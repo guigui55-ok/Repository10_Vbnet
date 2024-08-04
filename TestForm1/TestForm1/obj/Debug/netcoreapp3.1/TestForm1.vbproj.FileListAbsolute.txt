@@ -14,4 +14,5 @@ C:\Users\OK\source\repos\Repository10_VBnet\TestForm1\TestForm1\obj\Debug\netcor
 C:\Users\OK\source\repos\Repository10_VBnet\TestForm1\TestForm1\obj\Debug\netcoreapp3.1\TestForm1.pdb
 C:\Users\OK\source\repos\Repository10_VBnet\TestForm1\TestForm1\obj\Debug\netcoreapp3.1\TestForm1.genruntimeconfig.cache
 C:\Users\OK\source\repos\Repository10_VBnet\TestForm1\TestForm1\obj\Debug\netcoreapp3.1\TestForm1.UserControl1.resources
-C:\Users\OK\source\repos\Repository10_VBnet\TestForm1\TestForm1\obj\Debug\netcoreapp3.1\TestForm1.Form2.resources
+C:\Users\OK\source\repos\Repository10_VBnet\TestForm1\TestForm1\obj\Debug\netcoreapp3.1\TestForm1.FormChild1.resources
+C:\Users\OK\source\repos\Repository10_VBnet\TestForm1\TestForm1\obj\Debug\netcoreapp3.1\TestForm1.FormChild2.resources

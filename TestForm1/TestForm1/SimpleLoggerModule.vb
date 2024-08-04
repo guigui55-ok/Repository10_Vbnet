@@ -67,6 +67,8 @@ Public Class SimpleLogger
     Private Function AddTimeValue(Value As String)
         If Me.AddTime Then
             Return Me.GetTimeStr() & "    " & Value
+        Else
+            Return ""
         End If
     End Function
     Private Function GetTimeStr()

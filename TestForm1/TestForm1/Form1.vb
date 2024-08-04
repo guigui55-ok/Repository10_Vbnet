@@ -5,6 +5,10 @@ Public Class Form1
     Dim dummyTimer As Timer = New Timer()
     Dim dummyTimerCount As Integer
     Dim logger As SimpleLogger = New SimpleLogger()
+    'Dim userControl1 As UserControl1
+    Dim formChild1 As FormChild1
+    Dim formChild2 As FormChild2
+    Dim nowOpenChildFormName As String
     Sub New()
 
         ' この呼び出しはデザイナーで必要です。
@@ -17,8 +21,7 @@ Public Class Form1
         'Console.WriteLine("NowStatus = " & CStr(Me.NowStatus))'BC30311	型 'ProcessStatus' の値を 'String' に変換できません。
         Me.logger.PrintInfo("NowStatus = " & CStr(Me.NowStatus.MainValue))
     End Sub
-    'Dim userControl1 As UserControl1
-    Dim form2 As Form2
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.ExecuteDummy()
         'ウィンドウサイズ固定
@@ -46,10 +49,73 @@ Public Class Form1
         'Me.userControl1.BackColor = Color.White
         'Me.ResumeLayout(False)
 
-        Me.form2 = New Form2()
+        Me.formChild1 = New FormChild1()
+        Me.formChild2 = New FormChild2()
+        'Me.formChild1.Show()
+        'Me.formChild1.Visible = False
+        'Me.formChild2.Show()
+        'Me.formChild2.Visible = False
+        'Me.formChild2.Show()
         AddHandler Me.dummyTimer.Tick, New EventHandler(AddressOf ChangeProcessStatusByTimerInDummy)
         'Me.dummyTimer.Interval = 1000
         Me.dummyTimer.Interval = 1200
+        '/
+        Me.InitComboBox()
+    End Sub
+
+    Private Sub InitComboBox()
+        ' テキストボックス部分は編集不可にする
+        'Me.ComboBox1.DropDownStyle = ComboBoxStyle.DropDownList
+
+        '' コンボボックスに項目を追加する
+        'With Me.ComboBox1
+        '    .Items.Add("FromChild1")
+        '    .Items.Add("FormChild2")
+        '    .Items.Add("ETC")
+        'End With
+        'Dim strItem() As String = {"北海道", "東北", "関東", "中部", "近畿", "中国", "四国", "九州・沖縄"}
+        Dim strItem() As String
+        strItem = ConstGeneral.ConstGeneralModule.ExecuteMainModeName.Values.ToArray()
+
+        ' コンボボックスに配列項目を追加する
+        Me.ComboBox1.Items.AddRange(strItem)
+
+        AddHandler Me.ComboBox1.SelectionChangeCommitted, New EventHandler(AddressOf ChangedSelectItemInRunMode)
+    End Sub
+
+    Private Sub ChangedSelectItemInRunMode()
+        Me.logger.PrintInfo("ChangedSelectItemInRunMode")
+        ' 選択されているインデックスを取得する
+        Dim idx As Integer = Me.ComboBox1.SelectedIndex
+        Me.logger.PrintInfo(idx)
+        ' 選択されている文字列を取得する
+        Dim strItem As String = Me.ComboBox1.SelectedItem
+        Me.logger.PrintInfo(strItem)
+        '/
+        Dim value As String = String.Empty
+        'ConstGeneral.ConstGeneralModule.ExecuteMainModeName.TryGetValue(
+        '    ConstGeneral.ConstExecuteMainMode.ONE, value)
+
+        Me.CloseAllChildForm(strItem)
+        If strItem = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE) Then
+            Me.formChild1.Visible = True
+        ElseIf strItem = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.TWO) Then
+            Me.formChild2.Visible = True
+        End If
+        '/
+        '他の子ウィンドウを閉じて、選択されたものを開く
+    End Sub
+
+    Private Sub CloseAllChildForm(ignoreFormName As String)
+        If Me.formChild1.Visible Then
+            If ignoreFormName <> ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE) Then
+                Me.formChild1.Visible = False
+            End If
+        ElseIf Me.formChild2.Visible Then
+            If ignoreFormName <> ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.TWO) Then
+                Me.formChild2.Visible = False
+            End If
+        End If
     End Sub
 
     Private Sub ChangeProcessStatusByTimerInDummy()
@@ -104,7 +170,7 @@ Public Class Form1
         'buf = Me.UserControl11.Location.X & ":" & Me.UserControl11.Location.Y
         'Me.logger.PrintInfo(buf)
         'Me.UserControl11.Visible = True
-        'Me.form2.Show()
+        'Me.formChild1.Show()
         Me.dummyTimer.Enabled = True ' timer.Start()と同じ
         Dim StatusValue As Integer
         StatusValue = ConstGeneral.ConstProcessStatus.PROCESSING
@@ -120,15 +186,36 @@ Public Class Form1
 
     End Sub
 
-    Private Sub GroupBox1_Enter(sender As Object, e As EventArgs) Handles GroupBox1.Enter
-
-    End Sub
-
     Private Sub GroupBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles GroupBox1.MouseDoubleClick
-        Me.form2.Visible = True
+        Me.formChild1.Visible = True
     End Sub
 
-    Private Sub UserControl11_Load(sender As Object, e As EventArgs) Handles UserControl11.Load
+    Private Sub ComboBox1_KeyPress(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
+        Me.logger.PrintInfo("ComboBox1_KeyPress")
+        Me.logger.PrintInfo(CStr(e.KeyCode))
+        'Me.logger.PrintInfo(CStr(e.KeyData))
+        'Me.logger.PrintInfo(CStr(e.KeyValue))
+        Dim formName As String
+        If (e.KeyCode = Keys.D1) Or (e.KeyCode = Keys.NumPad1) Then
+            Me.formChild1.Visible = True
+            formName = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE)
+        ElseIf (e.KeyCode = Keys.D2) Or (e.KeyCode = Keys.NumPad2) Then
+            Me.formChild2.Visible = True
+            formName = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.TWO)
+        Else
+            formName = ""
+        End If
+        ComboBox1.SelectedItem = formName
+    End Sub
 
+    'Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+    '    Me.logger.PrintInfo("ComboBox1_KeyPress")
+    'End Sub
+
+    Private Sub ComboBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles ComboBox1.KeyPress
+        '数字キーでコンボボックスを選択した場合
+        'コンボボックスの選択アイテムを変更した後に、入力キーの文字列が残ってしまうため
+        ' KeyPressイベントでキー入力をキャンセルする
+        e.Handled = True
     End Sub
 End Class

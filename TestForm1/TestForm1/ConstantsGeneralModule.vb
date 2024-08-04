@@ -15,6 +15,12 @@ Namespace ConstGeneral
         PROCESSING
         END_PROCESS
     End Enum
+    Public Enum ConstExecuteMainMode
+        ONE
+        TWO
+        ETC
+    End Enum
+
 
     Public Module ConstGeneralModule
         Public ReadOnly ProessStatusName As New Dictionary(Of ConstProcessStatus, String) From {
@@ -22,6 +28,12 @@ Namespace ConstGeneral
             {ConstProcessStatus.WAIT_PROCESS, "測定前待機"},
             {ConstProcessStatus.PROCESSING, "測定中"},
             {ConstProcessStatus.END_PROCESS, "測定終了"}
+        }
+
+        Public ReadOnly ExecuteMainModeName As New Dictionary(Of ConstExecuteMainMode, String) From {
+            {ConstExecuteMainMode.ONE, "FormChild1"},
+            {ConstExecuteMainMode.TWO, "FormChild2"},
+            {ConstExecuteMainMode.ETC, "ETC"}
         }
     End Module
 End Namespace

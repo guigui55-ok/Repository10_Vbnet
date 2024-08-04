@@ -1,0 +1,596 @@
+
+
+
+################################################################################
+################################################################################
+
+vb.netでコンボボックスでKeyが押されたイベントをとらえる方法はありますか？
+以下のエラーが出てしまいます。
+
+    Private Sub ComboBox1_KeyPress(sender As Object, e As MouseEventArgs) Handles ComboBox1.KeyDown
+        '        重大度レベル  コード	説明	プロジェクト	ファイル	行	抑制状態
+        'エラー BC31029	メソッド 'ComboBox1_KeyPress' でイベント 
+        'KeyDown' を処理できません。シグネチャに互換性がありません。	
+        'TestForm1	C:\Users\OK\source\repos\Repository10_VBnet\TestForm1\TestForm1\Form1.vb	193	アクティブ
+
+    End Sub
+ChatGPT
+VB.NETでComboBoxでキーが押されたイベントを取得する方法については、以下のように正しいイベントハンドラを使用する必要があります。
+
+ComboBox1.KeyDownイベントを処理する場合、イベントハンドラの引数の型が正しくないため、エラーが発生しています。正しい引数の型はKeyEventArgsです。
+
+以下は、正しいコードの例です。
+
+vb.net
+コードをコピーする
+Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
+    ' ここに処理内容を記述します。
+    MessageBox.Show("キーが押されました: " & e.KeyCode.ToString())
+End Sub
+エラーメッセージにあるように、KeyEventArgsを使用してイベントを処理する必要があります。MouseEventArgsを使用すると、シグネチャに互換性がなくなり、エラーが発生します。
+
+また、ComboBox1_KeyPressではなく、ComboBox1_KeyDownというメソッド名を使うことで、イベントのハンドラが正しく設定されます。
+
+これでエラーが解決し、キーが押されたイベントを正しく取得できるはずです。
+
+
+################################################################################
+################################################################################
+
+このソースを実行したとき、Form1のコンボボックスで formChild1 を選択したときは、ちゃんとfromChild1が表示されるのに、formChild2を選択したときは、formChild2が表示されません。
+どうしたらよいでしょう？
+
+Source:
+Imports TestForm1.ConstGeneral.ConstGeneralModule
+
+Public Class Form1
+    Dim NowStatus As ProcessStatus = New ProcessStatus()
+    Dim dummyTimer As Timer = New Timer()
+    Dim dummyTimerCount As Integer
+    Dim logger As SimpleLogger = New SimpleLogger()
+    'Dim userControl1 As UserControl1
+    Dim formChild1 As FormChild1
+    Dim formChild2 As FormChild2
+    Dim nowOpenChildFormName As String
+    Sub New()
+
+        ' この呼び出しはデザイナーで必要です。
+        InitializeComponent()
+
+        ' InitializeComponent() 呼び出しの後で初期化を追加します。
+        Me.logger.PrintInfo("Form1.New")
+        'Console.WriteLine("NowStatus = " & Str(Me.NowStatus))
+        'System.InvalidCastException: 'Argument 'Number' cannot be converted to a numeric value.'
+        'Console.WriteLine("NowStatus = " & CStr(Me.NowStatus))'BC30311	型 'ProcessStatus' の値を 'String' に変換できません。
+        Me.logger.PrintInfo("NowStatus = " & CStr(Me.NowStatus.MainValue))
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.ExecuteDummy()
+        'ウィンドウサイズ固定
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
+        Me.MaximumSize = Me.Size
+        Me.MinimumSize = Me.Size
+        'フォームの最大化ボタンの表示、非表示を切り替える
+        'Me.MaximizeBox = Not Me.MaximizeBox
+        Me.MaximizeBox = Nothing
+        Me.logger.PrintInfo("Form1_Load")
+        '/
+        Dim Buf As String
+        Buf = ConstGeneral.ConstGeneralModule.ProessStatusName(ConstGeneral.ConstProcessStatus.NOT_SET_DATA)
+        Me.logger.PrintInfo("NowStatus = " & Buf)
+        Me.Label2.Text = Buf
+        '/
+        'Me.userControl1 = New UserControl1()
+        'Me.userControl1.Location = New System.Drawing.Point(10, 10)
+        'Me.userControl1.Name = "UserControl1"
+        'Me.userControl1.Size = New System.Drawing.Size(100, 200)
+        'Me.userControl1.TabIndex = 0
+        'Me.userControl1.TabStop = False
+        'Me.userControl1.Text = "UserControl1_text"
+        'Me.userControl1.Visible = True
+        'Me.userControl1.BackColor = Color.White
+        'Me.ResumeLayout(False)
+
+        Me.formChild1 = New FormChild1()
+        Me.formChild2 = New FormChild2()
+        'Me.formChild1.Show()
+        'Me.formChild1.Visible = False
+        'Me.formChild2.Show()
+        'Me.formChild2.Visible = False
+        'Me.formChild2.Show()
+        AddHandler Me.dummyTimer.Tick, New EventHandler(AddressOf ChangeProcessStatusByTimerInDummy)
+        'Me.dummyTimer.Interval = 1000
+        Me.dummyTimer.Interval = 1200
+        '/
+        Me.InitComboBox()
+    End Sub
+
+    Private Sub InitComboBox()
+        ' テキストボックス部分は編集不可にする
+        'Me.ComboBox1.DropDownStyle = ComboBoxStyle.DropDownList
+
+        '' コンボボックスに項目を追加する
+        'With Me.ComboBox1
+        '    .Items.Add("FromChild1")
+        '    .Items.Add("FormChild2")
+        '    .Items.Add("ETC")
+        'End With
+        'Dim strItem() As String = {"北海道", "東北", "関東", "中部", "近畿", "中国", "四国", "九州・沖縄"}
+        Dim strItem() As String
+        strItem = ConstGeneral.ConstGeneralModule.ExecuteMainModeName.Values.ToArray()
+
+        ' コンボボックスに配列項目を追加する
+        Me.ComboBox1.Items.AddRange(strItem)
+
+        AddHandler Me.ComboBox1.SelectionChangeCommitted, New EventHandler(AddressOf ChangedSelectItemInRunMode)
+    End Sub
+
+    Private Sub ChangedSelectItemInRunMode()
+        Me.logger.PrintInfo("ChangedSelectItemInRunMode")
+        ' 選択されているインデックスを取得する
+        Dim idx As Integer = Me.ComboBox1.SelectedIndex
+        Me.logger.PrintInfo(idx)
+        ' 選択されている文字列を取得する
+        Dim strItem As String = Me.ComboBox1.SelectedItem
+        Me.logger.PrintInfo(strItem)
+        '/
+        Dim value As String = String.Empty
+        'ConstGeneral.ConstGeneralModule.ExecuteMainModeName.TryGetValue(
+        '    ConstGeneral.ConstExecuteMainMode.ONE, value)
+
+        Me.CloseAllChildForm(strItem)
+        If strItem = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE) Then
+            Me.formChild1.Visible = True
+        ElseIf strItem = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE) Then
+            Me.formChild2.Visible = True
+            Me.formChild2.Show()
+        End If
+        '/
+        '他の子ウィンドウを閉じて、選択されたものを開く
+    End Sub
+
+    Private Sub CloseAllChildForm(ignoreFormName As String)
+        If Me.formChild1.Visible Then
+            If ignoreFormName <> ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE) Then
+                Me.formChild1.Visible = False
+            End If
+        ElseIf Me.formChild2.Visible Then
+            If ignoreFormName <> ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.TWO) Then
+                Me.formChild2.Visible = False
+            End If
+        End If
+    End Sub
+
+    Private Sub ChangeProcessStatusByTimerInDummy()
+        Me.logger.PrintInfo("ChangeProcessStatusByTimerInDummy")
+        If Me.NowStatus.MainValue = ConstGeneral.ConstProcessStatus.PROCESSING Then
+            If 0 < dummyTimerCount Then
+                dummyTimerCount += 1
+            Else
+                'dummyTimerCount = Me.NowStatus.MainValue
+                dummyTimerCount = 1
+            End If
+        Else
+            dummyTimerCount = 0
+        End If
+        If 3 < dummyTimerCount Then
+            Me.logger.PrintInfo("ProcessEnd Dummy")
+            Dim StatusValue As Integer
+            StatusValue = ConstGeneral.ConstProcessStatus.END_PROCESS
+            Me.NowStatus.MainValue = StatusValue
+            dummyTimerCount = 0
+            Me.dummyTimer.Enabled = False
+            Me.ChengeStatus(StatusValue)
+        End If
+    End Sub
+
+    Private Sub ChengeStatus(StatusValue As Integer)
+        ' ConstGeneral.ConstProcessStatus.NOT_SET_DATA
+        Me.NowStatus.MainValue = StatusValue
+        Dim Buf As String
+        Buf = ConstGeneral.ConstGeneralModule.ProessStatusName(StatusValue)
+        Me.logger.PrintInfo("NowStatus = " & Buf)
+        Me.Label2.Text = Buf
+    End Sub
+
+    Private Sub ExecuteDummy()
+        'Dim buf As String
+        'buf = ConstantsGeneralModule.DaysInYear
+        If False Then
+            Console.WriteLine(ConstantsGeneralModule.DaysInYear)
+        End If
+        ConstantsGeneralModule.TestMethod()
+        Dim BufCls As TestConstGeneralModuleTestClass = New TestConstGeneralModuleTestClass()
+        BufCls.TestB()
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        'Me.UserControl11.Show()
+        Me.logger.PrintInfo("Button1_Click")
+        'Dim buf As String
+        'buf = Me.UserControl11.Size.Width & ":" & Me.UserControl11.Size.Height
+        'Me.logger.PrintInfo(buf)
+        'buf = Me.UserControl11.Location.X & ":" & Me.UserControl11.Location.Y
+        'Me.logger.PrintInfo(buf)
+        'Me.UserControl11.Visible = True
+        'Me.formChild1.Show()
+        Me.dummyTimer.Enabled = True ' timer.Start()と同じ
+        Dim StatusValue As Integer
+        StatusValue = ConstGeneral.ConstProcessStatus.PROCESSING
+        Me.NowStatus.MainValue = StatusValue
+        Dim Buf As String
+        Buf = ConstGeneral.ConstGeneralModule.ProessStatusName(StatusValue)
+        Me.Label2.Text = Buf
+        Me.MainProcess()
+    End Sub
+
+    Private Sub MainProcess()
+
+
+    End Sub
+
+    Private Sub GroupBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles GroupBox1.MouseDoubleClick
+        Me.formChild1.Visible = True
+    End Sub
+
+End Class
+ChatGPT
+ChangedSelectItemInRunModeメソッドの中で、formChild2が表示されない理由は、選択条件が間違っているためです。現在のコードでは、formChild2が表示される条件がConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE)となっており、formChild1と同じ条件になっています。これを修正する必要があります。
+
+ChangedSelectItemInRunModeメソッドを以下のように修正してください。
+
+vb
+コードをコピーする
+Private Sub ChangedSelectItemInRunMode()
+    Me.logger.PrintInfo("ChangedSelectItemInRunMode")
+    ' 選択されているインデックスを取得する
+    Dim idx As Integer = Me.ComboBox1.SelectedIndex
+    Me.logger.PrintInfo(idx)
+    ' 選択されている文字列を取得する
+    Dim strItem As String = Me.ComboBox1.SelectedItem
+    Me.logger.PrintInfo(strItem)
+    '/
+    Dim value As String = String.Empty
+    'ConstGeneral.ConstGeneralModule.ExecuteMainModeName.TryGetValue(
+    '    ConstGeneral.ConstExecuteMainMode.ONE, value)
+
+    Me.CloseAllChildForm(strItem)
+    If strItem = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE) Then
+        Me.formChild1.Visible = True
+    ElseIf strItem = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.TWO) Then
+        Me.formChild2.Visible = True
+        Me.formChild2.Show()
+    End If
+    '/
+    '他の子ウィンドウを閉じて、選択されたものを開く
+End Sub
+ElseIf条件の中で、ConstGeneral.ConstExecuteMainMode.TWOを使用するように変更しました。これにより、formChild2が正しく表示されるようになります。
+
+また、CloseAllChildFormメソッドも見直す必要があります。以下のように修正してください。
+
+vb
+コードをコピーする
+Private Sub CloseAllChildForm(ignoreFormName As String)
+    If Me.formChild1.Visible Then
+        If ignoreFormName <> ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE) Then
+            Me.formChild1.Visible = False
+        End If
+    End If
+    If Me.formChild2.Visible Then
+        If ignoreFormName <> ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.TWO) Then
+            Me.formChild2.Visible = False
+        End If
+    End If
+End Sub
+この修正により、formChild1およびformChild2が適切に表示および非表示になるようになります。
+
+
+################################################################################
+################################################################################
+
+
+VB.NETで数値を2進数で表示するためには、Convert.ToStringメソッドを使用することができます。以下に、数値を2進数で表示するプロシージャの例を示します。
+
+vb
+コードをコピーする
+Sub ShowBinaryRepresentation(ByVal number As Integer)
+    Dim binaryString As String = Convert.ToString(number, 2)
+    Console.WriteLine("The binary representation of " & number & " is " & binaryString)
+End Sub
+
+Sub Main()
+    ' 例: 数値10を2進数で表示
+    ShowBinaryRepresentation(10)
+
+    ' 他の数値でも試してみる
+    ShowBinaryRepresentation(255)
+    ShowBinaryRepresentation(0)
+    ShowBinaryRepresentation(-10)
+End Sub
+このコードでは、ShowBinaryRepresentationというサブルーチンを定義しています。このサブルーチンは、引数として渡された整数を2進数の文字列に変換し、その結果をコンソールに出力します。
+
+Convert.ToStringメソッドの第2引数に基数（この場合は2）を指定することで、数値を2進数の文字列に変換できます。
+
+Mainサブルーチンでは、いくつかの例を使ってShowBinaryRepresentationサブルーチンを呼び出しています。これにより、指定した数値の2進数表現がコンソールに表示されます。
+
+実行すると、以下のような出力が得られます:
+
+vbnet
+コードをコピーする
+The binary representation of 10 is 1010
+The binary representation of 255 is 11111111
+The binary representation of 0 is 0
+The binary representation of -10 is 11111111111111111111111111110110
+負の数の場合は、2の補数表現が表示されます。
+
+
+
+
+
+引数に桁数の指定もして、'0001'のように表示させるようにしてください。
+ChatGPT
+指定された桁数に基づいて2進数の文字列をゼロ埋めするためには、PadLeftメソッドを使用します。以下に、桁数を指定して2進数を表示するプロシージャの例を示します。
+
+vb
+コードをコピーする
+Sub ShowBinaryRepresentation(ByVal number As Integer, ByVal digits As Integer)
+    Dim binaryString As String = Convert.ToString(number, 2).PadLeft(digits, "0"c)
+    Console.WriteLine("The binary representation of " & number & " is " & binaryString)
+End Sub
+
+Sub Main()
+    ' 例: 数値10を2進数で表示（4桁）
+    ShowBinaryRepresentation(10, 4)
+
+    ' 他の数値でも試してみる（8桁）
+    ShowBinaryRepresentation(255, 8)
+    ShowBinaryRepresentation(2, 8)
+    ShowBinaryRepresentation(7, 8)
+    ShowBinaryRepresentation(0, 8)
+    ShowBinaryRepresentation(-10, 8)
+End Sub
+このコードでは、ShowBinaryRepresentationサブルーチンに新しい引数digitsを追加しました。この引数は表示する2進数の桁数を指定します。Convert.ToStringメソッドで得られた2進数の文字列に対してPadLeftメソッドを使用し、指定された桁数にゼロ埋めします。
+
+Mainサブルーチンでは、いくつかの例を使ってShowBinaryRepresentationサブルーチンを呼び出しています。これにより、指定された桁数の2進数表現がコンソールに表示されます。
+
+実行すると、以下のような出力が得られます:
+
+vbnet
+コードをコピーする
+The binary representation of 10 is 1010
+The binary representation of 255 is 11111111
+The binary representation of 2 is 00000010
+The binary representation of 7 is 00000111
+The binary representation of 0 is 00000000
+The binary representation of -10 is 11111111111111111111111111110110
+負の数の場合、表示桁数が2の補数表現の長さよりも小さい場合は、完全な補数表現が表示されないことに注意してください。
+
+
+
+################################################################################
+################################################################################
+
+vb.net環境にて、
+以下のソースで、 Debug.WriteLineを使用したいのですが、
+System.Diagnostics.Debug.WriteLineとしなければエラーが出るようになりました。
+VisualStudio2019を使用していて、先ほどNameSpaceなどを一度変更したりしていたのですが、この影響が何かあったのかもしれません。
+何か解決方法はありますか？
+
+
+Error:
+重大度レベル	コード	説明	プロジェクト	ファイル	行	抑制状態
+エラー	BC30455	'Public Sub Debug(Value As String)' のパラメーター 'Value' に対して引数が指定されていません。	SimpleLoggerTest	C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\SimpleLoggerModule.vb	80	アクティブ
+
+Source:
+Imports System.IO
+Imports System.Diagnostics
+
+Public Enum LogLevel
+    DEF
+    CRITICAL
+    ERR
+    WARN
+    NORMAL
+    INFO
+    DEBUG
+    TRACE
+End Enum
+
+Public Enum OutputType
+    DEBUG_WINDOW
+    CONSOLE
+    FILE
+End Enum
+
+Public Class SimpleLogger
+    Private LoggerLogLevel As Integer = LogLevel.INFO
+    Private FilePath As String = ""
+
+
+    Sub New()
+
+    End Sub
+
+    Sub Critical(Value As String)
+
+        If LogLevel.CRITICAL <= Me.LoggerLogLevel Then
+            Me.Print(Value)
+        End If
+    End Sub
+    Sub Err(Value As String)
+        If LogLevel.ERR <= Me.LoggerLogLevel Then
+            Me.Print(Value)
+        End If
+    End Sub
+    Sub Warn(Value As String)
+        If LogLevel.WARN <= Me.LoggerLogLevel Then
+            Me.Print(Value)
+        End If
+    End Sub
+    Sub Info(Value As String)
+        If LogLevel.INFO <= Me.LoggerLogLevel Then
+            Me.Print(Value)
+        End If
+    End Sub
+    Sub Debug(Value As String)
+        If LogLevel.DEBUG <= Me.LoggerLogLevel Then
+            Me.Print(Value)
+        End If
+    End Sub
+    Sub Trace(Value As String)
+        If LogLevel.TRACE <= Me.LoggerLogLevel Then
+            Me.Print(Value)
+        End If
+    End Sub
+    '////////////////////////////////////////////////////////////////////////////////
+    ' Common
+    Private Sub Print(Value As String)
+        System.Diagnostics.Debug.WriteLine(Value)
+    End Sub
+
+    Private Sub PrintToFile(Value As String)
+        If Me.FilePath <> "" Then
+            Me.WriteToFile(Value)
+        End If
+    End Sub
+
+    Private Sub WriteToFile(Value As String)
+        Try
+            File.WriteAllText(Me.FilePath, Value)
+        Catch ex As Exception
+            ' エラーが発生した場合の処理
+            System.Diagnostics.Debug.WriteLine("WriteToFile ERROR: " & ex.Message)
+        End Try
+    End Sub
+    '////////////////////////////////////////////////////////////////////////////////
+    'Sample
+    Private Sub SampleWriteText()
+        ' 書き込むファイルのパス
+        Dim filePath As String = "C:\example\output.txt"
+
+        ' 書き込むテキスト
+        Dim textToWrite As String = "こんにちは、世界！"
+
+        ' テキストを書き込む
+        Try
+            ' File.WriteAllTextを使用してファイルにテキストを書き込む
+            File.WriteAllText(filePath, textToWrite)
+            Console.WriteLine("ファイルにテキストを書き込みました。")
+        Catch ex As Exception
+            ' エラーが発生した場合の処理
+            Console.WriteLine("エラーが発生しました: " & ex.Message)
+        End Try
+
+        ' プログラムが終了しないように入力を待つ
+        Console.ReadLine()
+    End Sub
+
+End Class
+ChatGPT
+メモリを更新しました
+System.Diagnostics.Debug.WriteLineを使用する際のエラーは、Debugというメソッド名がユーザー定義のクラスSimpleLogger内で既に定義されているためです。この名前の競合が原因で、正しいメソッドが呼び出されていない可能性があります。これを解決するために、ユーザー定義のDebugメソッドの名前を変更するか、名前空間を明示的に指定してSystem.Diagnostics.Debug.WriteLineを使用する必要があります。
+
+以下のいくつかの方法で解決できます：
+
+方法1: メソッド名の変更
+ユーザー定義のDebugメソッドの名前を他の名前に変更します。
+
+vb.net
+コードをコピーする
+Sub DebugLog(Value As String)
+    If LogLevel.DEBUG <= Me.LoggerLogLevel Then
+        Me.Print(Value)
+    End If
+End Sub
+方法2: 名前空間の明示的な指定
+名前空間を明示的に指定することで、名前の競合を回避します。
+
+vb.net
+コードをコピーする
+Private Sub Print(Value As String)
+    System.Diagnostics.Debug.WriteLine(Value)
+End Sub
+どちらかの方法で解決することができます。メソッド名の変更がプロジェクト全体に影響を与える可能性があるため、プロジェクトの規模や他の部分との関係を考慮して選択してください。
+
+もしSystem.Diagnostics.Debug.WriteLineを明示的に指定する場合は、以下のようにコードを変更することができます：
+
+vb.net
+コードをコピーする
+Private Sub Print(Value As String)
+    System.Diagnostics.Debug.WriteLine(Value)
+End Sub
+これにより、名前の競合が避けられ、エラーが解消されるはずです。
+
+
+
+################################################################################
+################################################################################
+
+vb.netで以下のソースで、警告が出るのですが、解決方法を教えてください。
+Source:
+Public Class SimpleLogger
+    Private LoggerLogLevel As Integer = LogLevel.INFO
+    Private FilePath As String = ""
+警告:
+重大度レベル	コード	説明	プロジェクト	ファイル	行	抑制状態
+メッセージ	IDE0044	フィールドを読み取り専用にします	SimpleLoggerTest	C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\SimpleLoggerModule.vb	17	アクティブ
+ChatGPT
+この警告は、フィールドを読み取り専用にすることを推奨するものです。フィールドがクラス内で一度だけ設定され、その後変更されない場合、読み取り専用（ReadOnly）として宣言することができます。これにより、コードの安全性と意図が明確になります。
+
+以下のように、フィールドをReadOnlyとして宣言すると、警告が解消されます。
+
+vb
+コードをコピーする
+Public Class SimpleLogger
+    Private ReadOnly LoggerLogLevel As Integer = LogLevel.INFO
+    Private ReadOnly FilePath As String = ""
+End Class
+この変更により、LoggerLogLevelとFilePathフィールドはクラス内で初期化された後に変更されなくなります。これで警告IDE0044が解消されるはずです。
+
+
+
+
+
+これは読み取り専用にしたくなくて、書き換えを可能にしたいのですが、警告を消すのはどうしたらよいですか
+ChatGPT
+フィールドの書き換えを可能にしたい場合、警告を消すためには、プロパティを使用することを検討できます。プロパティを使うことで、フィールドへのアクセスを制御しつつ、警告を解消できます。
+
+以下のようにプロパティを使用してみてください：
+
+vb
+コードをコピーする
+Public Class SimpleLogger
+    Private _loggerLogLevel As Integer = LogLevel.INFO
+    Private _filePath As String = ""
+
+    Public Property LoggerLogLevel As Integer
+        Get
+            Return _loggerLogLevel
+        End Get
+        Set(value As Integer)
+            _loggerLogLevel = value
+        End Set
+    End Property
+
+    Public Property FilePath As String
+        Get
+            Return _filePath
+        End Get
+        Set(value As String)
+            _filePath = value
+        End Set
+    End Property
+End Class
+この方法により、フィールドを直接操作するのではなく、プロパティを介してアクセスと変更を行うことができます。これで、IDE0044警告が解消され、フィールドの書き換えも可能な状態を保つことができます。
+
+
+################################################################################
+################################################################################
+
+
+
+
+
+
+
