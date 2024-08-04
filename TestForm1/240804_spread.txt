@@ -1,0 +1,65 @@
+「SPREAD for .NET Windows Forms Edition」は、Windows Formsアプリケーションで使えるスプレッドシート/グリッドコントロールです。このソフトウェアを使用することで、エンドユーザーに対してExcelライクなインターフェースを提供することができ、データの入力、表示、編集などを柔軟に行うことができます。以下にその概要を示します。
+
+概要
+開発元: GrapeCity
+用途: Windows Formsアプリケーション向けのスプレッドシート/グリッド機能
+主な機能:
+スプレッドシート/グリッド表示: データの表示、編集、フィルタリング、並び替え、グループ化など
+Excel互換: Excelファイルの読み込みと書き込みが可能
+セルタイプ: テキスト、数値、チェックボックス、コンボボックス、カレンダーなど
+数式と関数: Excelと同様の数式や関数をサポート
+スタイルとテーマ: セルや行列のスタイル設定、テーマの適用
+印刷とプレビュー: スプレッドシートの印刷設定、プレビュー機能
+イベントハンドリング: ユーザーアクションに対するイベント処理
+利用方法の基本
+インストール:
+
+GrapeCityの公式サイトから「SPREAD for .NET Windows Forms Edition」をダウンロードしてインストールします。
+Visual Studioにアドインとして追加されます。
+プロジェクトへの追加:
+
+Visual Studioで新しいWindows Formsプロジェクトを作成します。
+ツールボックスから「SPREAD」をフォームにドラッグアンドドロップします。
+基本的な操作:
+
+データのバインド: FpSpreadコントロールのDataSourceプロパティを設定することでデータソースにバインドします。
+セルのスタイル設定: 各セルのスタイルを設定するには、Sheetsコレクションを通じてアクセスします。
+イベント処理: ユーザーの入力やアクションに応じたイベントを処理するために、各種イベントハンドラを追加します。
+簡単なサンプルコード
+以下は、基本的なデータバインディングとセルスタイルの設定を行うサンプルコードです。
+
+vb.net
+コードをコピーする
+' インポートが必要
+Imports FarPoint.Win.Spread
+
+Public Class Form1
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' SPREADコントロールのインスタンスを作成
+        Dim spread As New FpSpread()
+        spread.Dock = DockStyle.Fill
+        Me.Controls.Add(spread)
+        
+        ' シートを追加
+        Dim sheet As New SheetView()
+        spread.Sheets.Add(sheet)
+
+        ' データのバインディング
+        Dim dataTable As New DataTable()
+        dataTable.Columns.Add("ID", GetType(Integer))
+        dataTable.Columns.Add("Name", GetType(String))
+        dataTable.Rows.Add(1, "John Doe")
+        dataTable.Rows.Add(2, "Jane Smith")
+
+        spread.DataSource = dataTable
+
+        ' セルのスタイル設定
+        sheet.Cells(0, 0).Text = "ID"
+        sheet.Cells(0, 1).Text = "Name"
+        sheet.Cells(0, 0).BackColor = Color.LightGray
+        sheet.Cells(0, 1).BackColor = Color.LightGray
+    End Sub
+End Class
+このコードでは、FpSpreadコントロールをフォームに追加し、データソースとしてDataTableをバインドし、セルのスタイルを設定しています。
+
+さらに詳しい情報や具体的な機能について知りたい場合は、GrapeCityの公式ドキュメントやサンプルコードを参照することをお勧めします。
