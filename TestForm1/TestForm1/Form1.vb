@@ -190,7 +190,7 @@ Public Class Form1
         Me.formChild1.Visible = True
     End Sub
 
-    Private Sub ComboBox1_KeyPress(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
+    Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
         Me.logger.PrintInfo("ComboBox1_KeyPress")
         Me.logger.PrintInfo(CStr(e.KeyCode))
         'Me.logger.PrintInfo(CStr(e.KeyData))

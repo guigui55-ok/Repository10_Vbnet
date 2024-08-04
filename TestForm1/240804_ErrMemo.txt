@@ -587,10 +587,48 @@ End Class
 
 ################################################################################
 ################################################################################
+KeyPressイベント名のメソッドにに ComboBox1.KeyDownイベントが定義されていて、
+別にComboBox1_KeyPressメソッドが定義されていた。
+→Formのデザイナがエラーを発生。VisualStudioでソースが見れない状態に
+→VsCodeでForm1.vbを開きソースを修正。解決
+
+    Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
+
+    Private Sub ComboBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles ComboBox1.KeyDown
+        Me.logger.PrintInfo("ComboBox1_KeyPress")
+        Me.logger.PrintInfo(CStr(e.KeyCode))
+        'Me.logger.PrintInfo(CStr(e.KeyData))
+        'Me.logger.PrintInfo(CStr(e.KeyValue))
+        Dim formName As String
+        If (e.KeyCode = Keys.D1) Or (e.KeyCode = Keys.NumPad1) Then
+            Me.formChild1.Visible = True
+            formName = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.ONE)
+        ElseIf (e.KeyCode = Keys.D2) Or (e.KeyCode = Keys.NumPad2) Then
+            Me.formChild2.Visible = True
+            formName = ConstGeneral.ExecuteMainModeName(ConstGeneral.ConstExecuteMainMode.TWO)
+        Else
+            formName = ""
+        End If
+        ComboBox1.SelectedItem = formName
+    End Sub
+
+    'Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+    '    Me.logger.PrintInfo("ComboBox1_KeyPress")
+    'End Sub
+
+    Private Sub ComboBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles ComboBox1.KeyPress
+        '数字キーでコンボボックスを選択した場合
+        'コンボボックスの選択アイテムを変更した後に、入力キーの文字列が残ってしまうため
+        ' KeyPressイベントでキー入力をキャンセルする
+        e.Handled = True
 
 
 
 
+
+
+################################################################################
+################################################################################
 
 
 
