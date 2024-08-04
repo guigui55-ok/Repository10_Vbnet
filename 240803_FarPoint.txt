@@ -1,0 +1,82 @@
+SPREAD for .NET Windows Forms Edition
+https://codezine.jp/article/detail/4436?p=2
+
+Loadイベントでは、次の処理を行っています。
+
+スキンを適用
+Me.FpSpread1_Sheet1.ActiveSkin = FarPoint.Win.Spread.DefaultSkins.Colorful4
+
+セル型の設定（テキスト型はReadOnly、Image型は縦横比を崩さずにサイズ調整）
+Dim textCellType As New FarPoint.Win.Spread.CellType.TextCellType
+Dim imageCellType As New FarPoint.Win.Spread.CellType.ImageCellType
+
+textCellType.ReadOnly = True
+imageCellType.Style = FarPoint.Win.RenderStyle.StretchAndScale
+
+列数設定
+Me.FpSpread1_Sheet1.Columns.Count = 9
+
+数式指定モードの指定
+Me.FpSpread1_Sheet1.ReferenceStyle = FarPoint.Win.Spread.Model.ReferenceStyle.R1C1
+
+シート全体の調整
+Me.FpSpread1_Sheet1.DataAutoSizeColumns = False
+Me.FpSpread1_Sheet1.DataAutoCellTypes = False
+Me.FpSpread1_Sheet1.AutoGenerateColumns = False
+
+列ヘッダの設定
+Dim colHeader As New CellType.ColumnHeaderRenderer
+colHeader.WordWrap = False
+Me.FpSpread1_Sheet1.ColumnHeader.DefaultStyle.Renderer = colHeader
+
+列ヘッダの連結
+Me.FpSpread1_Sheet1.AddColumnHeaderSpanCell(0, 1, 1, 3)
+
+高さや幅変更の抑止
+Me.FpSpread1_Sheet1.RowHeader.Rows.Default.Resizable = False
+Me.FpSpread1_Sheet1.ColumnHeader.Columns.Default.Resizable = False
+
+各列の定義
+'ID列は非表示にする
+Me.FpSpread1_Sheet1.Columns.Get(0).DataField = "ID"
+Me.FpSpread1_Sheet1.Columns.Get(0).Visible = False
+'アイコン列の設定を行う
+Me.FpSpread1_Sheet1.Columns.Get(1).DataField = "ProfileImage"
+Me.FpSpread1_Sheet1.ColumnHeader.Cells(0, 1).Text = "ユーザ名"
+Me.FpSpread1_Sheet1.Columns.Get(1).CellType = imageCellType
+Me.FpSpread1_Sheet1.Columns.Get(1).Width = Me.FpSpread1_Sheet1.Rows.Get(1).Height
+'名前列の設定を行う
+Me.FpSpread1_Sheet1.Columns.Get(2).DataField = "Name"
+Me.FpSpread1_Sheet1.Columns.Get(2).CellType = textCellType
+'ID名列の設定を行う
+Me.FpSpread1_Sheet1.Columns.Get(3).DataField = "ScreenName"
+Me.FpSpread1_Sheet1.Columns.Get(3).CellType = textCellType
+'プロテクション列は非表示にする
+Me.FpSpread1_Sheet1.Columns.Get(4).DataField = "IsProtected"
+Me.FpSpread1_Sheet1.Columns.Get(4).Visible = False
+'プロテクションだったら○表示する列に計算式を設定する
+Me.FpSpread1_Sheet1.ColumnHeader.Cells(0, 5).Text = "プロテクト"
+Me.FpSpread1_Sheet1.Columns.Get(5).CellType = textCellType
+Me.FpSpread1_Sheet1.Columns.Get(5).Formula = "IF(RC5=""True"",""○"","""")"
+Me.FpSpread1_Sheet1.Columns.Get(5).HorizontalAlignment = CellHorizontalAlignment.Center
+'フォロー列は非表示にする
+Me.FpSpread1_Sheet1.Columns.Get(6).DataField = "IsFollowing"
+Me.FpSpread1_Sheet1.Columns.Get(6).Visible = False
+'フォローしてたら○表示する列に計算式を設定する
+Me.FpSpread1_Sheet1.ColumnHeader.Cells(0, 7).Text = "フォロー済"
+Me.FpSpread1_Sheet1.Columns.Get(7).CellType = textCellType
+Me.FpSpread1_Sheet1.Columns.Get(7).Formula = "IF(RC[-1]=""True"",""○"","""")"
+Me.FpSpread1_Sheet1.Columns.Get(7).HorizontalAlignment = CellHorizontalAlignment.Center
+'最新の発言列の設定を行う
+Me.FpSpread1_Sheet1.Columns.Get(8).DataField = "StatusText"
+Me.FpSpread1_Sheet1.ColumnHeader.Cells(0, 8).Text = "最新の発言"
+Me.FpSpread1_Sheet1.Columns.Get(8).CellType = textCellType
+
+
+
+Memo
+GlobalSuppressions.vb
+<Assembly: SuppressMessage("CodeQuality", "IDE0051:使用されていないプライベート メンバーを削除する", Justification:="<保留中>", Scope:="member", Target:="~M:SimpleLogger.SimpleLogger.SampleWriteText")>
+<Assembly: SuppressMessage("CodeQuality", "IDE0051:使用されていないプライベート メンバーを削除する", Justification:="<保留中>", Scope:="member", Target:="~M:SimpleLogger.SimpleLogger.PrintToFile(System.String)")>
+
+

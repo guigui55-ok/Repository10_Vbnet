@@ -1,0 +1,13 @@
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\bin\Debug\netcoreapp3.1\SimpleLoggerTest.exe
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\bin\Debug\netcoreapp3.1\SimpleLoggerTest.deps.json
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\bin\Debug\netcoreapp3.1\SimpleLoggerTest.runtimeconfig.json
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\bin\Debug\netcoreapp3.1\SimpleLoggerTest.runtimeconfig.dev.json
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\bin\Debug\netcoreapp3.1\SimpleLoggerTest.dll
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\bin\Debug\netcoreapp3.1\SimpleLoggerTest.pdb
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\obj\Debug\netcoreapp3.1\SimpleLoggerTest.vbprojAssemblyReference.cache
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\obj\Debug\netcoreapp3.1\SimpleLoggerTest.AssemblyInfoInputs.cache
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\obj\Debug\netcoreapp3.1\SimpleLoggerTest.AssemblyInfo.vb
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\obj\Debug\netcoreapp3.1\SimpleLoggerTest.vbproj.CoreCompileInputs.cache
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\obj\Debug\netcoreapp3.1\SimpleLoggerTest.dll
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\obj\Debug\netcoreapp3.1\SimpleLoggerTest.pdb
+C:\Users\OK\source\repos\Repository10_VBnet\SimpleLogger\SimpleLogger\obj\Debug\netcoreapp3.1\SimpleLoggerTest.genruntimeconfig.cache

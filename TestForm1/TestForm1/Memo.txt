@@ -1,0 +1,5 @@
+VisualStudio コメントアウトショートカット
+Ctrl + k + c
+コメントアウト解除ショートカット
+Ctrl + k + u
+

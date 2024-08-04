@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "+33fg/Ep8ImeDgziSdKoPsmN/LodNP725+pukf7GRQlmGJxFrBarEOhIezr/dMvL0rBd5GOmSQAGH1Rk4O7wyQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\OK\\source\\repos\\Repository10_VBnet\\TestForm1\\TestForm1\\TestForm1.vbproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\OK\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.25\\microsoft.netcore.app.host.win-x64.3.1.25.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,30 @@
+
+
+'ユーザーがサイズを変更できないようにする
+'最大化、最小化はできる
+Me.FormBorderStyle = FormBorderStyle.FixedSingle
+
+'最大サイズと最小サイズを現在のサイズに設定する
+Me.MaximumSize = Me.Size
+Me.MinimumSize = Me.Size
+
+コードを隠すコードを選択
+'フォームの最大化ボタンの表示、非表示を切り替える
+Me.MaximizeBox = Not Me.MaximizeBox
+'フォームの最小化ボタンの表示、非表示を切り替える
+Me.MinimizeBox = Not Me.MinimizeBox
+'フォームのコントロールボックスの表示、非表示を切り替える
+'コントロールボックスを非表示にすると最大化、最小化、閉じるボタンも消える
+Me.ControlBox = Not Me.ControlBox
+
+デバッグ出力
+Debug.WriteLine("処理終了")
+
+
+VB.NET
+コードを隠すコードを選択
+Me.FormBorderStyle = FormBorderStyle.None
+
+'タイトルバーを消す
+Me.ControlBox = False
+Me.Text = ""

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "akX0kF97Cq9P6WnEbbh4JsMFA4tpkyf0MjjuquJtoFpV2Dtcnd6eNoqzrfXCNYYeH2X2g4k47Ww7tJv9ISAdxQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\OK\\source\\repos\\Repository10_VBnet\\SimpleLogger\\SimpleLogger\\SimpleLoggerTest.vbproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\OK\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.25\\microsoft.netcore.app.host.win-x64.3.1.25.nupkg.sha512"
+  ],
+  "logs": []
+}
