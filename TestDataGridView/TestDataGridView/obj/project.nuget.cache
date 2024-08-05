@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "RGvVAjvjB1ey8ONgwvKwep7el/j62KyXwFYkQXKRaAvXASZA8ADtOvzAeV5vIpcwbA58LXAuUw4JbF1IOU3p+A==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\OK\\source\\repos\\Repository10_VBnet\\TestDataGridView\\TestDataGridView\\TestDataGridView.vbproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\OK\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.25\\microsoft.netcore.app.host.win-x64.3.1.25.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,5 @@
+C:\Users\OK\source\repos\Repository10_VBnet\DataGridViewTest2\DataGridViewTest2\obj\Debug\netcoreapp3.1\DataGridViewTest2.Form1.resources
+C:\Users\OK\source\repos\Repository10_VBnet\DataGridViewTest2\DataGridViewTest2\obj\Debug\netcoreapp3.1\DataGridViewTest2.vbproj.GenerateResource.cache
+C:\Users\OK\source\repos\Repository10_VBnet\DataGridViewTest2\DataGridViewTest2\obj\Debug\netcoreapp3.1\DataGridViewTest2.AssemblyInfoInputs.cache
+C:\Users\OK\source\repos\Repository10_VBnet\DataGridViewTest2\DataGridViewTest2\obj\Debug\netcoreapp3.1\DataGridViewTest2.AssemblyInfo.vb
+C:\Users\OK\source\repos\Repository10_VBnet\DataGridViewTest2\DataGridViewTest2\obj\Debug\netcoreapp3.1\DataGridViewTest2.vbproj.CoreCompileInputs.cache
