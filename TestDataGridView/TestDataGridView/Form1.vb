@@ -251,6 +251,8 @@ Module CommonExcelModule
         ' Excelアプリケーションを作成
         Dim excelApp As New Microsoft.Office.Interop.Excel.Application()
         Dim excelWorkbook As Workbook = excelApp.Workbooks.Open(filePath)
+        'Dim sheetName As String = "YourSheetName"
+        'Dim excelWorksheet As Worksheet = CType(excelWorkbook.Sheets(sheetName), Worksheet)
         Dim excelWorksheet As Worksheet = CType(excelWorkbook.Sheets(1), Worksheet)
 
         ' 使用範囲の取得
