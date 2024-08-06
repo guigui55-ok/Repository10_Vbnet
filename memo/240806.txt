@@ -1,0 +1,260 @@
+PowerTools 
+SPREAD for Windows Forms 10.0J
+
+
+
+'fpSpread' は、参照されていないアセンブリに定義されています。
+アセンブリ 'FarPoint.Win, Version=****, Culture=neutral, PublicKeyToken=******' 
+に参照を追加する必要があります。
+
+
+
+############################
+1. DLLの再参照
+特にfpspreadに関連するDLLに問題がある可能性があります。参照を一度削除してから再追加してみてください。
+
+参照の削除:
+
+ソリューションエクスプローラーで FarPoint.Win.Spread.dll を右クリックし、「削除」を選択します。
+同様に FarPoint.Win.dll も削除します。
+再追加:
+
+「参照の追加」を選択し、FarPoint.Win.Spread.dll および FarPoint.Win.dll を再追加します。
+############################
+2. .NET Framework のバージョンの確認
+SPREADがサポートする .NET Framework のバージョンと、プロジェクトが使用しているバージョンが一致していることを確認してください。
+
+プロジェクトのプロパティを開き、ターゲットフレームワークがSPREADの要件を満たしているか確認します。
+
+############################
+SPREAD for Windows Forms 10.0J は、.NET Framework 4.6.2 以降のバージョンをサポートしています​ (MESCIUS)​。以下の手順で、.NET Frameworkのバージョンを確認および更新してみてください。
+
+.NET Framework のバージョン確認と更新手順
+現在のバージョンを確認:
+
+コマンドプロンプトを開き、以下のコマンドを実行してインストールされている .NET Framework のバージョンを確認します。
+shell
+コードをコピーする
+reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" /v Release
+出力された Release 値を Microsoft のバージョン対応表 で確認し、インストールされているバージョンを特定します。
+.NET Framework の更新:
+
+必要に応じて、最新の .NET Framework を Microsoft の公式サイト からダウンロードしてインストールします。
+プロジェクトのターゲットフレームワークを更新:
+
+Visual Studio でプロジェクトのプロパティを開き、「アプリケーション」タブの「ターゲットフレームワーク」を確認および更新します。
+
+
+.Net Framework対応表
+https://learn.microsoft.com/en-us/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed
+
+############################
+4. GAC (Global Assembly Cache) の確認
+GACにインストールされているDLLのバージョンが異なる可能性があります。
+
+GACの確認と更新:
+コマンドプロンプトを管理者権限で開き、以下のコマンドを実行して、GACにインストールされているアセンブリを確認します。
+コードをコピーする
+gacutil -l FarPoint.Win.Spread
+必要に応じて、古いバージョンのアセンブリを削除し、最新のバージョンをインストールします。
+css
+コードをコピーする
+gacutil -i <path_to_FarPoint.Win.Spread.dll>
+これらの手順を試しても問題が解決しない場合は、エラーメッセージの詳細を教えていただけると、さらに具体的な対応策を提供できるかもしれません。
+############################
+4. 詳細なエラーメッセージの取得
+Visual Studioで詳細なエラーメッセージを取得する方法を試してみてください。
+
+詳細なビルド出力:
+「ツール」メニューから「オプション」を選択します。
+「プロジェクトおよびソリューション」 -> 「ビルドおよび実行」を選択し、「出力の詳細さ」ドロップダウンリストを「詳細」に設定します。
+再度ビルドを行い、詳細なエラーメッセージを確認します。
+############################
+SPREAD のインストールの修復
+他のプロジェクトでのテスト
+
+############################
+3. app.config または web.config の確認
+設定ファイルにアセンブリのバインディングリダイレクトが必要な場合があります。
+
+バインディングリダイレクトの追加:
+app.config または web.config に以下のようなバインディングリダイレクトを追加します。
+xml
+コードをコピーする
+<configuration>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="FarPoint.Win" publicKeyToken="xxxxxxx" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-10.0.0.0" newVersion="10.0.0.0"/>
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+</configuration>
+############################
+DLLの再参照
+参照が正しく設定されていることを再確認します。
+
+参照の削除:
+
+ソリューションエクスプローラーで FarPoint.Win.dll と FarPoint.Win.Spread.dll を右クリックして「削除」を選択します。
+再追加:
+
+「参照の追加」を選択し、FarPoint.Win.dll および FarPoint.Win.Spread.dll を再追加します。
+追加する際には、正しいバージョンのDLLを選択するように注意してください。
+############################
+
+https://loxylife.com/spread-on-server-program/
+
+
+'Spreadオブジェクトを生成
+Dim objFpSpread As New FarPoint.Win.Spread.FpSpread
+
+'テンプレートファイルを開く
+objFpSpread.OpenExcel("ファイル名フルパス", "シート名")
+
+'書式の入ったテンプレート行をコピー
+objFpSpread.ActiveSheet.CopyRange
+(コピー元行Index, コピー元列Index, コピー先行Index, コピー先列Index, コピーする行数, コピーする列数, データのみか否か)
+
+'値をセット
+objFpSpread.ActiveSheet.SetValue(行Index, 列Index, セットする値)'xlsx形式で保存
+objFpSpread.SaveExcel("保存ファイルフルパス", FarPoint.Excel.ExcelSaveFlags.UseOOXMLFormat)
+
+
+############################
+[FlexPivot for WinForms] 製品付属サンプルで、C1.DataEngine.4.5.2の参照エラーが出ることがある
+https://support.mescius.jp/hc/ja/articles/5589018454927--FlexPivot-for-WinForms-%E8%A3%BD%E5%93%81%E4%BB%98%E5%B1%9E%E3%82%B5%E3%83%B3%E3%83%97%E3%83%AB%E3%81%A7-C1-DataEngine-4-5-2%E3%81%AE%E5%8F%82%E7%85%A7%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E5%87%BA%E3%82%8B%E3%81%93%E3%81%A8%E3%81%8C%E3%81%82%E3%82%8B
+
+########################################################
+FarPoint.Win.Spread.FpSpread, FarPoint.Win.Spread, Version=10.0.XXXX.0, Culture=neutral, PublicKeyToken=xxxxxxx
+############################
+
+
+########################################################
+########################################################
+Formにツールボックスからコントロールを配置した場合とコードでSPREADを配置した場合とで動作が異なる
+https://support.mescius.jp/hc/ja/articles/4414166382223-Form%E3%81%AB%E3%83%84%E3%83%BC%E3%83%AB%E3%83%9C%E3%83%83%E3%82%AF%E3%82%B9%E3%81%8B%E3%82%89%E3%82%B3%E3%83%B3%E3%83%88%E3%83%AD%E3%83%BC%E3%83%AB%E3%82%92%E9%85%8D%E7%BD%AE%E3%81%97%E3%81%9F%E5%A0%B4%E5%90%88%E3%81%A8%E3%82%B3%E3%83%BC%E3%83%89%E3%81%A7SPREAD%E3%82%92%E9%85%8D%E7%BD%AE%E3%81%97%E3%81%9F%E5%A0%B4%E5%90%88%E3%81%A8%E3%81%A7%E5%8B%95%E4%BD%9C%E3%81%8C%E7%95%B0%E3%81%AA%E3%82%8B
+
+
+◎サンプルコード(VB)
+
+Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    ' コードで配置するSPREAD①
+    Dim spread1 As New FarPoint.Win.Spread.FpSpread() '<== この場合にはLegacyBehaviors = ALL
+    spread1.Sheets.Add(New FarPoint.Win.Spread.SheetView())
+    spread1.Size = New Size(385, 426)
+    spread1.Location = New Point(12, 12)
+    Me.Controls.Add(spread1)
+    spread1.ActiveSheet.Columns(0).Width = 250
+    spread1.ActiveSheet.Cells(0, 0).Value = "コーディングで配置したSPREAD①"
+    spread1.ActiveSheet.Cells(1, 0).Value = "LegacyBehaviors : " + spread1.LegacyBehaviors.ToString
+
+    ' コードで配置するSPREAD②
+    Dim spread2 As New FarPoint.Win.Spread.FpSpread(FarPoint.Win.Spread.LegacyBehaviors.None)
+    spread2.Sheets.Add(New FarPoint.Win.Spread.SheetView())
+    spread2.Size = New Size(385, 426)
+    spread2.Location = New Point(403, 12)
+    Me.Controls.Add(spread2)
+    spread2.ActiveSheet.Columns(0).Width = 250
+    spread2.ActiveSheet.Cells(0, 0).Value = "コーディングで配置したSPREAD②"
+    spread2.ActiveSheet.Cells(1, 0).Value = "LegacyBehaviors : " + spread2.LegacyBehaviors.ToString
+
+    ' ツールボックスから配置したSPREAD <== LegacyBehaviors = None（既定値）
+    FpSpread1.ActiveSheet.Columns(0).Width = 250
+    FpSpread1.ActiveSheet.Cells(0, 0).Value = "ツールボックスから配置したSPREAD"
+    FpSpread1.ActiveSheet.Cells(1, 0).Value = "LegacyBehaviors : " + FpSpread1.LegacyBehaviors.ToString
+End Sub
+
+
+##############################
+https://codezine.jp/article/detail/1325?p=2
+
+########################################################
+########################################################
+lc.exeライセンスコンパイラについて
+Visual Studio 2017 でアプリケーションをビルドするときのエラー: ライセンス ファイルをバイナリ リソースに変換できませんでした
+https://learn.microsoft.com/ja-jp/troubleshoot/developer/visualstudio/general/not-transform-license-file-to-binary-resource
+この問題は、Visual Studio 2017 バージョン 15.3 で修正されています。
+
+
+##############################
+licenses.licxを使用したライセンスの組み込み（トライアル版やライセンスに関するエラーが出力された場合の対処方法）
+https://support.mescius.jp/hc/ja/articles/360003883476-licenses-licx%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%9F%E3%83%A9%E3%82%A4%E3%82%BB%E3%83%B3%E3%82%B9%E3%81%AE%E7%B5%84%E3%81%BF%E8%BE%BC%E3%81%BF-%E3%83%88%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%AB%E7%89%88%E3%82%84%E3%83%A9%E3%82%A4%E3%82%BB%E3%83%B3%E3%82%B9%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E5%87%BA%E5%8A%9B%E3%81%95%E3%82%8C%E3%81%9F%E5%A0%B4%E5%90%88%E3%81%AE%E5%AF%BE%E5%87%A6%E6%96%B9%E6%B3%95
+
+
+https://formyself.hateblo.jp/entry/2020/11/03/131855
+
+【VB.NET】スプレッドシートで選択したセルのデータをクリアする
+http://blog.livedoor.jp/akf0/archives/51506864.html
+
+
+https://qiita.com/tak001/items/a8978b5ef1e3a1644f61
+CS0012 型 'DataTable' は、参照されていないアセンブリに定義されています。
+アセンブリ 'System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089' 
+に参照を追加する必要があります。
+
+
+https://learn.microsoft.com/ja-jp/dotnet/csharp/language-reference/compiler-messages/assembly-references
+https://learn.microsoft.com/ja-jp/troubleshoot/developer/visualstudio/project-build/troubleshooting-broken-references
+
+
+
+
+
+##############################
+
+GrapeCity SPREAD for Windows Forms 12.0J
+アセンブリリファレンス
+https://docs.mescius.jp/help/spread-winforms-12/spwin-assemblyref.html
+
+
+NameBox クラス
+https://docs.mescius.jp/help/spread-winforms-11/FarPoint.Win.SpreadJ~FarPoint.Win.Spread.NameBox.html
+
+
+Spread Windows Forms 9.0 Product Documentation
+FpChart Class
+
+
+https://devlog.mescius.jp/spread-winforms-with-dotnet-6/
+
+
+作成したプロジェクトで .NET 6.0対応版のSPREADを使用するには、NuGetパッケージをプロジェクトに追加する必要があります。
+
+
+
+https://docs.mescius.jp/help/spread-winforms-10/Trial.html
+licenses.licx
+
+SPREAD（FpSpread）コントロール
+FarPoint.Win.Spread.FpSpread, FarPoint.Win.SpreadJ, Version=10.0.xxxx.2012, Culture=neutral, PublicKeyToken=a5fa960294d899e7
+チャート（FpChart）コントロール
+FarPoint.Win.Chart.FpChart, FarPoint.Win.Chart, Version=10.0.xxxx.2012, Culture=neutral, PublicKeyToken=a5fa960294d899e7
+数式テキストボックス（FormulaTextBox）コントロール
+FarPoint.Win.Spread.FormulaTextBox, FarPoint.Win.SpreadJ, Version=10.0.xxxx.2012, Culture=neutral, PublicKeyToken=a5fa960294d899e7
+名前ボックス（NameBox）コントロール
+FarPoint.Win.Spread.NameBox, FarPoint.Win.SpreadJ, Version=10.0.xxxx.2012, Culture=neutral, PublicKeyToken=a5fa960294d899e7
+
+
+licenses.licx
+
+FarPoint.Win.Spread
+
+FarPoint.Win ビルドエラー　licenses.licx
+
+
+ビルドすると「”lc.exe”はコード -1 を伴って終了しました。」という ...
+
+
+クラス・ライブラリ化したら突然「評価期限切れ」のメッセージが　[FarPoint.Win.Spread]
+https://ziyi.blog.ss-blog.jp/2006-10-27
+
+
+VStudio2005からの移行
+https://docs.mescius.jp/help/spread-winforms-migrationguide-10/vs2005.html
+
+.NETでアセンブリが参照するよりも高いバージョンであるビルドエラーが発生する
+https://knowledge.ni.com/KnowledgeArticleDetails?id=kA00Z0000019LEVSA2&l=ja-JP
+
+
