@@ -1,0 +1,28 @@
+Imports FarPoint.Win.Spread
+
+Public Class Form1
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' FpSpreadコントロールの初期設定
+        Dim spread As New FpSpread()
+        Dim sheet As New SheetView()
+
+        ' FpSpreadをフォームに追加
+        Me.Controls.Add(spread)
+
+        ' FpSpreadのサイズを設定
+        spread.Dock = DockStyle.Fill
+
+        ' シートの行数と列数を設定
+        sheet.RowCount = 25
+        sheet.ColumnCount = 11
+
+        ' 各列にサンプル名を設定
+        Dim columnNames As String() = {"ID", "名前", "住所", "電話番号", "メール", "職業", "会社名", "部署", "役職", "年齢", "備考"}
+        For i As Integer = 0 To sheet.ColumnCount - 1
+            sheet.Columns(i).Label = columnNames(i)
+        Next
+
+        ' シートをFpSpreadに追加
+        spread.Sheets.Add(sheet)
+    End Sub
+End Class
