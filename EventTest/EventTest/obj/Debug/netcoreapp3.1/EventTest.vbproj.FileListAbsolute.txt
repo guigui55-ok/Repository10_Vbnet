@@ -1,0 +1,16 @@
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.vbprojAssemblyReference.cache
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.Form1.resources
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.vbproj.GenerateResource.cache
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.AssemblyInfoInputs.cache
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.AssemblyInfo.vb
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.vbproj.CoreCompileInputs.cache
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\bin\Debug\netcoreapp3.1\EventTest.exe
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\bin\Debug\netcoreapp3.1\EventTest.deps.json
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\bin\Debug\netcoreapp3.1\EventTest.runtimeconfig.json
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\bin\Debug\netcoreapp3.1\EventTest.runtimeconfig.dev.json
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\bin\Debug\netcoreapp3.1\EventTest.dll
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\bin\Debug\netcoreapp3.1\EventTest.pdb
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.dll
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.pdb
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.genruntimeconfig.cache
+C:\Users\OK\source\repos\Repository10_VBnet\EventTest\EventTest\obj\Debug\netcoreapp3.1\EventTest.Form2.resources
