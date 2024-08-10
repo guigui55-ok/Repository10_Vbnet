@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31313.79
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "RenameProjectFileName", "RenameProjectFileName\RenameProjectFileName.vbproj", "{C0312931-48E8-4E86-978E-AF0BC8766BB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0312931-48E8-4E86-978E-AF0BC8766BB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0312931-48E8-4E86-978E-AF0BC8766BB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0312931-48E8-4E86-978E-AF0BC8766BB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0312931-48E8-4E86-978E-AF0BC8766BB4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E6CA4DD3-00AD-4176-9B91-8FC7A2121F87}
+	EndGlobalSection
+EndGlobal
