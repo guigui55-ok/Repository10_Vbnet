@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-<RootNamespace>TestVbBasic</RootNamespace>
-    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>TestWriteXml</RootNamespace>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
 </Project>

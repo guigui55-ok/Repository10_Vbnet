@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>TimerProcessCloser</RootNamespace>
+    <StartupObject>Sub Main</StartupObject>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PackageId>me.TimerProcessCloser.v1</PackageId>
+    <Authors>ToProject</Authors>
+    <Company>ToProject</Company>
+    <Product>Timer Process Closer</Product>
+    <Description>タイマーを用いて、指定時間が来たら任意のアプリ（プロセス）を終了する</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+
+</Project>

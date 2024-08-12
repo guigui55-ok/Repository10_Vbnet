@@ -1,0 +1,48 @@
+このコードを実行すると、Windows 10の通知センターにトースト通知が表示されます。
+ただし、このコードを使用するためには、
+プロジェクトの参照にWindows.winmd（Windows SDK）を追加する必要があります。
+また、UWP（Universal Windows Platform）アプリケーションとして実行する必要がある場合もあります。
+
+もし、デスクトップアプリケーションから直接通知を出したい場合は、
+System.Windows.Forms.NotifyIconを使って通知領域にアイコンを表示し、
+そのアイコンを使用してユーザーに通知する方法もあります。
+
+---------------
+
+WinFormsのプロジェクトから直接Windows.UI.Notifications.ToastNotificationManagerを使用するのは難しいです。
+なぜなら、このAPIは主にUWP（Universal Windows Platform）アプリケーション向けに設計されているためです。
+しかし、WinFormsアプリケーションからトースト通知を送信するための方法として、
+Windows 10 Toast Notificationsというパッケージを利用することができます。
+
+このパッケージを使うことで、WinFormsアプリケーションからもトースト通知を送信できます。以下に、その方法を説明します。
+
+手順
+NuGetパッケージのインストール
+
+Visual Studioで、プロジェクトのソリューションエクスプローラーを開き、プロジェクトを右クリックして「NuGet パッケージの管理」を選択します。
+「Windows 10 Toast Notifications」または「Microsoft.Toolkit.Uwp.Notifications」というパッケージを検索し、インストールします。
+トースト通知のコードを記述
+
+インストール後、以下のコードを使用してトースト通知を送信できます。
+vb
+コードをコピーする
+Imports Microsoft.Toolkit.Uwp.Notifications
+
+Public Class Form1
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        ' トースト通知の内容を定義
+        Dim toastContent As New ToastContentBuilder()
+        toastContent.AddText("こんにちは")
+        toastContent.AddText("これはWinFormsからのトースト通知です")
+        
+        ' トースト通知を送信
+        toastContent.Show()
+    End Sub
+End Class
+注意事項
+Microsoft.Toolkit.Uwp.NotificationsはWindows 10以降の環境でのみ動作します。
+トースト通知を送信するには、アプリケーションが「スタートメニューにピン留め」されている必要があります。
+これは、特に企業内アプリケーションや特定のデバイス上でのデプロイ時に注意が必要です。
+この方法を使えば、WinFormsアプリケーションからも簡単にトースト通知を送信できます。
+
+

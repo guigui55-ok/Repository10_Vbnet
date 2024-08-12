@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31313.79
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NotificationInTaskBarTest", "NotificationInTaskBarTest\NotificationInTaskBarTest.vbproj", "{1C9D5DF5-A2BB-45B5-A174-CE4155B0D8C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C9D5DF5-A2BB-45B5-A174-CE4155B0D8C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C9D5DF5-A2BB-45B5-A174-CE4155B0D8C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C9D5DF5-A2BB-45B5-A174-CE4155B0D8C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C9D5DF5-A2BB-45B5-A174-CE4155B0D8C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C7339B7-7327-41BB-A309-B55654F36679}
+	EndGlobalSection
+EndGlobal
