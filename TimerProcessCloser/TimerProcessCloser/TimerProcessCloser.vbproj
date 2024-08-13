@@ -19,4 +19,10 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Timer_Process_Closer.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

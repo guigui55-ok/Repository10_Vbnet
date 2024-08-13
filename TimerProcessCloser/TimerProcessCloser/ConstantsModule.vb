@@ -109,7 +109,9 @@ Public Module ConstantsModule
 
 
     '/////
-    Public ReadOnly TIMER_INTERVAL As Integer = 1000
+    'Public ReadOnly TIMER_INTERVAL As Integer = 1000
+    'タイマー表示1秒飛び対策 240813
+    Public ReadOnly TIMER_INTERVAL As Integer = 200
 
     '/////
 

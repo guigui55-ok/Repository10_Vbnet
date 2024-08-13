@@ -111,11 +111,17 @@
         'ChangeTextGroupBox の後に実行する
         Me.TextBoxProcessName.Text = itemValueDict(ConstInfoFile.KEY_PROCESS_NAME)
         Me.TextBoxTimerTime.Text = itemValueDict(ConstInfoFile.KEY_TIMER_TIME)
-        Me.LabelRemainingTime.Text = itemValueDict(ConstInfoFile.KEY_REMAINING_TIME)
+        Me.LabelRemainingTimeDisp.Text = itemValueDict(ConstInfoFile.KEY_REMAINING_TIME)
         Me.ComboBoxNotification.Text = itemValueDict(ConstInfoFile.KEY_NOTIFICATION)
         Me.Select_NotificationItem(itemValueDict(ConstInfoFile.KEY_NOTIFICATION))
         Me.CheckBoxAutoRun.Checked = ConverToBool(itemValueDict(ConstInfoFile.KEY_AUTO_RUN))
     End Sub
+
+    'Sub UpdateProcessingTimeByReadSettingValue
+    '読み込んだタイマー経過時間が途中の時に、経過途中から再開する（実装検討中）
+    '一般的に使用されないと思うので実装しない方向で 240813
+    '実装する場合は、setting.xmlに値はすでにあるので、これを読み込み、ストップウォッチを初期化して時間をセット、フォームtextに反映
+    'ボタンを再開にしておく。（必要に応じてTimerクラスの値も変更する）
 
     Private Sub ChangeTextInFrameControls()
         'コントロールのテキストを変更する

@@ -96,7 +96,8 @@ Public Class FormMain
         Dim logFilePath As String = Me.GetDefaultLogPathFromDict()
         'settingから読み取ったパスには、DirectoryがないのでCurrentDirectoryを付与する
         Dim currentDir As String = Directory.GetCurrentDirectory()
-        logFilePath = currentDir & logFilePath
+        'logFilePath = currentDir & logFilePath
+        logFilePath = JoinPath(currentDir, logFilePath)
         'Me._logger.SetFilePath(logFilePath, Me._logger.LogFileTimeFormat) '\log\20240811_233238_20240812_001130.log となるので直接格納
         Me._logger.FilePath = logFilePath
         Me._logger.LogOutPutMode += OutputMode.FILE
@@ -150,10 +151,23 @@ Public Class FormMain
         Dim projectRoot As String = AppDomain.CurrentDomain.BaseDirectory
         projectRoot = System.IO.Path.GetFullPath(System.IO.Path.Combine(projectRoot, "..\..\.."))
         Me._logger.PrintInfo("Project Root Directory: " & projectRoot)
+        ' 実行中のEXEファイルのパスを取得
+        Dim exePath As String = Application.ExecutablePath
+        Me._logger.PrintInfo("exePath: " & exePath)
 
         ' アイコンを設定（カスタムアイコンも可能）
         Me.NotifyIcon1.Icon = SystemIcons.Application
-        Dim iconPath As String = projectRoot & "\" & "Timer_Process_Closer.ico"
+        'Dim iconPath As String = projectRoot & "\" & "Timer_Process_Closer.ico"
+        '上記だと 実行フォルダの親フォルダに対してicoを探してしまい
+        'Exe実行時にvb.netのシステムエラーが表示されてしまう
+        'Debug Releaseビルド実行すると
+        'C:\Users\OK\source\repos\Repository10_VBnet\TimerProcessCloser\TimerProcessCloser\bin\Release\netcoreapp3.1\TimerProcessCloser.dll
+        'のようにDLLパスまで含まれる。（Exeをクリック実行だとフォルダ名となる模様）
+        If File.Exists(exePath) Then
+            exePath = Path.GetDirectoryName(exePath)
+            Me._logger.PrintInfo("exePath B: " & exePath)
+        End If
+        Dim iconPath As String = exePath & "\" & "Timer_Process_Closer.ico"
         Me.NotifyIcon1.Icon = New Icon(iconPath)
         Me.NotifyIcon1.Visible = True
 
@@ -201,11 +215,11 @@ Public Class FormMain
     'ProcessingNumber の TimerStatus の番号をリストで取得する
     Private Function GetListProcessingNumberList() As List(Of Integer)
         Dim controls As List(Of MainItemFrame) = Me.GetMainItemFrameControlList()
-        Dim isProcessingNow As Boolean = False
+        'Dim isProcessingNow As Boolean = False
         Dim nowProcessingNumList As List(Of Integer) = New List(Of Integer)()
         For Each frame In controls
             If frame._timerStatus._NowStatus = TimerItemStatusFlags.PROCESSING_TIMER Then
-                isProcessingNow = True
+                'isProcessingNow = True
                 nowProcessingNumList.Add(frame._timerStatus._timer_number)
             End If
         Next
@@ -296,43 +310,3 @@ Public Class FormMain
 
 
 End Class
-
-Public Module CommonModule
-    Public Class MainLogger
-        Inherits SimpleLogger
-    End Class
-
-    Function GetCallerInfo() As String
-        Dim ret As String
-        Dim frame As StackFrame
-        Dim method As String
-        Dim filePath As String
-        Dim lineNumber As Integer
-
-        Dim stackTrace As New StackTrace(True)
-        ' インデックス1は呼び出し元のメソッドに対応します。
-        '/
-        frame = stackTrace.GetFrame(2)
-        method = frame.GetMethod().Name
-        filePath = frame.GetFileName()
-        lineNumber = frame.GetFileLineNumber()
-        ret = $"Method: {method}, File: {System.IO.Path.GetFileName(filePath)}, Line: {lineNumber}" + vbCrLf
-        '/
-        frame = stackTrace.GetFrame(3)
-        method = frame.GetMethod().Name
-        filePath = frame.GetFileName()
-        lineNumber = frame.GetFileLineNumber()
-        ret &= $"Method: {method}, File: {System.IO.Path.GetFileName(filePath)}, Line: {lineNumber}"
-        '/
-        Return ret
-    End Function
-
-    Public Sub ShowError(_logger As MainLogger, msg As String)
-        Dim stackStr As String = GetCallerInfo()
-        Dim errMsg As String = msg & vbCrLf & "処理を中断します。" & vbCrLf & "[ERROR詳細]" & vbCrLf & GetCallerInfo()
-        _logger.PrintInfo("ERROR: " & errMsg)
-        MessageBox.Show(errMsg, "ERROR")
-    End Sub
-
-
-End Module

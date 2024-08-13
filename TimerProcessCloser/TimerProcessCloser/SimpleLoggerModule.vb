@@ -1,11 +1,12 @@
 ﻿'------------------------------------------------------------------------------
 ' File Name: SimpleLoggerModule.vb
-' Version: 1.0.2
+' Version: 1.1.1
 ' Version History:
 '   v1.0.0: Initial version, 240805
 '   v1.0.1: AddTimeValue戻り値漏れ修正, 240811
-'   v1.0.2: LogPathのファイル名に時間書式を追加 SetFilePathを追記, 240811
-' Last Updated: 240811
+'   v1.1.0: LogPathのファイル名に時間書式を追加 SetFilePathを追記, 240811
+'   v1.1.1: SetPath関数にコメントを追記, 240813
+' Last Updated: 240813
 '------------------------------------------------------------------------------
 Imports System.IO
 Imports System.Diagnostics
@@ -48,6 +49,14 @@ Public Class SimpleLogger
         End If
     End Sub
 
+    ''' <summary>
+    ''' ログのファイルパスを設定する
+    ''' </summary>
+    ''' <remarks>logFileTimeFormat または Me.logFileTimeFormat が設定されているときは
+    ''' log_[TimeFormat].logというように、時間書式が追加される
+    ''' </remarks>
+    ''' <param name="filePath"></param>
+    ''' <param name="logFileTimeFormat"></param>
     Sub SetFilePath(filePath As String, Optional logFileTimeFormat As String = "")
         If logFileTimeFormat = "" Then
             logFileTimeFormat = Me.LogFileTimeFormat

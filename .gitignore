@@ -4,3 +4,4 @@ bin/
 .vs*/
 **/log/log_*
 **/log/log/log_*
+~$*.xlsx
