@@ -1,12 +1,9 @@
 ﻿'------------------------------------------------------------------------------
 ' File Name: SimpleLoggerModule.vb
-' Version: 1.1.1
+' Version: 1.0.0
 ' Version History:
 '   v1.0.0: Initial version, 240805
-'   v1.0.1: AddTimeValue戻り値漏れ修正, 240811
-'   v1.1.0: LogPathのファイル名に時間書式を追加 SetFilePathを追記, 240811
-'   v1.1.1: SetPath関数にコメントを追記, 240813
-' Last Updated: 240813
+' Last Updated: 240810
 '------------------------------------------------------------------------------
 Imports System.IO
 Imports System.Diagnostics
@@ -33,46 +30,11 @@ End Enum
 Public Class SimpleLogger
     Public LoggerLogLevel As Integer = LogLevel.INFO
     Public FilePath As String = ""
-    Public LogFileTimeFormat As String = "_yyyyMMdd_HHmmss"
     Public LogOutPutMode As OutputMode = OutputMode.DEBUG_WINDOW
     Public AddTime As Boolean = True
 
     Sub New()
 
-    End Sub
-
-    Public Sub MakeLogDir()
-        Dim dirPath As String = Path.GetDirectoryName(Me.FilePath)
-        If Not Directory.Exists(dirPath) Then
-            Directory.CreateDirectory(dirPath)
-            Debug.Print("Log CreateDirectory Path= " & dirPath)
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' ログのファイルパスを設定する
-    ''' </summary>
-    ''' <remarks>logFileTimeFormat または Me.logFileTimeFormat が設定されているときは
-    ''' log_[TimeFormat].logというように、時間書式が追加される
-    ''' </remarks>
-    ''' <param name="filePath"></param>
-    ''' <param name="logFileTimeFormat"></param>
-    Sub SetFilePath(filePath As String, Optional logFileTimeFormat As String = "")
-        If logFileTimeFormat = "" Then
-            logFileTimeFormat = Me.LogFileTimeFormat
-        End If
-        ' "~dirPath\fileName_logFileTimeFormat.log"のようになる
-        ' logFileTimeFormat = "" だと　"~dirPath\fileName.log" となる
-        If logFileTimeFormat = "" Then
-            Me.FilePath = filePath
-        Else
-            Dim dirPath As String = Path.GetDirectoryName(filePath)
-            Dim fileNameOnly As String = Path.GetFileNameWithoutExtension(filePath)
-            Dim datetimeStr As String = Now.ToString(logFileTimeFormat)
-            Dim ext As String = Path.GetExtension(filePath)
-            Me.FilePath = String.Format("{0}\{1}{2}{3}", dirPath, fileNameOnly, datetimeStr, ext)
-        End If
-        Me.MakeLogDir()
     End Sub
 
     Sub PrintCritical(Value As String)
@@ -112,7 +74,6 @@ Public Class SimpleLogger
         If Me.AddTime Then
             Return Me.GetTimeStr() & "    " & Value
         End If
-        Return Value
     End Function
     Private Function GetTimeStr()
         Dim now As DateTime = DateTime.Now
@@ -150,26 +111,26 @@ Public Class SimpleLogger
         End Try
     End Sub
     '////////////////////////////////////////////////////////////////////////////////
-    ''Sample
-    'Private Sub SampleWriteText()
-    '    ' 書き込むファイルのパス
-    '    Dim filePath As String = "C:\example\output.txt"
+    'Sample
+    Private Sub SampleWriteText()
+        ' 書き込むファイルのパス
+        Dim filePath As String = "C:\example\output.txt"
 
-    '    ' 書き込むテキスト
-    '    Dim textToWrite As String = "こんにちは、世界！"
+        ' 書き込むテキスト
+        Dim textToWrite As String = "こんにちは、世界！"
 
-    '    ' テキストを書き込む
-    '    Try
-    '        ' File.WriteAllTextを使用してファイルにテキストを書き込む
-    '        File.WriteAllText(filePath, textToWrite)
-    '        Console.WriteLine("ファイルにテキストを書き込みました。")
-    '    Catch ex As Exception
-    '        ' エラーが発生した場合の処理
-    '        Console.WriteLine("エラーが発生しました: " & ex.Message)
-    '    End Try
+        ' テキストを書き込む
+        Try
+            ' File.WriteAllTextを使用してファイルにテキストを書き込む
+            File.WriteAllText(filePath, textToWrite)
+            Console.WriteLine("ファイルにテキストを書き込みました。")
+        Catch ex As Exception
+            ' エラーが発生した場合の処理
+            Console.WriteLine("エラーが発生しました: " & ex.Message)
+        End Try
 
-    '    ' プログラムが終了しないように入力を待つ
-    '    Console.ReadLine()
-    'End Sub
+        ' プログラムが終了しないように入力を待つ
+        Console.ReadLine()
+    End Sub
 
 End Class

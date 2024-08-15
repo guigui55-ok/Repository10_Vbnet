@@ -1,0 +1,22 @@
+必要なライブラリ
+Core Audio APIにアクセスするためにNAudioライブラリを使用します。NuGetからNAudioをインストールしてください。
+
+コマンドライン引数によってWindowsフォームを表示するか、コンソールで動作するか変更させる
+ウィンドウの場合
+フォームを表示させる
+
+コンソールの場合
+コマンドライン引数によってVolume操作をする
+
+オプション
+-v ボリュームは0-1.0まで
+-m ミュート設定をする（1=ON、0=OFF）
+ボリュームとミュートが同時の時はミュートを優先する
+-w ウィンドウを表示する（他のオプションを適用後ウィンドウ表示）
+
+設定例
+MuteSystemVolumeTest.exe -v 0.5
+MuteSystemVolumeTest.exe -m 1
+MuteSystemVolumeTest.exe -m 0
+MuteSystemVolumeTest.exe -m 0 -v 0.5
+MuteSystemVolumeTest.exe -w -m 0 -v 0.5
