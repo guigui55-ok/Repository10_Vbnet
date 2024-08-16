@@ -1,0 +1,25 @@
+
+Release Path
+C:\Users\OK\source\repos\Repository10_VBnet\TimerProcessCloser\TimerProcessCloser\bin\Release\netcoreapp3.1
+
+Debug Path
+C:\Users\OK\source\repos\Repository10_VBnet\TimerProcessCloser\TimerProcessCloser\bin\Debug\netcoreapp3.1
+
+
+
+Action:RunƒeƒXƒg•¶Žš—ñ
+C:\Users\OK\source\repos\Repository10_VBnet\MuteSystemVolumeTest\SystemVolumeController\bin\Release\netcoreapp3.1\SystemVolumeController_test2.bat
+
+C:\Users\OK\source\repos\Repository10_VBnet\MuteSystemVolumeTest\SystemVolumeController_test.bat
+
+
+C:\Windows\System32\notepad.exe
+
+
+C:\Users\OK\source\repos\Repository10_VBnet\MuteSystemVolumeTest\SystemVolumeController\bin\Release\netcoreapp3.1\SystemVolumeController.exe -v 0.35 -m 1
+
+
+C:\Users\OK\source\repos\Repository10_VBnet\MuteSystemVolumeTest\SystemVolumeController\bin\Release\netcoreapp3.1\SystemVolumeController.exe -v 0.35 -m 1
+
+
+

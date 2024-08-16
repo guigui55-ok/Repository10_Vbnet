@@ -24,6 +24,9 @@ Partial Class FormMain
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim TimerItemStatus1 As TimerProcessCloser.ConstantsModule.TimerItemStatus = New TimerProcessCloser.ConstantsModule.TimerItemStatus()
+        Dim TimerItemStatus2 As TimerProcessCloser.ConstantsModule.TimerItemStatus = New TimerProcessCloser.ConstantsModule.TimerItemStatus()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMain))
         Me.MainItemFrame1 = New TimerProcessCloser.MainItemFrame()
         Me.MainItemFrame2 = New TimerProcessCloser.MainItemFrame()
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
@@ -31,16 +34,18 @@ Partial Class FormMain
         '
         'MainItemFrame1
         '
+        Me.MainItemFrame1._timerStatus = TimerItemStatus1
         Me.MainItemFrame1.Location = New System.Drawing.Point(2, 3)
         Me.MainItemFrame1.Name = "MainItemFrame1"
-        Me.MainItemFrame1.Size = New System.Drawing.Size(549, 108)
+        Me.MainItemFrame1.Size = New System.Drawing.Size(549, 120)
         Me.MainItemFrame1.TabIndex = 0
         '
         'MainItemFrame2
         '
-        Me.MainItemFrame2.Location = New System.Drawing.Point(-1, 113)
+        Me.MainItemFrame2._timerStatus = TimerItemStatus2
+        Me.MainItemFrame2.Location = New System.Drawing.Point(2, 129)
         Me.MainItemFrame2.Name = "MainItemFrame2"
-        Me.MainItemFrame2.Size = New System.Drawing.Size(549, 108)
+        Me.MainItemFrame2.Size = New System.Drawing.Size(549, 121)
         Me.MainItemFrame2.TabIndex = 1
         '
         'NotifyIcon1
@@ -53,10 +58,11 @@ Partial Class FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(547, 222)
+        Me.ClientSize = New System.Drawing.Size(547, 251)
         Me.Controls.Add(Me.MainItemFrame2)
         Me.Controls.Add(Me.MainItemFrame1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "FormMain"
         Me.Text = "Timer Process Closer"
         Me.ResumeLayout(False)

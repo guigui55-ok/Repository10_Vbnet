@@ -1,0 +1,83 @@
+indowsのコマンドでSystemVolumeを操作することについて
+
+
+*****
+Windowsのコマンドラインやスクリプトでシステムの音量を操作するには、直接的な方法はありませんが、いくつかのツールやスクリプトを使用することで実現可能です。以下にいくつかの方法を紹介します。
+
+1. PowerShellを使用する方法
+PowerShellを使ってシステムの音量を調整するスクリプトを実行できます。
+
+ボリュームの変更
+powershell
+コードをコピーする
+$volume = 50  # 設定したい音量（0〜100）
+Add-Type -TypeDefinition @"
+  using System;
+  using System.Runtime.InteropServices;
+  public class Volume {
+    [DllImport("user32.dll")]
+    public static extern int SendMessageW(int hWnd, int Msg, int wParam, int lParam);
+    public const int APPCOMMAND_VOLUME_UP = 0xA0000;
+    public const int APPCOMMAND_VOLUME_DOWN = 0x90000;
+    public const int WM_APPCOMMAND = 0x319;
+    public static void SetVolume(int volume) {
+      int currentVolume = 50; // 現在の音量を取得する方法は省略しています
+      int difference = volume - currentVolume;
+      int hwnd = 0xffff; // ハンドル
+      int msg = WM_APPCOMMAND;
+      int wParam = hwnd;
+      int lParam = difference > 0 ? APPCOMMAND_VOLUME_UP : APPCOMMAND_VOLUME_DOWN;
+      for (int i = 0; i < Math.Abs(difference); i++) {
+        SendMessageW(hwnd, msg, wParam, lParam);
+      }
+    }
+  }
+"@
+
+[Volume]::SetVolume($volume)
+MuteのON/OFF
+powershell
+コードをコピーする
+Add-Type -TypeDefinition @"
+  using System;
+  using System.Runtime.InteropServices;
+  public class Volume {
+    [DllImport("user32.dll")]
+    public static extern int SendMessageW(int hWnd, int Msg, int wParam, int lParam);
+    public const int APPCOMMAND_VOLUME_MUTE = 0x80000;
+    public const int WM_APPCOMMAND = 0x319;
+    public static void ToggleMute() {
+      int hwnd = 0xffff; // ハンドル
+      SendMessageW(hwnd, WM_APPCOMMAND, hwnd, APPCOMMAND_VOLUME_MUTE);
+    }
+  }
+"@
+
+[Volume]::ToggleMute()
+2. NirCmdを使用する方法
+NirCmdは、Windowsのコマンドラインから様々な操作を行うことができる無料ツールです。
+
+ボリュームの変更
+bash
+コードをコピーする
+nircmd.exe setsysvolume 32768  # 音量を50%に設定
+MuteのON/OFF
+bash
+コードをコピーする
+nircmd.exe mutesysvolume 1  # Muteをオン
+nircmd.exe mutesysvolume 0  # Muteをオフ
+nircmd.exe mutesysvolume 2  # Muteのトグル
+3. SoundVolumeViewを使用する方法
+SoundVolumeViewは、Windowsのサウンドボリュームを管理するための無料のユーティリティです。
+
+ボリュームの変更
+bash
+コードをコピーする
+SoundVolumeView.exe /SetVolume "スピーカー名" 50  # 音量を50%に設定
+MuteのON/OFF
+bash
+コードをコピーする
+SoundVolumeView.exe /Mute "スピーカー名"  # Muteをオン
+SoundVolumeView.exe /Unmute "スピーカー名"  # Muteをオフ
+SoundVolumeView.exe /Switch "スピーカー名"  # Muteのトグル
+これらの方法を使って、Windowsのシステムボリュームをコマンドラインから操作することができます。お使いの環境に最適な方法を選んでください。

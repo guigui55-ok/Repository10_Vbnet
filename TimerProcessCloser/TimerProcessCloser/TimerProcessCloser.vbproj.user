@@ -4,12 +4,12 @@
     <Compile Update="CommonParts\MainItemFrame.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Form1.vb">
+    <Compile Update="FormMain.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Form1.resx">
+    <EmbeddedResource Update="FormMain.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

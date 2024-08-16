@@ -125,7 +125,7 @@ Public Module ConstantsModule
         Public Const RESTART_BUTTON = "ReStart"
         Public Const PAUSE_BUTTON = "Pause"
         Public Const STOP_BUTTON = "Stop"
-        Public Const LABEL_PROCESS_NAME = "LabelProcessName"
+        Public Const LABEL_PROCESS_NAME = "Process Name"
         Public Const TIMER_TIME = "Time"
         Public Const TIMER_TIME_RIGHT = " (hh:mm:ss)"
         Public Const REMAINING_TIME = "Remaining Time"
@@ -135,6 +135,7 @@ Public Module ConstantsModule
         Public Const LABEL_STATUS = "Status"
         Public Const CHECK_BOX_AUTO_RUN = "Auto Run Timer at Startup (起動時に実行)"
         Public Const CHECK_BOX_AUTO_RUN_EN = "Execute the timer at startup"
+        Public Const LABEL_ACTION = "Action"
         'Auto Run Timer at Startup / Automatically Run Timer at Startup
         '/
         'Public Shared Widening Operator CType(v As ConstItemFrameWordingJA) As ConstItemFrameWording
@@ -160,6 +161,7 @@ Public Module ConstantsModule
         Public Const LABEL_STATUS = "ステータス"
         Public Const CHECK_BOX_AUTO_RUN = "起動時にタイマーを実行する"
         Public Const CHECK_BOX_AUTO_RUN_EN = "Execute the timer at startup"
+        Public Const LABEL_ACTION = "処理"
     End Class
 
     'インターフェースは定義部の実装が長くなるので保留
@@ -181,6 +183,10 @@ Public Module ConstantsModule
         Public Const SETTING_NONE = "None"
         Public Const SETTING_TASK_BAR = "TaskBar"
 
+        Public Function GetDefaultValue() As String
+            Return SETTING_NONE
+        End Function
+
         'Public Shared Function GetMembarSettingVariantList()
         '    'このクラスのメンバ変数の設定の値をリストで取得する
         '    'Imports System.Reflection
@@ -198,6 +204,15 @@ Public Module ConstantsModule
 
         '    Return settingList
         'End Function
+
+        Public Shared Function GetMember() As String()
+            ' ConstNotificationValueInItemクラスの全ての定数フィールドを取得
+            Dim constants = GetType(ConstNotificationValueInItem).GetFields(BindingFlags.Public Or BindingFlags.Static Or BindingFlags.FlattenHierarchy) _
+                            .Where(Function(f) f.IsLiteral AndAlso Not f.IsInitOnly) _
+                            .Select(Function(f) f.GetValue(Nothing).ToString()) _
+                            .ToArray()
+            Return constants
+        End Function
 
         Public Shared Function GetMembarSettingVariantList() As List(Of String)
             Dim settingList As New List(Of String)()
@@ -249,6 +264,39 @@ Public Module ConstantsModule
 
             Return -1 ' 一致する値が見つからなかった場合
         End Function
+
+
+    End Class
+
+    '//////////////////
+
+    'Notification設定用定数クラス
+    Public Class ConstActionValueInItem
+        Public Const SETTING_NONE = "None"
+        Public Const SETTING_CLOSE = "Close"
+        Public Const SETTING_RUN = "Run"
+        Public Const SETTING_RUN_ADMIN = "Run(Admin)"
+
+        Public Function GetDefaultValue() As String
+            Return SETTING_NONE
+        End Function
+
+        Public Shared Function GetMembarSettingVariantList() As List(Of String)
+            Dim settingList As New List(Of String)()
+
+            ' リフレクションを使ってこのクラスのフィールドを取得
+            Dim fields As FieldInfo() = GetType(ConstActionValueInItem).GetFields(BindingFlags.Public Or BindingFlags.Static Or BindingFlags.FlattenHierarchy)
+
+            ' 各フィールドが Const であるかを確認し、値をリストに追加
+            For Each field As FieldInfo In fields
+                If field.IsLiteral AndAlso Not field.IsInitOnly Then ' Const フィールドかどうか確認
+                    settingList.Add(field.GetValue(Nothing).ToString())
+                End If
+            Next
+
+            Return settingList
+        End Function
+
 
 
     End Class

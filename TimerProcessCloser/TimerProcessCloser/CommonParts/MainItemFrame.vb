@@ -31,6 +31,7 @@
         AddHandler _mainTimer.Tick, AddressOf _mainTimer_Tick
         Me._timerStatus.ChangeStatus(TimerItemStatusFlags.INIT_TIMER)
         Me.Initialize_NotificationItems()
+        Me.Initialize_ActionItems()
     End Sub
 
     'ComBoboxを初期化
@@ -41,20 +42,48 @@
         'Next
         Me.ComboBoxNotification.Items.AddRange(settingList.ToArray())
     End Sub
+    Private Sub Initialize_ActionItems()
+        Dim settingList As List(Of String) = ConstActionValueInItem.GetMembarSettingVariantList()
+        Me.ComboBoxAction.Items.AddRange(settingList.ToArray())
+    End Sub
 
     'テキストから読み込んだ値を、コンボボックスに設定する
     '値が選択肢になければNoneにする
-    Private Sub Select_NotificationItem(readValue As String)
-        Dim Index As Integer = ConstNotificationValueInItem.GetIndexInMatchSettingList(readValue)
-        If Index < 0 Then
-            Me.LoggerPrintInfo(String.Format("Set NotificationItem readValue Is Nothing [value={0}]", readValue))
+    Private Sub Select_ComboBoxItem(
+        readValue As String,
+        comboControl As ComboBox,
+        selectList As List(Of String),
+        defaultValue As String
+    )
+        If comboControl.Name.Contains("Action") Then
+            Dim break As String = ""
+        End If
+        '規定のItemValuリストの中に、readValueが一致するかを判定する
+        '一致したら、そのValueをセットする
+        'Dim Index As Integer = ConstNotificationValueInItem.GetIndexInMatchSettingList(readValue)
+        Dim index As Integer
+        For i As Integer = 0 To selectList.Count - 1
+            If selectList(i) = readValue Then
+                index = i
+                Exit For
+            End If
+        Next
+
+        'If index < 0 Then '240816
+        If index <= 0 Then
+            Dim name As String = comboControl.Name
+            Me.LoggerPrintInfo(String.Format("Set ComboBox[{0}] readValue Is Nothing [value={1}]", name, readValue))
             'Dim index
             'Me.ComboBoxNotification.SelectedIndex = ConstNotificationValueInItem.SETTING_NONE
             ' アイテム名がコンボボックスに存在する場合、そのアイテムを選択
-            Me.ComboBoxNotification.SelectedItem = ConstNotificationValueInItem.SETTING_NONE
+            Me.LoggerPrintInfo(String.Format("Set defaultValue[{0}] To ComboBox[{1}]", defaultValue, name))
+            'comboControl.SelectedItem = defaultValue
+            '上記では、正しく設定されない？（アプリ終了、Comboboxから値取得時に空文字となる）
+            'なのでインデックス指定で設定する（デフォルトは1であるものとする）
+            comboControl.SelectedIndex = 1
             Exit Sub
         End If
-        Me.ComboBoxNotification.SelectedIndex = Index
+        comboControl.SelectedIndex = index
     End Sub
 
     'ステータスを変更する
@@ -111,11 +140,47 @@
         'ChangeTextGroupBox の後に実行する
         Me.TextBoxProcessName.Text = itemValueDict(ConstInfoFile.KEY_PROCESS_NAME)
         Me.TextBoxTimerTime.Text = itemValueDict(ConstInfoFile.KEY_TIMER_TIME)
-        Me.LabelRemainingTimeDisp.Text = itemValueDict(ConstInfoFile.KEY_REMAINING_TIME)
+        Dim buf As String = itemValueDict(ConstInfoFile.KEY_REMAINING_TIME)
+        Debug.WriteLine(String.Format("itemValueDict(ConstInfoFile.KEY_REMAINING_TIME) = ", buf))
+        If IsNotTimeFormat(buf) Then
+            buf = "00:00:00"
+        End If
+        Me.LabelRemainingTimeDisp.Text = buf
         Me.ComboBoxNotification.Text = itemValueDict(ConstInfoFile.KEY_NOTIFICATION)
-        Me.Select_NotificationItem(itemValueDict(ConstInfoFile.KEY_NOTIFICATION))
+        Dim dVal As String
+        dVal = Me.GetValueFromDict(itemValueDict, ConstInfoFile.KEY_NOTIFICATION)
+        Me.Select_ComboBoxItem(
+            dVal,
+            Me.ComboBoxNotification,
+            ConstNotificationValueInItem.GetMembarSettingVariantList(),
+            ConstNotificationValueInItem.SETTING_TASK_BAR)
+
+        dVal = Me.GetValueFromDict(itemValueDict, ConstInfoFile.KEY_ACTION)
+        Me.Select_ComboBoxItem(
+            dVal,
+            Me.ComboBoxAction,
+            ConstActionValueInItem.GetMembarSettingVariantList(),
+            ConstActionValueInItem.SETTING_CLOSE)
         Me.CheckBoxAutoRun.Checked = ConverToBool(itemValueDict(ConstInfoFile.KEY_AUTO_RUN))
+        'Me.ComboBoxAction.Text
     End Sub
+
+    Public Function GetValueFromDict(dict As Dictionary(Of String, Object), key As String)
+        Try
+            Return dict(key)
+        Catch ex As KeyNotFoundException
+            Dim msg As String = String.Format("Keyが見つかりません。(key = {0})", key)
+            Me._logger.PrintInfo(msg)
+            Me._logger.PrintInfo(ex.Message)
+            Return ""
+        Catch ex As Exception
+            Dim msg As String = String.Format("Key取得時エラー(key = {0})", key)
+            Me._logger.PrintInfo(msg)
+            Me._logger.PrintInfo(ex.Message)
+            Me._logger.PrintInfo(ex.StackTrace)
+            Return ""
+        End Try
+    End Function
 
     'Sub UpdateProcessingTimeByReadSettingValue
     '読み込んだタイマー経過時間が途中の時に、経過途中から再開する（実装検討中）
@@ -135,20 +200,23 @@
             Me.ButtonStartOrPause.Text = ConstItemFrameWordingJA.START_BUTTON
             Me.ButtonStop.Text = ConstItemFrameWordingJA.STOP_BUTTON
             Me.GroupBoxItemFrame.Text = ConstItemFrameWordingJA.GROUP_BOX_TITLE & Me._timerStatus._timer_number
-            Me.LabelStatus.Text = ConstItemFrameWordingJA.LABEL_STATUS & " : "
+            Me.LabelStatus.Text = ConstItemFrameWordingJA.LABEL_STATUS & Colon
             Me.CheckBoxAutoRun.Text = ConstItemFrameWordingJA.CHECK_BOX_AUTO_RUN
+            Me.LabelAction.Text = ConstItemFrameWordingJA.LABEL_ACTION & Colon
         Else
             'Default
             Me.LabelNotification.Text = ConstItemFrameWording.NOTIFICATION & Colon
             Me.LabelProcessName.Text = ConstItemFrameWording.LABEL_PROCESS_NAME & Colon
             Me.LabelRemainingTime.Text = ConstItemFrameWording.REMAINING_TIME & Colon
+            Debug.WriteLine("ChangeTextControl  ==>  " & ConstItemFrameWording.REMAINING_TIME_DISP_DEFAULT)
             Me.LabelRemainingTimeDisp.Text = ConstItemFrameWording.REMAINING_TIME_DISP_DEFAULT & Colon
             Me.LabelTimerTIme.Text = ConstItemFrameWording.TIMER_TIME & ConstItemFrameWording.TIMER_TIME_RIGHT & Colon
             Me.ButtonStartOrPause.Text = ConstItemFrameWording.START_BUTTON
             Me.ButtonStop.Text = ConstItemFrameWording.STOP_BUTTON
             Me.GroupBoxItemFrame.Text = ConstItemFrameWording.GROUP_BOX_TITLE & Me._timerStatus._timer_number
-            Me.LabelStatus.Text = ConstItemFrameWording.LABEL_STATUS & " : "
+            Me.LabelStatus.Text = ConstItemFrameWording.LABEL_STATUS & Colon
             Me.CheckBoxAutoRun.Text = ConstItemFrameWording.CHECK_BOX_AUTO_RUN
+            Me.LabelAction.Text = ConstItemFrameWording.LABEL_ACTION & Colon
         End If
     End Sub
 
@@ -234,12 +302,41 @@
         ButtonStartOrPause.Text = ConstItemFrameWording.START_BUTTON
         'Me.UpdateRemainingTimeDisp()
         Me._timerStatus.ChangeStatus(TimerItemStatusFlags.FINISHED_TIMER)
-        Me.KillProcessForThisItem()
+        Me.ExecuteAction()
         '親フォームに通知する
         Dim msg As String = ConstInfoFile.KEY_ITEM & Me._timerStatus._timer_number
         msg += String.Format(" - Finished Timer [{0}]", Me.TextBoxTimerTime)
-        msg += " - Close " & Me.TextBoxProcessName.Text
+        msg += String.Format(" - {0} ", Me.GetFinishStr()) & Me.TextBoxProcessName.Text
         Me.SendToNotification(msg:=msg)
+    End Sub
+
+    Private Function GetFinishStr()
+        Dim ret As String
+        Dim value As String = Me.ComboBoxAction.Text
+        If value = ConstActionValueInItem.SETTING_CLOSE Then
+            ret = "Close"
+        ElseIf value = ConstActionValueInItem.SETTING_RUN Then
+            ret = "Run"
+        ElseIf value = ConstActionValueInItem.SETTING_RUN_ADMIN Then
+            ret = "Run(Admin)"
+        Else
+            ret = "Else"
+        End If
+        Return ret
+    End Function
+
+    'タイマーが完走したときのアクション実行
+    Private Sub ExecuteAction()
+        Dim value As String = Me.ComboBoxAction.Text
+        If value = ConstActionValueInItem.SETTING_CLOSE Then
+            Me.KillProcessForThisItem()
+        ElseIf value = ConstActionValueInItem.SETTING_RUN Then
+            Me.RunProcessForThisItem()
+        ElseIf value = ConstActionValueInItem.SETTING_RUN_ADMIN Then
+            Me.RunProcessForThisItem(runAsAdmin:=True)
+        End If
+        '
+        Me._logger.PrintInfo("ExecutedAction")
     End Sub
 
 
@@ -265,6 +362,22 @@
     Private Sub KillProcessForThisItem()
         Dim isSuccess As Boolean = KillProcess(Me._logger, Me.TextBoxProcessName.Text)
     End Sub
+
+    'プロセスを実行する
+    Private Sub RunProcessForThisItem(Optional arguments As String = "", Optional runAsAdmin As Boolean = False)
+        '引数とコマンド部を分離する処理を追記 240816
+        Dim exe_data As (String, String) = SplitCommand(Me.TextBoxProcessName.Text)
+        Dim exe_path As String = exe_data.Item1
+        Dim exe_args As String = exe_data.Item2
+        '/
+        'Dim result As Dictionary(Of String, String) = RunProcess(
+        '    Me._logger, Me.TextBoxProcessName.Text, arguments:=arguments, runAsAdmin:=runAsAdmin)
+        'Dim isOK As Boolean = IsSuccessToRunProcess(result)
+        '同期処理だと、実行プロセスが終了するまで止まってしまうため非同期に変更
+        Dim result As Task(Of Dictionary(Of String, String)) = RunProcessAsync(
+            Me._logger, exe_path, arguments:=exe_args, runAsAdmin:=runAsAdmin)
+    End Sub
+
 
     'タイマーカウント表示を更新
     Private Sub UpdateRemainingTimeDisp()
@@ -331,9 +444,11 @@
         itemValue.Add(ConstInfoFile.KEY_REMAINING_TIME, "00:00:00")
         itemValue.Add(ConstInfoFile.KEY_NOTIFICATION, "TaskBar")
         itemValue.Add(ConstInfoFile.KEY_AUTO_RUN, "0")
+        itemValue.Add(ConstInfoFile.KEY_ACTION, "Close")
         Return itemValue
     End Function
 
+    'ItemFrameのフォーム内のコントロールから値を取得して、書き込み用のDictionaryを作成する
     Public Function GetDictInThisItem() As Dictionary(Of String, Object)
         Me.LoggerPrintInfo(String.Format("GetDictInThisItem[{0}]", Me._timerStatus._timer_number))
         'Dictionary型を1行ずつAddする
@@ -348,10 +463,13 @@
         itemValue.Add(ConstInfoFile.KEY_PROCESS_NAME, Me.TextBoxProcessName.Text)
         itemValue.Add(ConstInfoFile.KEY_TIMER_TIME, Me.TextBoxTimerTime.Text)
         itemValue.Add(ConstInfoFile.KEY_REMAINING_TIME, Me.LabelRemainingTime.Text)
-        itemValue.Add(ConstInfoFile.KEY_NOTIFICATION, Me.ComboBoxNotification.SelectedText)
+        itemValue.Add(ConstInfoFile.KEY_NOTIFICATION, Me.ComboBoxNotification.SelectedItem)
+        Debug.WriteLine(String.Format("KEY_NOTIFICATION = {0}", Me.ComboBoxNotification.SelectedItem))
         'Dim buf = ConvertBoolToInt(Me.CheckBoxAutoRun.Checked)
         itemValue.Add(ConstInfoFile.KEY_AUTO_RUN, ConvertBoolToInt(Me.CheckBoxAutoRun.Checked))
+        itemValue.Add(ConstInfoFile.KEY_ACTION, Me.ComboBoxAction.SelectedItem)
 
+        Debug.WriteLine(String.Format("KEY_ACTION = {0}", Me.ComboBoxAction.SelectedItem))
         ' Item1をメインのDictionaryに追加
         'logData.Add(ConstInfoFile.KEY_ITEM & Me._timerStatus._timer_number, itemValue)
         Return itemValue
@@ -384,5 +502,6 @@ Public Module MainItemFrameModule
         Public Const KEY_NOTIFICATION As String = "WindowsNotification"
         Public Const KEY_ITEM As String = "Item"
         Public Const KEY_AUTO_RUN As String = "AutoRun"
+        Public Const KEY_ACTION As String = "Action"
     End Class
 End Module

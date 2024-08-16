@@ -23,6 +23,9 @@ Partial Class MainItemFrame
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.GroupBoxItemFrame = New System.Windows.Forms.GroupBox()
+        Me.ComboBoxAction = New System.Windows.Forms.ComboBox()
+        Me.LabelAction = New System.Windows.Forms.Label()
+        Me.CheckBoxAutoRun = New System.Windows.Forms.CheckBox()
         Me.LabelStatus = New System.Windows.Forms.Label()
         Me.ComboBoxNotification = New System.Windows.Forms.ComboBox()
         Me.LabelNotification = New System.Windows.Forms.Label()
@@ -34,12 +37,13 @@ Partial Class MainItemFrame
         Me.LabelRemainingTime = New System.Windows.Forms.Label()
         Me.TextBoxProcessName = New System.Windows.Forms.TextBox()
         Me.LabelProcessName = New System.Windows.Forms.Label()
-        Me.CheckBoxAutoRun = New System.Windows.Forms.CheckBox()
         Me.GroupBoxItemFrame.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBoxItemFrame
         '
+        Me.GroupBoxItemFrame.Controls.Add(Me.ComboBoxAction)
+        Me.GroupBoxItemFrame.Controls.Add(Me.LabelAction)
         Me.GroupBoxItemFrame.Controls.Add(Me.CheckBoxAutoRun)
         Me.GroupBoxItemFrame.Controls.Add(Me.LabelStatus)
         Me.GroupBoxItemFrame.Controls.Add(Me.ComboBoxNotification)
@@ -54,19 +58,46 @@ Partial Class MainItemFrame
         Me.GroupBoxItemFrame.Controls.Add(Me.LabelProcessName)
         Me.GroupBoxItemFrame.Location = New System.Drawing.Point(0, 0)
         Me.GroupBoxItemFrame.Name = "GroupBoxItemFrame"
-        Me.GroupBoxItemFrame.Size = New System.Drawing.Size(543, 108)
+        Me.GroupBoxItemFrame.Size = New System.Drawing.Size(543, 121)
         Me.GroupBoxItemFrame.TabIndex = 0
         Me.GroupBoxItemFrame.TabStop = False
         Me.GroupBoxItemFrame.Text = "Item1"
         '
+        'ComboBoxAction
+        '
+        Me.ComboBoxAction.FormattingEnabled = True
+        Me.ComboBoxAction.Location = New System.Drawing.Point(376, 65)
+        Me.ComboBoxAction.Name = "ComboBoxAction"
+        Me.ComboBoxAction.Size = New System.Drawing.Size(152, 23)
+        Me.ComboBoxAction.TabIndex = 13
+        '
+        'LabelAction
+        '
+        Me.LabelAction.AutoSize = True
+        Me.LabelAction.Location = New System.Drawing.Point(294, 68)
+        Me.LabelAction.Name = "LabelAction"
+        Me.LabelAction.Size = New System.Drawing.Size(48, 15)
+        Me.LabelAction.TabIndex = 12
+        Me.LabelAction.Text = "Action :"
+        '
+        'CheckBoxAutoRun
+        '
+        Me.CheckBoxAutoRun.AutoSize = True
+        Me.CheckBoxAutoRun.Location = New System.Drawing.Point(6, 67)
+        Me.CheckBoxAutoRun.Name = "CheckBoxAutoRun"
+        Me.CheckBoxAutoRun.Size = New System.Drawing.Size(242, 19)
+        Me.CheckBoxAutoRun.TabIndex = 11
+        Me.CheckBoxAutoRun.Text = "Auto Run Timer at Startup (起動時に実行)"
+        Me.CheckBoxAutoRun.UseVisualStyleBackColor = True
+        '
         'LabelStatus
         '
         Me.LabelStatus.AutoSize = True
-        Me.LabelStatus.Location = New System.Drawing.Point(6, 89)
+        Me.LabelStatus.Location = New System.Drawing.Point(6, 94)
         Me.LabelStatus.Name = "LabelStatus"
-        Me.LabelStatus.Size = New System.Drawing.Size(41, 15)
+        Me.LabelStatus.Size = New System.Drawing.Size(68, 15)
         Me.LabelStatus.TabIndex = 10
-        Me.LabelStatus.Text = "Label1"
+        Me.LabelStatus.Text = "TimerStatus"
         '
         'ComboBoxNotification
         '
@@ -87,7 +118,7 @@ Partial Class MainItemFrame
         '
         'ButtonStop
         '
-        Me.ButtonStop.Location = New System.Drawing.Point(456, 71)
+        Me.ButtonStop.Location = New System.Drawing.Point(456, 94)
         Me.ButtonStop.Name = "ButtonStop"
         Me.ButtonStop.Size = New System.Drawing.Size(72, 22)
         Me.ButtonStop.TabIndex = 7
@@ -96,7 +127,7 @@ Partial Class MainItemFrame
         '
         'ButtonStartOrPause
         '
-        Me.ButtonStartOrPause.Location = New System.Drawing.Point(376, 71)
+        Me.ButtonStartOrPause.Location = New System.Drawing.Point(376, 94)
         Me.ButtonStartOrPause.Name = "ButtonStartOrPause"
         Me.ButtonStartOrPause.Size = New System.Drawing.Size(72, 22)
         Me.ButtonStartOrPause.TabIndex = 6
@@ -123,11 +154,12 @@ Partial Class MainItemFrame
         'LabelRemainingTimeDisp
         '
         Me.LabelRemainingTimeDisp.AutoSize = True
+        Me.LabelRemainingTimeDisp.Font = New System.Drawing.Font("Yu Gothic UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.LabelRemainingTimeDisp.Location = New System.Drawing.Point(397, 17)
         Me.LabelRemainingTimeDisp.Name = "LabelRemainingTimeDisp"
-        Me.LabelRemainingTimeDisp.Size = New System.Drawing.Size(49, 15)
+        Me.LabelRemainingTimeDisp.Size = New System.Drawing.Size(55, 15)
         Me.LabelRemainingTimeDisp.TabIndex = 3
-        Me.LabelRemainingTimeDisp.Text = "00:000:0"
+        Me.LabelRemainingTimeDisp.Text = "00:00:00"
         '
         'LabelRemainingTime
         '
@@ -153,16 +185,6 @@ Partial Class MainItemFrame
         Me.LabelProcessName.Size = New System.Drawing.Size(112, 15)
         Me.LabelProcessName.TabIndex = 0
         Me.LabelProcessName.Text = "LabelProcessName :"
-        '
-        'CheckBoxAutoRun
-        '
-        Me.CheckBoxAutoRun.AutoSize = True
-        Me.CheckBoxAutoRun.Location = New System.Drawing.Point(6, 67)
-        Me.CheckBoxAutoRun.Name = "CheckBoxAutoRun"
-        Me.CheckBoxAutoRun.Size = New System.Drawing.Size(242, 19)
-        Me.CheckBoxAutoRun.TabIndex = 11
-        Me.CheckBoxAutoRun.Text = "Auto Run Timer at Startup (起動時に実行)"
-        Me.CheckBoxAutoRun.UseVisualStyleBackColor = True
         '
         'MainItemFrame
         '
@@ -190,4 +212,6 @@ Partial Class MainItemFrame
     Friend WithEvents ButtonStop As Button
     Friend WithEvents LabelStatus As Label
     Friend WithEvents CheckBoxAutoRun As CheckBox
+    Friend WithEvents ComboBoxAction As ComboBox
+    Friend WithEvents LabelAction As Label
 End Class

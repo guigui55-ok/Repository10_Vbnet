@@ -15,3 +15,6 @@ Imports System.Diagnostics.CodeAnalysis
 <Assembly: SuppressMessage("Style", "IDE0017:オブジェクトの初期化を簡略化します", Justification:="<保留中>", Scope:="member", Target:="~M:TimerProcessCloser.MainItemFrame.SetLogger(TimerProcessCloser.CommonModule.MainLogger)")>
 <Assembly: SuppressMessage("Style", "IDE1006:命名スタイル", Justification:="<保留中>", Scope:="member", Target:="~P:TimerProcessCloser.MainItemFrame._timerStatus")>
 <Assembly: SuppressMessage("Style", "IDE0084:'IsNot' 式を使用する", Justification:="<保留中>", Scope:="member", Target:="~M:TimerProcessCloser.MainItemFrame.LoggerPrintInfo(System.String)")>
+<Assembly: SuppressMessage("Style", "IDE0060:未使用のパラメーターを削除します", Justification:="<保留中>", Scope:="member", Target:="~M:TimerProcessCloser.MainItemFrame.RunProcessForThisItem(System.String,System.Boolean)")>
+<Assembly: SuppressMessage("Style", "IDE0059:値の不必要な代入", Justification:="<保留中>", Scope:="member", Target:="~M:TimerProcessCloser.MainItemFrame.Select_ComboBoxItem(System.String,System.Windows.Forms.ComboBox,System.Collections.Generic.List{System.String},System.String)")>
+<Assembly: SuppressMessage("Style", "IDE0060:未使用のパラメーターを削除します", Justification:="<保留中>", Scope:="member", Target:="~M:TimerProcessCloser.MainItemFrame.SendToNotification(System.String,System.String,System.Int32)")>

@@ -7,13 +7,12 @@
 
     Private Sub FormStateContoller_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ChangeMode(Me._mainStatus)
+        ChangeErrorStatus(ErrorStateFlags.NONE)
+
     End Sub
     Private Sub FormStateContoller_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Me.Visible = False
         e.Cancel = True
-    End Sub
-    Private Sub ButtonPrevState_Click(sender As Object, e As EventArgs)
-
     End Sub
 
     Public Sub ChangeMode(argAppStatus As AppStatus)
@@ -24,6 +23,12 @@
         Dim statusList As List(Of String) = _mainStatus.GetEnumStrValueList()
         Dim statusListStr As String = String.Join(Environment.NewLine, statusList)
         Me.LabelStatusList.Text = statusListStr
+    End Sub
+
+    Public Sub ChangeErrorStatus(argErrorStatus As Integer)
+        Me._mainStatus._nowErrorStatus._nowState = argErrorStatus
+        Me.TextBoxErrorNumber.Text = _mainStatus._nowErrorStatus._nowState
+        Me.LabelErrorName.Text = _mainStatus._nowErrorStatus.GetNowStateName()
     End Sub
 
     Public Sub ChangeStatus()
@@ -51,15 +56,41 @@
         Else
             If Not IsNumeric(TextBoxStateNumber.Text) Then
                 Dim msg As String = String.Format("入力値が数字でない（{0})", TextBoxStateNumber.Text)
+                PrintInfo(msg)
                 Exit Sub
             End If
             Dim value As Integer = Integer.Parse(TextBoxStateNumber.Text)
             If Not Me._mainStatus.IsValueInEnum(value) Then
                 Dim msg As String = String.Format("入力値がEnumに含まれない（{0})", TextBoxStateNumber.Text)
+                PrintInfo(msg)
                 Exit Sub
             End If
             Me._mainStatus.ChangeStatus(value)
         End If
+    End Sub
+
+    Private Sub TextBoxErrorNumber_TextChanged(sender As Object, e As EventArgs) Handles TextBoxErrorNumber.TextChanged
+        If Me._isTextUpdatingProgrammatically Then
+            Exit Sub
+        Else
+            If Not IsNumeric(TextBoxErrorNumber.Text) Then
+                Dim msg As String = String.Format("入力値が数字でない（{0})", TextBoxErrorNumber.Text)
+                PrintInfo(msg)
+                Exit Sub
+            End If
+            Dim value As Integer = Integer.Parse(TextBoxErrorNumber.Text)
+            If Not Me._mainStatus._nowErrorStatus.IsValueInEnum(value) Then
+                Dim msg As String = String.Format("入力値がEnumに含まれない（{0})", TextBoxErrorNumber.Text)
+                PrintInfo(msg)
+                Exit Sub
+            End If
+            Me._mainStatus._nowErrorStatus.ChangeStatus(value)
+            Me.LabelErrorName.Text = Me._mainStatus._nowErrorStatus.GetNowStateName()
+        End If
+    End Sub
+
+    Public Sub PrintInfo(value As String)
+        Debug.WriteLine(value)
     End Sub
 End Class
 
@@ -108,6 +139,77 @@ Public Module AppStatusModule
                 {StateFlagsModeB.B_END, "処理終了_B"}
     }
 
+
+    Enum ErrorStateFlags
+        NONE
+        UNEXPECTED_ERROR
+    End Enum
+
+    Public Status_Error_DescDictionary = New Dictionary(Of Integer, String) _
+                From {
+                {ErrorStateFlags.NONE, "None"},
+                {ErrorStateFlags.UNEXPECTED_ERROR, "不明なエラー"}
+    }
+
+    Public Class ErrorStatus
+        Public _nowState As Integer
+        Public _exeMode As Integer
+        Public _stateDistDict As Dictionary(Of Integer, String)
+        'Public _enumFlags As Object
+        Public _enumType As Type
+        Public _enumTypeName As String
+        Public _enumObject As Type
+        Public Event ChangeErrorStatusEvent()
+
+        Sub New()
+            Me._nowState = ErrorStateFlags.NONE
+            Me._stateDistDict = Status_Error_DescDictionary
+            Me._enumType = GetType(ErrorStateFlags)
+            Me._enumTypeName = Me._enumType.Name
+            Me._enumObject = Me.GetEnumTypeFromTypeName(Me._enumTypeName)
+        End Sub
+        Public Sub ChangeStatus(value As Integer)
+            Me._nowState = value
+            Me.PrintStatus()
+            ' ステータスが変更されたときにイベントを発生させる
+            RaiseEvent ChangeErrorStatusEvent()
+        End Sub
+        Public Sub PrintStatus()
+            Dim buf As String = Me.GetPrintStatusValue()
+            Debug.Print(buf)
+        End Sub
+        Public Function GetPrintStatusValue()
+            Dim buf As String = String.Format("ChangeErrorStatus = {0} [{1}]", Me._nowState, Me._stateDistDict(Me._nowState))
+            Return buf
+        End Function
+        Public Function GetNowStateName()
+            Return Me._stateDistDict(Me._nowState)
+        End Function
+        Public Function GetEnumTypeFromTypeName(ByVal typeName As String) As Type
+            ' 現在のアセンブリから全ての型を取得し、名前でフィルタリング
+            Dim enumType As Type = Me.GetType().Assembly.GetTypes().FirstOrDefault(Function(t) t.Name = typeName)
+
+            ' 取得した型がEnum型かどうかを確認
+            If enumType IsNot Nothing AndAlso enumType.IsEnum Then
+                Return enumType
+            Else
+                Throw New ArgumentException("指定された型名はEnumではありません: " & typeName)
+            End If
+        End Function
+
+        'value が Enumに含まれるか判定する
+        Function IsValueInEnum(ByVal value As Integer) As Boolean
+            Dim enumType As Type
+            enumType = Me.GetType().Assembly.GetTypes().FirstOrDefault(Function(t) t.Name = Me._enumTypeName)
+            If enumType Is Nothing Then
+                Throw New ArgumentException($"Enum type '{Me._enumTypeName}' not found.")
+            End If
+            Return [Enum].IsDefined(enumType, value)
+        End Function
+    End Class
+
+
+    '///////////
     Public Class AppStatus
         Public _nowState As Integer
         Public _exeMode As Integer
@@ -116,8 +218,18 @@ Public Module AppStatusModule
         Public _enumType As Type
         Public _enumTypeName As String
         Public _enumObject As Type
+        Public _nowErrorStatus As ErrorStatus
 
         Public Event ChangeStatusEvent()
+        Public Event ChangeErrorStatusEvent()
+
+        Public Sub New()
+            Me._nowErrorStatus = New ErrorStatus()
+        End Sub
+
+        Public Sub SetErrorStatus(statusValue As Integer)
+            Me._nowErrorStatus._nowState = statusValue
+        End Sub
 
         Public Sub ChangeMode(mode As Integer)
             If mode = ExecuteMode.MODE_A Then
@@ -154,6 +266,10 @@ Public Module AppStatusModule
                 val = Me._stateDistDict.Count - 1
             End If
             Me.ChangeStatus(val)
+        End Sub
+
+        Public Sub ChangeErrorStatus(value As Integer)
+
         End Sub
 
         Public Sub ChangeStatus(value As Integer)

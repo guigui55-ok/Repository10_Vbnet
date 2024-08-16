@@ -1,4 +1,6 @@
-﻿Module GeneralModule
+﻿
+Imports System.Text.RegularExpressions
+Module GeneralModule
     Public Function ConvertBoolToInt(Value As Boolean) As Integer
         If Value = True Then
             Return 1
@@ -83,6 +85,17 @@ Public Module CommonModule
     Public Class MainLogger
         Inherits SimpleLogger
     End Class
+
+    Function IsNotTimeFormat(input As String) As Boolean
+        ' 正規表現パターンを定義します。HH:MM:SS形式を検証するためのものです。
+        Dim pattern As String = "^\d{2}:\d{2}:\d{2}$"
+
+        ' 正規表現に一致するかどうかを確認します。
+        Dim isMatch As Boolean = Regex.IsMatch(input, pattern)
+
+        ' 一致しない場合はTrue、一致する場合はFalseを返します。
+        Return Not isMatch
+    End Function
 
     Function GetCallerInfo() As String
         Dim ret As String
