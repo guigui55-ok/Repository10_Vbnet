@@ -5,7 +5,7 @@
         Application.SetHighDpiMode(HighDpiMode.SystemAware)
         Application.EnableVisualStyles()
         Application.SetCompatibleTextRenderingDefault(False)
-        Application.Run(New Form1)
+        Application.Run(New StatusControllerTestMain)
     End Sub
 
 End Module

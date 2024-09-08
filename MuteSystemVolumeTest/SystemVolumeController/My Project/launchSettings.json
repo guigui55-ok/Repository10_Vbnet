@@ -1,7 +1,8 @@
 {
   "profiles": {
     "SystemVolumeController": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "-w"
     }
   }
 }

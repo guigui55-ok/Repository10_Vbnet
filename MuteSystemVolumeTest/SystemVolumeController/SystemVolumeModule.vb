@@ -45,5 +45,7 @@ Module SystemVolumeModule
         Public Sub ToggleMute()
             _defaultDevice.AudioEndpointVolume.Mute = Not _defaultDevice.AudioEndpointVolume.Mute
         End Sub
+
+
     End Class
 End Module

@@ -26,6 +26,7 @@ Partial Class FormSystemVolumeController
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.ButtonDispOff = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'Label1
@@ -63,11 +64,21 @@ Partial Class FormSystemVolumeController
         Me.CheckBox1.Text = "Mute"
         Me.CheckBox1.UseVisualStyleBackColor = True
         '
+        'ButtonDispOff
+        '
+        Me.ButtonDispOff.Location = New System.Drawing.Point(228, 37)
+        Me.ButtonDispOff.Name = "ButtonDispOff"
+        Me.ButtonDispOff.Size = New System.Drawing.Size(75, 23)
+        Me.ButtonDispOff.TabIndex = 5
+        Me.ButtonDispOff.Text = "DisplayOff"
+        Me.ButtonDispOff.UseVisualStyleBackColor = True
+        '
         'FormSystemVolumeController
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(311, 69)
+        Me.Controls.Add(Me.ButtonDispOff)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.TextBox1)
@@ -83,4 +94,5 @@ Partial Class FormSystemVolumeController
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents Button1 As Button
     Friend WithEvents CheckBox1 As CheckBox
+    Friend WithEvents ButtonDispOff As Button
 End Class

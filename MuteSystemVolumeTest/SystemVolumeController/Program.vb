@@ -66,6 +66,24 @@ Module Program
             End If
         End If
 
+        ' 240907 一緒に使いたいのでディスプレイOFF機能も追加
+        ' ディスプレイOFF設定
+        Dim displayOffIndex As Integer = Array.IndexOf(args, "-d")
+        If displayOffIndex > -1 AndAlso displayOffIndex + 1 < args.Length Then
+            'If muteIndex > -1 AndAlso muteIndex + 1 <= args.Length Then
+            Dim dispStr As String = args(displayOffIndex + 1)
+            If dispStr = "0" Then
+                '現在の状態は確認しない
+                TurnOffDisplayAsync()
+                Console.WriteLine("Execute Display OFF")
+            ElseIf dispStr = "1" Then
+                TurnOnDisplayAsync()
+                Console.WriteLine("Execute Display ON")
+            Else
+                Console.WriteLine("Invalid display control value. Please specify 1 for display ON and 0 for display OFF.")
+            End If
+        End If
+
         ' ウィンドウ表示フラグが立っていない場合はここで終了
         If Not args.Contains("-w") Then
             'DebugPrint("処理が完了しました。Enterキーを押して終了します。")

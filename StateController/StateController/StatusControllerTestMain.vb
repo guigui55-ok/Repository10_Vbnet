@@ -1,4 +1,4 @@
-﻿Public Class Form1
+﻿Public Class StatusControllerTestMain
     Public _logger As SimpleLogger
     Public _formStateCon As FormStateContoller
     Public _StateList As List(Of AppStatus) = New List(Of AppStatus)

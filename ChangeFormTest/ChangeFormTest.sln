@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31313.79
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ChangeFormTest", "ChangeFormTest\ChangeFormTest.vbproj", "{94728715-9FBC-416D-8D2C-9B40A6C2C70E}"
+EndProject
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "StateController", "..\StateController\StateController\StateController.vbproj", "{FA5FD994-299B-4C20-8A9C-AD2BA278E3BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94728715-9FBC-416D-8D2C-9B40A6C2C70E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94728715-9FBC-416D-8D2C-9B40A6C2C70E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94728715-9FBC-416D-8D2C-9B40A6C2C70E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94728715-9FBC-416D-8D2C-9B40A6C2C70E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA5FD994-299B-4C20-8A9C-AD2BA278E3BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA5FD994-299B-4C20-8A9C-AD2BA278E3BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA5FD994-299B-4C20-8A9C-AD2BA278E3BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA5FD994-299B-4C20-8A9C-AD2BA278E3BB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF122016-DF75-44CB-9E74-0ACD23320EBB}
+	EndGlobalSection
+EndGlobal

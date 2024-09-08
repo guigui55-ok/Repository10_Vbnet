@@ -49,4 +49,8 @@
             e.Handled = True
         End If
     End Sub
+
+    Private Sub ButtonDispOff_Click(sender As Object, e As EventArgs) Handles ButtonDispOff.Click
+        TurnOffDisplayAsync()
+    End Sub
 End Class
