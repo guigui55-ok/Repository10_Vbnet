@@ -1,0 +1,52 @@
+互換性のあるバージョンを使用する
+
+.NET Framework 4.6.1 に対応する Oracle.ManagedDataAccess の旧バージョンを使用します。以下のバージョンを試してください：
+Oracle.ManagedDataAccess 19.x.x
+
+.NET Frameworkのアップグレード
+
+もし可能であれば、プロジェクトのターゲットフレームワークを .NET Framework 4.7.2 以上にアップグレードすることを検討してください。これにより、最新のライブラリやパッケージがサポートされるようになります。
+
+-------
+racleデータベースをプログラムから作成するには、通常は事前にOracleインスタンスが必要です。ローカル環境にOracleのデータベースをインストールするか、Oracle CloudやOracle VMを使用してDBをセットアップします
+
+
+
+
+
+----------
+Imports Oracle.ManagedDataAccess.Client
+
+Module OracleAccessSample
+    Sub Main()
+        ' Oracleデータベースへの接続文字列
+        Dim connectionString As String = "User Id=your_username;Password=your_password;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=your_host)(PORT=your_port))(CONNECT_DATA=(SERVICE_NAME=your_service_name)));"
+
+        ' Oracleコネクションオブジェクトを作成
+        Using connection As New OracleConnection(connectionString)
+            Try
+                ' データベース接続を開く
+                connection.Open()
+                Console.WriteLine("接続成功!")
+
+                ' SQLクエリを実行
+                Dim command As New OracleCommand("SELECT * FROM your_table", connection)
+                Using reader As OracleDataReader = command.ExecuteReader()
+                    While reader.Read()
+                        ' カラムのデータを取得（例：カラム1の値）
+                        Console.WriteLine(reader.GetString(0)) ' 0は最初のカラム
+                    End While
+                End Using
+
+            Catch ex As Exception
+                Console.WriteLine("エラーが発生しました: " & ex.Message)
+            Finally
+                ' 接続を閉じる
+                connection.Close()
+            End Try
+        End Using
+
+        Console.WriteLine("処理終了")
+        Console.ReadLine()
+    End Sub
+End Module
