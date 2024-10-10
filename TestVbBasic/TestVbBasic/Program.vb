@@ -1,7 +1,14 @@
 Imports System
 
 Module Program
+
     Sub Main(args As String())
+        ExecuteFactoryTestMain()
+        Console.ReadKey()
+    End Sub
+
+
+    Sub MainB()
         Console.WriteLine("Hello World!")
         Dim bufStr As String
         bufStr = "TestString"
@@ -18,4 +25,10 @@ Module Program
         '////
         'ƒLƒƒƒXƒg
     End Sub
+
+
+    Class ThisProgramConstants
+        Public Const VALUE_A As Integer = 0
+        Public Const VALUE_B As Integer = 1
+    End Class
 End Module
