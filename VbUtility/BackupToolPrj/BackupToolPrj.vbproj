@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5825DA7A-4D0E-4D11-96E5-378E5D66994B}</ProjectGuid>
+    <ProjectGuid>{1ED794F7-788E-4A0F-A27A-8F09BF7CFA32}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>VbUtility.ModuleExcelReader</StartupObject>
-    <RootNamespace>VbUtility</RootNamespace>
-    <AssemblyName>VbUtility</AssemblyName>
+    <StartupObject>BackupToolPrj.ModuleBackupToolMain</StartupObject>
+    <RootNamespace>BackupToolPrj</RootNamespace>
+    <AssemblyName>BackupToolPrj</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Console</MyType>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -22,7 +22,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>VbUtility.xml</DocumentationFile>
+    <DocumentationFile>BackupToolPrj.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,7 +32,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>VbUtility.xml</DocumentationFile>
+    <DocumentationFile>BackupToolPrj.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -69,7 +69,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModuleProcess.vb" />
+    <Compile Include="ModuleBackupTool.vb" />
+    <Compile Include="ModuleBackupToolMain.vb" />
+    <Compile Include="ModuleFilterIgnore.vb" />
+    <Compile Include="ModuleMakeTestFile.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -105,6 +108,16 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonUtilityPrj\CommonUtilityPrj.vbproj">
+      <Project>{1b8aac53-10ad-4606-9bc2-2743cf43d6f3}</Project>
+      <Name>CommonUtilityPrj</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CsvUtility\CsvUtility.vbproj">
+      <Project>{14EA99CB-6240-41FA-80EE-CA5C40DBEAB4}</Project>
+      <Name>CsvUtility</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

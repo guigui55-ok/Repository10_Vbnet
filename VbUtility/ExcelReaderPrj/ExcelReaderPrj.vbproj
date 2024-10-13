@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5825DA7A-4D0E-4D11-96E5-378E5D66994B}</ProjectGuid>
+    <ProjectGuid>{5FE03FA5-290A-45BF-94EE-A1AC8041CA84}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>VbUtility.ModuleExcelReader</StartupObject>
-    <RootNamespace>VbUtility</RootNamespace>
-    <AssemblyName>VbUtility</AssemblyName>
+    <StartupObject>ExcelReaderPrj.ModuleExcelTest</StartupObject>
+    <RootNamespace>ExcelReaderPrj</RootNamespace>
+    <AssemblyName>ExcelReaderPrj</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Console</MyType>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -22,7 +22,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>VbUtility.xml</DocumentationFile>
+    <DocumentationFile>ExcelReaderPrj.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,7 +32,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>VbUtility.xml</DocumentationFile>
+    <DocumentationFile>ExcelReaderPrj.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -48,6 +48,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -69,7 +72,8 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModuleProcess.vb" />
+    <Compile Include="ModuleExcelTest.vb" />
+    <Compile Include="ModuleExcelReader.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -105,6 +109,12 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonUtilityPrj\CommonUtilityPrj.vbproj">
+      <Project>{1b8aac53-10ad-4606-9bc2-2743cf43d6f3}</Project>
+      <Name>CommonUtilityPrj</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
