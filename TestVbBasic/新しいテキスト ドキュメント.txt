@@ -1,0 +1,17 @@
+結果格納用
+CheckBox
+info Variable　（settingValues、Result）
+--
+
+Execute Get Setting Initialize（値、Resutから取得）
+---
+Execute、Setting（No、Pos、値）格納、Show
+---
+中止
+---
+すべて終了
+--
+DB
+接続、取得
+　フィールド
+　ConstでFielsList{ } string()
