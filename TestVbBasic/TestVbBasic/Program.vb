@@ -3,14 +3,16 @@ Imports System
 Module Program
 
     Sub Main(args As String())
+        MainRefrection()
+
+    End Sub
+
+    Sub MainC()
         ExecuteFactoryTestMain()
         Console.ReadKey()
 
         Dim columns As New List(Of (Name As String, Type As String))
-
-
     End Sub
-
 
     Sub MainB()
         Console.WriteLine("Hello World!")
