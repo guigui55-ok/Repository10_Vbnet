@@ -4,7 +4,10 @@ Module Program
 
     Sub Main(args As String())
         MainRefrection()
-
+        Console.WriteLine(" ##### ")
+        MainRefrectionB()
+        Console.WriteLine(" ##### ")
+        MainRefrectD()
     End Sub
 
     Sub MainC()
