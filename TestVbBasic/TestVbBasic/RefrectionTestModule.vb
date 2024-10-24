@@ -3,6 +3,7 @@ Imports System.Reflection
 
 Public Module RefrectionTestModule
 
+
     Public Class Constants
         Public Const MaxValue As Integer = 100
         Public Const MinValue As Integer = 1

@@ -3,11 +3,14 @@ Imports System
 Module Program
 
     Sub Main(args As String())
-        MainRefrection()
-        Console.WriteLine(" ##### ")
-        MainRefrectionB()
-        Console.WriteLine(" ##### ")
-        MainRefrectD()
+        'MainRefrection()
+        'Console.WriteLine(" ##### ")
+        'MainRefrectionB()
+        'Console.WriteLine(" ##### ")
+        'MainRefrectD()
+        'TestCopyObjectA()
+        'TestCopyObjectB()
+        TestCopyObjectC_1()
     End Sub
 
     Sub MainC()
