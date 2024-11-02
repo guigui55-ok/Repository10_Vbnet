@@ -1,0 +1,15 @@
+DataTableComputeTestB
+
+expression = "(((x+y))z)()"
+System.Data.SyntaxErrorException: '式に構文エラーがあります。'
+
+この例外は、最初にこの呼び出し履歴 
+    System.Data.ExpressionParser.Parse()
+    System.Data.DataExpression.DataExpression(System.Data.DataTable, string, System.Type)
+    System.Data.DataTable.Compute(string, string)
+    MathFormulaParser.MathFomulaParserMainModule.DataTableComputeTestB() 場所: MathFomulaParserMainModule.vb
+    MathFormulaParser.MathFomulaParserMainModule.Main() 場所: MathFomulaParserMainModule.vb でスローされました
+
+
+System.Data.SyntaxErrorException: '構文エラー : '0' 演算子の後にオペランドがありません。'
+

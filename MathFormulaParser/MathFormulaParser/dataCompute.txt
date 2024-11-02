@@ -1,0 +1,59 @@
+DataTable.Computeメソッドは、単純な算術演算や関数の評価に対応していますが、複雑な数式や特定の構文には対応していません。以下は、DataTable.Computeが対応できる代表的な書式です。
+
+1. 四則演算
++（加算）
+-（減算）
+*（乗算）
+/（除算）
+例：
+
+vb.net
+コードをコピーする
+Dim result As Double = dt.Compute("2 + 3 * 4", String.Empty) ' 計算結果: 14
+2. 括弧を使用した演算
+演算の優先順位を明示するために括弧を使うことができます。
+
+例：
+
+vb.net
+コードをコピーする
+Dim result As Double = dt.Compute("(2 + 3) * 4", String.Empty) ' 計算結果: 20
+3. 比較演算子
+=, <, >, <=, >=, <>
+例：
+
+vb.net
+コードをコピーする
+Dim result As Boolean = dt.Compute("5 > 3", String.Empty) ' 計算結果: True
+4. 論理演算子
+AND, OR, NOT
+例：
+
+vb.net
+コードをコピーする
+Dim result As Boolean = dt.Compute("True AND False", String.Empty) ' 計算結果: False
+5. 関数
+DataTable.Computeは一部の集計関数をサポートしていますが、計算式の中で使用するのは限られています。
+
+例：
+
+SUM(), MIN(), MAX(), COUNT()
+vb.net
+コードをコピーする
+' データテーブル内のデータに対して使用する例:
+Dim result As Object = dt.Compute("SUM(ColumnName)", "")
+6. 演算子の優先順位
+DataTable.Computeは標準的な演算子の優先順位に従います。
+
+*、/ は +、- よりも優先度が高い。
+括弧内の計算は最優先で実行される。
+対応しない例
+変数代入
+特定のカスタム関数や外部ライブラリによる演算
+文字列操作（CONCAT、SUBSTRING など）
+三項演算子 (condition ? true : false)
+注意点
+式の中で変数を使用する場合、プログラム内で事前に文字列として置換する必要があります。
+演算子の誤りや未対応の構文を含む式を評価しようとすると、SyntaxErrorException が発生します。
+まとめ
+DataTable.Computeは簡易的な数式計算に便利で、四則演算や基本的な比較・論理演算をサポートしています。ただし、複雑な数式解析やカスタム関数には別途パーサーライブラリやカスタム実装が必要です。
