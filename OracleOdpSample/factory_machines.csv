@@ -1,0 +1,11 @@
+MACHINE_ID,MACHINE_NAME,PRODUCT_TYPE,STATUS,LAST_MAINTENANCE
+1,Drill Press,Metal Parts,Active,2024-10-20
+2,Conveyor Belt,Packaging,Maintenance,2024-09-15
+3,Lathe Machine,Metal Parts,Active,2024-11-01
+4,Welding Robot,Assemblies,Standby,2024-10-10
+5,Cutting Laser,Plastic,Active,2024-10-05
+6,CNC Mill,Metal Parts,Active,2024-09-30
+7,Sorting Arm,Electronics,Active,2024-11-02
+8,Paint Sprayer,Exterior,Idle,2024-10-25
+9,Assembly Line,Assemblies,Active,2024-10-28
+10,Packaging Unit,Packaging,Standby,2024-09-20

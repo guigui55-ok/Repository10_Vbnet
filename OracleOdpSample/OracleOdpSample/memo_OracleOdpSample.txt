@@ -1,0 +1,45 @@
+**ODP.NET (Oracle Data Provider for .NET)**は、Oracle Corporationが提供する.NET向けのデータプロバイダーで、.NETアプリケーションからOracleデータベースにアクセスできるようにするためのライブラリです。ODP.NETを使用すると、高性能でセキュアなデータベース操作をサポートする専用の機能を利用できます。
+
+ODP.DLLは、ODP.NETのコアDLLで、Oracleデータベースとの接続と操作を行うためのクラスやメソッドを提供します。たとえば、OracleConnection、OracleCommand、OracleDataReaderなどのクラスを使用して、接続を開いたり、SQLクエリを実行したり、データを取得したりすることができます。
+
+ODP.NET の特徴
+パフォーマンス最適化: ODP.NETは、Oracleデータベースに特化したプロバイダーであるため、データアクセスが高速で効率的です。
+多機能サポート: Oracle特有のデータ型、PL/SQLブロック、REF CURSOR、LOB（Large Object）などの高度なデータ操作がサポートされています。
+.NET統合: LINQやEntity Frameworkなどの.NET技術とも統合されており、開発の生産性を高めます。
+
+
+インストール: ODP.NETは、NuGetパッケージとして提供されています。
+Visual Studioでプロジェクトに追加するには、NuGetパッケージマネージャを使用してOracle.ManagedDataAccessをインストールします。
+
+
+エラーが発生：
+重大度レベル	コード	説明	プロジェクト	ファイル	行	抑制状態
+エラー		パッケージ 'Oracle.ManagedDataAccess 23.6.0' をインストールできませんでした。このパッケージを '.NETFramework,Version=v4.6.1' を対象とするプロジェクトにインストールしようとしていますが、そのフレームワークと互換性があるアセンブリ参照またはコンテンツ ファイルがパッケージに含まれていません。詳細については、パッケージの作成者に問い合わせてください。				
+
+
+解決方法
+ターゲットフレームワークのアップグレード: Oracle.ManagedDataAccess 23.6.0は、
+より新しい.NET Frameworkのバージョンを必要としている可能性があります。
+プロジェクトのターゲットフレームワークを.NET Framework 4.7.2や4.8にアップグレードできる場合は、これを試してみてください。
+
+Visual Studioでプロジェクトを右クリックし、[プロパティ] を選択。
+[アプリケーション] タブでターゲットフレームワークを選択してアップグレード。
+互換性のあるパッケージバージョンを使用: 
+.NET Framework 4.6.1に対応した古いバージョンのOracle.ManagedDataAccessを使用することで問題を解決できます。
+例えば、バージョン23.5.0や23.3.0など、互換性があるバージョンを探してインストールしてください。
+
+
+**********
+★
+.NET Framework 4.6.1 に対応したバージョン:
+Oracle.ManagedDataAccessバージョン　19.25.0
+
+
+https://docs.oracle.com/cd/E90668_01/ODPNT/release_changes.htm
+ODAC 12cリリース4内のOracle Data Provider for .NETでの変更点
+ODAC 12cリリース4のOracle Data Provider for .NETでの変更点は次のとおりです。
+
+
+
+
+

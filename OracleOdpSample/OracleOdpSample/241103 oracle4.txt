@@ -1,0 +1,149 @@
+XEPDB1に接続
+sqlplus sys/oracle@localhost/XEPDB1 as sysdba
+
+sqlplus oracle@localhost/XEPDB1 as sysdba
+
+sqlplus oracle@localhost/XEPDB1
+
+
+**************
+sqlplus test_user/password@tns_alias
+
+sqlplus test_user@localhost/XEPDB1
+
+
+**************
+https://docs.oracle.com/cd/E36055_01/admin.112/b66465/toc.htm#BJFCFGCA
+Oracle SQL Developerでsystemユーザーで作成したtestユーザーで XEPDB1 にログイン
+
+CSVで作成
+
+*****
+高機能かつ軽量な汎用SQLクライアント / ER図作成ソフト / フリーソフト
+（読み：エーファイブ・エスキューエル・マークツー）
+https://a5m2.mmatsubara.com/
+
+
+*****
+a5m2
+
+トランザクションの設定 （更新/削除時に別レコードも操作してしまった...）
+
+https://one-div.com/programming/sql/a5m2_sql_tool
+テーブルのインポートやエクスポート
+
+複数の結果をまとめてExcelへ出力
+
+
+https://a5m2.mmatsubara.com/help/TableEditor/import_export.ado.html
+■テーブルデータのインポート
+メニューの[データベース(D)] [テーブル(T)]-[インポート(I)...]を選択
+主キーを選択
+必須キーを選択
+
+テーブル作成、左ペインでテーブルを更新
+
+■データの追加
+メニュー[テーブル]、CSV/TSVインポートからファイルを選択するだけ
+
+
+*************
+ORA-01950: 表領域'USERS'に対する権限がありません
+
+解決策
+DBAに権限付与を依頼する
+※DBA権限を持つユーザーで実行する: SYSTEMやSYSなどの権限を持つユーザーでログインし、以下のSQLを実行する。
+
+データベース管理者（DBA）に相談し、あなたのユーザーに指定された表領域 (USERS) への QUOTA 権限を付与してもらう必要があります。具体的には、以下のコマンドをDBAが実行する必要があります:
+ALTER USER your_username QUOTA UNLIMITED ON USERS;
+または、特定のサイズに制限する場合:
+ALTER USER your_username QUOTA 500M ON USERS;
+
+---
+1. システム権限の確認
+現在のユーザーに与えられたシステム権限を確認するために、以下のSQLを実行してください。
+
+SELECT * 
+FROM DBA_SYS_PRIVS 
+WHERE GRANTEE = 'your_username';
+
+SELECT * FROM DBA_SYS_PRIVS WHERE GRANTEE = 'test_user';
+SELECT * FROM DBA_SYS_PRIVS WHERE GRANTEE = 'TEST_USER';
+
+---
+2. オブジェクト権限の確認
+ユーザーが持っているオブジェクトに対する権限を確認するには、以下のSQLを使用します。
+
+SELECT * 
+FROM DBA_TAB_PRIVS 
+WHERE GRANTEE = 'your_username';
+
+SELECT * FROM DBA_TAB_PRIVS WHERE GRANTEE = 'test_user';
+
+---
+3. ロールの確認
+ユーザーに付与されているロールを確認するためには、以下のSQLを実行します。
+
+SELECT * 
+FROM DBA_ROLE_PRIVS 
+WHERE GRANTEE = 'your_username';
+
+SELECT * FROM DBA_ROLE_PRIVS WHERE GRANTEE = 'test_user';
+
+---
+4. 表領域のクオータの確認
+表領域の使用に関する権限を確認するには、次のクエリを実行してください。
+
+SELECT TABLESPACE_NAME, BYTES, MAX_BYTES 
+FROM DBA_TS_QUOTAS 
+WHERE USERNAME = 'your_username';
+
+SELECT TABLESPACE_NAME, BYTES, MAX_BYTES FROM DBA_TS_QUOTAS WHERE USERNAME = 'test_user';
+
+-------
+ユーザー一覧
+1. DBA_USERS ビューを使用する方法（DBA 権限）
+SELECT USERNAME FROM DBA_USERS;
+2. ALL_USERS ビューを使用する方法
+SELECT USERNAME FROM ALL_USERS;
+
+
+*************
+ORA-00955:既に使用されているオブジェクト名です。
+
+
+・データベース内のすべてのテーブル一覧を取得するSQL
+
+SELECT *
+FROM   DBA_TABLES
+ORDER BY OWNER,TABLE_NAME
+
+SELECT * FROM   DBA_TABLES ORDER BY OWNER,TABLE_NAME
+
+・ログインユーザーがアクセスできるすべてのテーブル一覧を取得するSQL
+
+SELECT *
+FROM   ALL_TABLES
+ORDER BY OWNER,TABLE_NAME
+
+SELECT * FROM ALL_TABLES ORDER BY OWNER,TABLE_NAME
+
+***
+
+解決方法
+オブジェクトが既に存在するか確認する:
+
+作成しようとしているテーブルが既に存在しているかどうかを確認するために、以下のクエリを実行してみてください。
+sql
+SELECT OBJECT_NAME, OBJECT_TYPE 
+FROM USER_OBJECTS 
+WHERE OBJECT_NAME = 'TABLE_NAME';  -- 必要に応じてテーブル名を大文字に変更
+
+
+
+SELECT OBJECT_NAME, OBJECT_TYPE 
+FROM USER_OBJECTS 
+WHERE OBJECT_NAME = 'customer_info';
+
+
+SELECT OBJECT_NAME, OBJECT_TYPE FROM USER_OBJECTS WHERE OBJECT_NAME = 'customer_info';

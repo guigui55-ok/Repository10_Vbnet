@@ -1,0 +1,577 @@
+Oracle OWNERとは？
+
+「OWNER」とは、Oracle Databaseにおけるデータベーススキーマの所有者を指します。具体的には、Oracleでは各スキーマは特定のユーザーに紐付いており、そのユーザーがスキーマの「OWNER」です。スキーマは、そのユーザーが所有するデータベースオブジェクト（テーブル、ビュー、シーケンス、ストアドプロシージャなど）の集合を指します。これにより、アクセス権や管理の単位としてユーザーとスキーマが密接に結びつけられています。
+
+一方で、MySQLやPostgreSQLにおいては、スキーマの所有者という概念がOracleほど明確には存在しないことが多いです。たとえば、MySQLではスキーマはデータベースの別名として使われることがあり、特定のユーザーに所有されるわけではありません。PostgreSQLではスキーマは存在しますが、OWNERとしてユーザーに結び付けられることはあまりなく、スキーマに対して個別に権限を設定することでアクセスを制御します。
+
+したがって、OracleのOWNERの概念は、MySQLやPostgreSQLには厳密には対応するものがないと言えるでしょう。
+
+
+*****
+https://helloworld.sakura.ne.jp/db/?p=1187
+
+管理者ログイン：sqlplus sys/｛インストーラで入力したパスワード｝@XE as sysdba
+
+*****
+高機能かつ軽量な汎用SQLクライアント / ER図作成ソフト / フリーソフト
+（読み：エーファイブ・エスキューエル・マークツー）
+https://a5m2.mmatsubara.com/
+
+
+******
+Oracle Instance Manager
+
+*****
+C:\app\OK\product\21c\homes\OraDB21Home1
+C:\app\OK\product\21c\homes\OraDB21Home1\network\admin
+
+C:\app\OK\product\21c\dbhomeXE\network\admin
+Actual=C:\app\OK\product\21c\dbhomeXE\network\admin
+
+
+
+接続を追加する場合にクリックします
+TNSエントリが{USER Home dir=C:\Users\OK, ORACLE_HOME=C:\app\OK\product\21c\dbhomeXE\network\admin, Actual=C:\app\OK\product\21c\dbhomeXE\network\admin}に見つかりません
+
+
+
+ステータス: 失敗 -テストが失敗しました: ORA-12541: 接続できません。host localhost port 1521にリスナーがありません。 (CONNECTION_ID=bWuU5UNvSvG7xgSOw4wwxw==)
+https://docs.oracle.com/error-help/db/ora-12541/
+
+*****
+Oracle Database Express Editionをインストールした後、テスト対象のDBとテーブルを作成するための手順は以下の通りです。
+
+1. SQL*PlusまたはSQL Developerの準備
+SQL*PlusはOracle Databaseに標準で付属しており、コマンドラインからDBに接続できます。
+SQL DeveloperはGUIベースのツールで、Oracleから無償で提供されています。こちらを使うと操作が簡単です。
+
+https://www.oracle.com/jp/database/sqldeveloper/technologies/download/
+Windows 64-bit with JDK 17 included
+
+
+2. データベースへの接続
+SQL*PlusまたはSQL Developerを使用して、SYSTEMユーザーで接続します。接続の基本的なコマンドは以下の通りです。
+
+sql
+コードをコピーする
+sqlplus SYSTEM/your_password@localhost/XEPDB1
+※ your_password はインストール時に設定したパスワードです。XEPDB1はデフォルトのプラガブルデータベース名です。
+
+sqlplus SYSTEM/oracle@localhost/XEPDB1
+
+*************
+C:\Users\OK>sqlplus SYSTEM/oracle@localhost/XEPDB1
+
+SQL*Plus: Release 21.0.0.0.0 - Production on 日 11月 3 09:16:30 2024
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+ERROR:
+ORA-12541: TNS: リスナーがありません
+
+
+ユーザー名を入力してください: test_user
+パスワードを入力してください:
+ERROR:
+ORA-01017: ユーザー名/パスワードが無効です。ログオンは拒否されました。
+
+
+ユーザー名を入力してください: パスワードを入力してください:
+ERROR:
+ORA-01017: ユーザー名/パスワードが無効です。ログオンは拒否されました。
+
+
+SP2-0157: 3回試行しましたがOracleに接続できませんでした。SQL*Plusを終了します。
+****************
+
+https://qiita.com/TaroYamaguchi/items/3311b95a99ece0b43d2e
+
+***
+https://qiita.com/nakaie/items/7f27218f0643a0911f68
+
+https://xn--w8j8bac3czf5bl7e.com/2021/09/08/%E3%82%AA%E3%83%B3%E3%83%97%E3%83%AC%E3%83%9F%E3%82%B9%E7%89%88oracle-database-21c%E3%82%92%E4%BD%9C%E6%88%90%E3%81%97%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%81%9F-2of2/
+
+
+Database Configuration Assistant
+https://ai-can-fly.hateblo.jp/entry/oracle-database-create
+
+グローバル・データベース名：XE
+既に存在
+
+C:\app\OK\product\21c\dbhomeXE
+setup.exe
+
+中央イベントりに既に登録されています。
+このツールは未登録のデータベース・ホームでのみ使用できます。
+
+PDUを出荷時のデフォルト設定にリセットした場合、 admin ユーザーのパスワードは adm1n です
+
+https://docs.oracle.com/cd/E57425_01/121/SQPUG/GUID-4EABFC58-37FE-4E3A-A3B1-9F3C3CEF0B89.htm
+Oracle Databaseのインストール中にデフォルト・ログインが作成され、対応するパスワードの入力を求めるプロンプトが表示されます。作成されるデフォルト・ログインのユーザー名の一部には、次のものがあります。
+
+SYS
+SYSTEM
+HR
+
+
+ユーザー名を入力してください: sys
+パスワードを入力してください:
+ERROR:
+ORA-28009: SYSでの接続はSYSDBAまたはSYSOPERで行う必要があります
+
+************
+sqlplus SYSTEM/oracle@localhost/XE
+sqlplus sys/oracle@localhost/XE
+
+
+
+Oracle リスナーとは、データベース・ホスト上で実行されるプロセスで、クライアントからの接続要求を受信し、データベース・サーバーとの通信量を管理する役割を担っています。﻿
+
+データベース・ホスト上のOracle Netリスナー(リスナー)は、クライアント接続要求をリスニングするプロセスです。 着信中のクライアント接続要求を受信し、データベース・サーバーに対する要求の通信量を管理します。
+
+プラガブル・データベース(PDB)　コンテナ技術
+**************
+
+C:\Users\OK>sqlplus sys/oracle@localhost/XE
+ユーザー名：system
+パスワード、設定したもの
+
+E
+1.4.3 パラメータの現在の設定値の表示
+初期化パラメータの現在の設定値を表示するには、次のSQL*Plusコマンドを使用します。
+
+SQL> SHOW PARAMETERS
+
+
+**************
+https://qiita.com/TaroYamaguchi/items/3311b95a99ece0b43d2e
+Oracle で 新規USER を作成し、impdp するまでの手順、メモ書き
+
+ユーザー作成
+CREATE USER [USER_NAME] IDENTIFIED BY "password";
+
+CREATE USER test_user IDENTIFIED BY "";
+CREATE USER TEST IDENTIFIED BY "";
+
+SQL> CREATE USER test_user IDENTIFIED BY "*";
+CREATE USER test_user IDENTIFIED BY "*"
+            *
+行1でエラーが発生しました。:
+ORA-65096: 共通ユーザーまたはロール名が無効です
+************
+https://docs.oracle.com/cd/E96517_01/xeinw/connecting-oracle-database-xe.html
+
+次の簡易接続文字列を使用してデータベースに接続できます。
+マルチテナント・コンテナ・データベース: host[:port]
+
+プラガブル・データベース: host[:port]/service_name
+
+XEPDB1は、デフォルトで作成される最初のPDBに対して定義されるサービス名です。接続先の別のPDBの名前でXEPDB1を置き換えることができます。
+
+リスナーがデフォルトのポート1521で設定されている場合、ポートの指定はオプションです。別のポートを使用する場合は、ポート番号を指定する必要があります。
+
+インストールの最終画面には、ローカル接続の接続文字列が指定されていました。リモート・コンピュータから接続する場合は、localhostのかわりに(XEがインストールされている)ホスト名を指定する必要があります。
+
+CREATE USER test_user IDENTIFIED BY test;
+******
+以下のURLを参考にして Oracle Database XE をインストールして、ユーザーを作成しようとしましたが、エラーとなります。解決方法を教えてください。
+
+・URL
+https://docs.oracle.com/cd/E96517_01/xeinw/connecting-oracle-database-xe.html
+・ログイン
+C:\Users\OK>sqlplus sys/oracle@localhost/XE
+→成功
+・ユーザー作成
+CREATE USER test_user IDENTIFIED BY test
+            *
+行1でエラーが発生しました。:
+ORA-65096: 共通ユーザーまたはロール名が無効です
+
+************
+
+ORA-65096 エラーは、Oracle 12c以降で導入されたマルチテナント・アーキテクチャに関連しています。デフォルトのCDB（コンテナ・データベース）ではなく、PDB（プラガブル・データベース）で操作を行う必要があります。sysユーザーで接続しているときはCDBにいるため、ユーザー作成が制限されます。
+
+このエラーを解決するには、以下の手順でプラガブル・データベース（通常は XEPDB1）に接続して操作を行ってください。
+
+手順:
+SQL*Plusでプラガブル・データベースに接続: XEPDB1に接続するために、以下のようにコマンドを実行します。
+
+sqlplus sys/oracle@localhost/XEPDB1 as sysdba
+
+
+CREATE USER test_user IDENTIFIED BY test;
+
+******
+以下の実行結果とおり、コマンドでPDBに接続を試みましたが、
+リスナーがありません。というエラーが発生し、
+その後、ユーザー作成でエラーとなります。解決方法を教えてください。
+
+[実行結果]
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0との接続が切断されました。
+
+C:\Users\OK>sqlplus sys/oracle@localhost/XEPDB1 as sysdba
+
+SQL*Plus: Release 21.0.0.0.0 - Production on 日 11月 3 12:19:43 2024
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+ERROR:
+ORA-12541: TNS: リスナーがありません
+
+
+ユーザー名を入力してください: system
+パスワードを入力してください:
+最終正常ログイン時間: 日 11月 03 2024 10:02:40 +09:00
+
+
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+に接続されました。
+SQL> SHOW CON_NAME;
+
+CON_NAME
+------------------------------
+CDB$ROOT
+SQL> CREATE USER test_user IDENTIFIED BY test;
+CREATE USER test_user IDENTIFIED BY test
+            *
+行1でエラーが発生しました。:
+ORA-65096: 共通ユーザーまたはロール名が無効です
+
+***************
+
+ORA-12541: TNS: リスナーがありません エラーは、リスナーが起動していないために発生します。このリスナーはOracleデータベースへの接続を管理する重要なコンポーネントです。以下の手順でこの問題を解決してください。
+
+1. リスナーの状態を確認
+リスナーが起動しているかどうかを確認するため、lsnrctl status コマンドを実行します。
+lsnrctl status
+2. リスナーを起動
+lsnrctl start
+3. 再度PDBに接続
+sqlplus sys/oracle@localhost/XEPDB1 as sysdba
+sqlplus sys/oracle@192.168.1.2/XEPDB1 as sysdba
+確認
+SHOW CON_NAME;
+4. PDBにユーザーを作成
+CREATE USER test_user IDENTIFIED BY test;
+GRANT CONNECT, RESOURCE TO test_user;
+***************
+
+C:\Users\OK>lsnrctl status
+
+LSNRCTL for 64-bit Windows: Version 21.0.0.0.0 - Production on 03-11月-2024 12:23:51
+
+Copyright (c) 1991, 2021, Oracle.  All rights reserved.
+
+(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.2)(PORT=1521)))に接続中
+リスナーのステータス
+------------------------
+別名                      LISTENER
+バージョン                TNSLSNR for 64-bit Windows: Version 21.0.0.0.0 - Production
+開始日                    03-11月-2024 09:34:34
+稼働時間                  0 日 2 時間 49 分 20 秒
+トレース・レベル          off
+セキュリティ              ON: Local OS Authentication
+SNMP                      OFF
+デフォルト・サービス           XE
+パラメータ・ファイル      C:\app\OK\product\21c\homes\OraDB21Home1\network\admin\listener.ora
+ログ・ファイル            C:\app\OK\product\21c\diag\tnslsnr\OK-PC\listener\alert\log.xml
+リスニング・エンドポイントのサマリー...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=192.168.1.2)(PORT=1521)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=127.0.0.1)(PORT=5500))(Security=(my_wallet_directory=C:\APP\OK\PRODUCT\21C\admin\XE\xdb_wallet))(Presentation=HTTP)(Session=RAW))
+サービスのサマリー...
+サービス"9a0487a4b9e248f6bccbc304a3204a5d"には、1件のインスタンスがあります。
+  インスタンス"xe"、状態READYには、このサービスに対する2件のハンドラがあります...
+サービス"CLRExtProc"には、1件のインスタンスがあります。
+  インスタンス"CLRExtProc"、状態UNKNOWNには、このサービスに対する1件のハンドラがあります...
+サービス"XE"には、1件のインスタンスがあります。
+  インスタンス"xe"、状態READYには、このサービスに対する2件のハンドラがあります...
+サービス"XEXDB"には、1件のインスタンスがあります。
+  インスタンス"xe"、状態READYには、このサービスに対する1件のハンドラがあります...
+サービス"xepdb1"には、1件のインスタンスがあります。
+  インスタンス"xe"、状態READYには、このサービスに対する2件のハンドラがあります...
+コマンドは正常に終了しました。
+
+************
+リスナーを起動して、再度ユーザー作成を試みましたが、
+ログイン時にリスナーがないエラーとなります。解決方法を教えてください。
+
+
+エラーメッセージを確認すると、リスナーは正常に稼働していますが、sqlplusでXEPDB1に接続しようとしたときにORA-12541: TNS: リスナーがありませんエラーが発生しています。この問題は、tnsnames.oraファイルや接続設定が原因である可能性があります。以下の手順を試してみてください。
+
+1. tnsnames.oraファイルの確認
+tnsnames.oraファイルが正しく設定されているか確認します。このファイルは通常、Oracleホームディレクトリのnetwork\adminフォルダにあります（例: C:\app\OK\product\21c\homes\OraDB21Home1\network\admin\tnsnames.ora）。
+
+XEPDB1への接続情報が次のように記載されていることを確認してください。
+
+XEPDB1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = xepdb1)
+    )
+  )
+
+2. sqlnet.oraファイルの確認
+sqlnet.oraファイルで、データベース接続の構成が制限されていないか確認します。このファイルもnetwork\adminフォルダにあります。以下のように構成されているか確認してください。
+
+SQLNET.AUTHENTICATION_SERVICES = (NTS)
+
+
+************
+以下のログを参考にadminパスのtnsnames.ora、sqlnet.oraを以下のようにしましたが、ログイン時にエラーとなってしまします。あっていますでしょうか？
+
+1. listener.oraの見直し
+listener.oraファイルのDEFAULT_SERVICE_LISTENERで指定されているデフォルトサービスがXEとなっていますが、XEPDB1をデフォルトサービスとして指定する必要があるかもしれません。以下のように変更してください。
+
+DEFAULT_SERVICE_LISTENER = XEPDB1
+
+
+******************
+C:\Users\OK>sqlplus sys/oracle@localhost as sysdba
+
+SQL*Plus: Release 21.0.0.0.0 - Production on 日 11月 3 12:47:34 2024
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+ERROR:
+ORA-12541: TNS: リスナーがありません
+
+
+ユーザー名を入力してください: system
+パスワードを入力してください:
+最終正常ログイン時間: 日 11月 03 2024 12:41:03 +09:00
+
+
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+に接続されました。
+SQL> SELECT name, open_mode FROM v$pdbs;
+
+NAME
+--------------------------------------------------------------------------------
+OPEN_MODE
+--------------------
+PDB$SEED
+READ ONLY
+
+XEPDB1
+READ WRITE
+
+
+SQL> ALTER PLUGGABLE DATABASE XEPDB1 OPEN;
+ALTER PLUGGABLE DATABASE XEPDB1 OPEN
+*
+行1でエラーが発生しました。:
+ORA-01031: 権限が不足しています
+
+
+*********************
+
+sqlplus sys/oracle@localhost/XEPDB1 as sysdba
+
+6. 環境変数の確認
+Oracleの環境変数ORACLE_HOMEやTNS_ADMINが正しく設定されていることを確認してください。特にTNS_ADMINがC:\app\OK\product\21c\homes\OraDB21Home1\network\adminを指しているか確認します。
+
+環境変数を以下のように設定すると、コマンド実行時に接続されなくなりました。
+解決方法を教えてください。
+
+■環境変数
+ORACLE_HOME
+C:\app\OK\product\21c\homes
+TNS_ADMIN
+C:\app\OK\product\21c\homes\OraDB21Home1\network\admin
+
+■コマンド結果
+C:\WINDOWS\system32>lsnrctl
+
+LSNRCTL for 64-bit Windows: Version 21.0.0.0.0 - Production on 03-NOV-2024 13:05:40
+
+Copyright (c) 1991, 2021, Oracle.  All rights reserved.
+
+Message 850 not found; No message file for product=NETWORK, facility=NL
+LSNRCTL> start
+Message 1070 not found; No message file for product=NETWORK, facility=TNSTNS-12557: Message 12557 not found; No message file for product=NETWORK, facility=TNS
+ TNS-12560: Message 12560 not found; No message file for product=NETWORK, facility=TNS
+  TNS-00527: Message 527 not found; No message file for product=NETWORK, facility=TNS
+
+LSNRCTL>
+
+
+
+C:\app\OK\product\21c\homes\OraDB21Home1
+*************************
+*************************
+
+https://www.shift-the-oracle.com/config/show-environment-variable.html
+
+reg query "HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\KEY_OraDb11g_home1"
+
+
+reg query "HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\KEY_OraDB21Home1"
+
+HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\KEY_OraDB21Home1
+    ORACLE_HOME    REG_SZ    C:\app\OK\product\21c\dbhomeXE
+    ORACLE_HOME_NAME    REG_SZ    OraDB21Home1
+    ORACLE_GROUP_NAME    REG_SZ    Oracle - OraDB21Home1
+    ORACLE_BUNDLE_NAME    REG_SZ    Express
+    NLS_LANG    REG_SZ    JAPANESE_JAPAN.JA16SJISTILDE
+    OLEDBOLAP    REG_SZ    C:\app\OK\product\21c\dbhomeXE\oledbolap\mesg
+    OLEDB    REG_SZ    C:\app\OK\product\21c\dbhomeXE\oledb\mesg
+    ORACLE_HOME_READONLY    REG_SZ    Y
+    ORACLE_HOME_TYPE    REG_SZ    1
+    ORACLE_SVCUSER    REG_SZ    ORA_OraDB21Home1_SVCACCTS
+    ORACLE_SVCUSER_TYPE    REG_SZ    V
+    ORACLE_SVCUSER_PWDREQ    REG_SZ    0
+    ORACLE_BASE    REG_SZ    C:\app\OK\product\21c
+    ORACLE_HOME_KEY    REG_SZ    SOFTWARE\ORACLE\KEY_OraDB21Home1
+    SQLPATH    REG_SZ    C:\app\OK\product\21c\dbhomeXE\dbs
+    MSHELP_TOOLS    REG_SZ    C:\app\OK\product\21c\dbhomeXE\MSHELP
+    RDBMS_CONTROL    REG_SZ    C:\app\OK\product\21c\dbhomeXE\DATABASE
+    RDBMS_ARCHIVE    REG_SZ    C:\app\OK\product\21c\dbhomeXE\DATABASE\ARCHIVE
+    ORA_XE_AUTOSTART    REG_EXPAND_SZ    TRUE
+    ORA_XE_SHUTDOWN    REG_EXPAND_SZ    TRUE
+    ORA_XE_SHUTDOWNTYPE    REG_EXPAND_SZ    immediate
+    ORA_XE_SHUTDOWN_TIMEOUT    REG_EXPAND_SZ    90
+    ORACLE_SID    REG_SZ    XE
+    OMTSRECO_PORT    REG_EXPAND_SZ    2030
+
+***************
+
+sqlplus sys/oracle@localhost/XEPDB1 as sysdba
+
+
+ERROR:
+ORA-12514: TNS:リスナーは接続記述子でリクエストされたサービスを現在認識していません
+
+*****************
+net stop OracleServiceXE
+net start OracleServiceXE
+lsnrctl stop
+lsnrctl start
+sqlplus sys/oracle@localhost/XEPDB1 as sysdba
+
+
+****************
+listener.ora
+
+
+# listener.ora Network Configuration File: C:\app\OK\product\21c\homes\OraDB21Home1\NETWORK\ADMIN\listener.ora
+# Generated by Oracle configuration tools.
+
+DEFAULT_SERVICE_LISTENER = XEPDB1
+
+SID_LIST_LISTENER =
+  (SID_LIST =
+    (SID_DESC =
+      (SID_NAME = CLRExtProc)
+      (ORACLE_HOME = C:\app\OK\product\21c\dbhomeXE)
+      (PROGRAM = extproc)
+      (ENVS = "EXTPROC_DLLS=ONLY:C:\app\OK\product\21c\dbhomeXE\bin\oraclr.dll")
+    )
+    (SID_DESC =
+      (SID_NAME = XE)
+      (ORACLE_HOME = C:\app\OK\product\21c\dbhomeXE)
+      (GLOBAL_DBNAME = XE)
+    )
+    (SID_DESC =
+      (SID_NAME = XEPDB1)
+      (ORACLE_HOME = C:\app\OK\product\21c\dbhomeXE)
+      (GLOBAL_DBNAME = XEPDB1)
+    )
+  )
+
+LISTENER =
+  (DESCRIPTION_LIST =
+    (DESCRIPTION =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1521))
+    )
+  )
+
+XEPDB1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVICE_NAME = XEPDB1)
+    )
+  )
+
+
+******************
+
+
+3. XEPDB1がオープンされていることを確認
+sqlplusでsysユーザーとして接続し、XEPDB1がオープンされているか確認・オープンします。
+
+sql
+sqlplus sys/oracle@localhost as sysdba
+
+-- プラガブル・データベースの状態を確認
+SELECT name, open_mode FROM v$pdbs;
+
+-- 必要に応じてXEPDB1をオープン
+ALTER PLUGGABLE DATABASE XEPDB1 OPEN;
+
+sqlplus sys/oracle@localhost/XEPDB1 as sysdba
+
+PDBに接続されているか確認
+SHOW CON_NAME;
+
+
+4. PDBにユーザーを作成
+CREATE USER test_user IDENTIFIED BY test;
+GRANT CONNECT, RESOURCE TO test_user;
+
+******************
+C:\WINDOWS\system32>sqlplus sys/oracle@localhost/XEPDB1 as sysdba
+
+SQL*Plus: Release 21.0.0.0.0 - Production on 日 11月 3 13:52:16 2024
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+
+
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+に接続されました。
+SQL> sqlplus sys/oracle@localhost as sysdba
+SP2-0734: "sqlplus sy..."で開始するコマンドが不明です - 残りの行は無視されました。
+SQL> SELECT name, open_mode FROM v$pdbs;
+
+NAME
+--------------------------------------------------------------------------------
+OPEN_MODE
+--------------------
+XEPDB1
+READ WRITE
+
+
+SQL>
+SQL>
+SQL> ALTER PLUGGABLE DATABASE XEPDB1 OPEN;
+ALTER PLUGGABLE DATABASE XEPDB1 OPEN
+*
+行1でエラーが発生しました。:
+ORA-65019: プラガブル・データベースXEPDB1はすでにオープンしています
+
+
+SQL> SHOW CON_NAME;
+
+CON_NAME
+------------------------------
+XEPDB1
+SQL> CREATE USER test_user IDENTIFIED BY test;
+
+ユーザーが作成されました。
+
+SQL> GRANT CONNECT, RESOURCE TO test_user;
+
+権限付与が成功しました。
+
+*************************

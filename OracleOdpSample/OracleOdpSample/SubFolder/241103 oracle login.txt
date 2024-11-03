@@ -1,0 +1,53 @@
+oracle に test_user でログインするには
+
+
+test_userでOracleデータベースにログインするためには、Oracleのクライアントツールやコマンドラインツールを使用します。以下に、いくつかの方法を示します。
+
+1. SQL*Plus を使用してログイン
+Oracle Databaseがインストールされている場合、SQL*Plusを使ってログインできます。
+
+bash
+コードをコピーする
+sqlplus test_user/password@tns_alias
+test_user: ログインユーザー名
+password: test_userのパスワード
+tns_alias: Oracleの接続識別子（TNSエントリ）。ローカル接続の場合は省略できます。
+例:
+
+bash
+コードをコピーする
+sqlplus test_user/password@localhost/XEPDB1
+2. SQL Developer を使用してログイン
+GUIベースのOracleクライアントであるSQL Developerを使用してログインする方法です。
+
+SQL Developerを開きます。
+「新しい接続」をクリックします。
+接続名に適当な名前を入力します（例: TEST_USER_CONN）。
+ユーザー名にtest_userを、パスワードに対応するパスワードを入力します。
+ホスト名、ポート（通常1521）、サービス名（例: XEPDB1）を入力します。
+接続テストを実行し、成功すれば「接続」ボタンをクリックします。
+3. コマンドラインからSQL*Plusを使用
+もしCLI上で簡単にログインしたい場合、以下を試してください。
+
+bash
+コードをコピーする
+sqlplus test_user/password
+注意: デフォルトでは、パスワードは平文で入力されるため、セキュリティに配慮する必要があります。SQL*Plusの/nologオプションを使用し、ログイン後にパスワードを入力する方法もあります。
+
+4. JDBC接続を使用する
+Javaプログラムやスクリプトから接続する場合、JDBCを使用してログインできます。
+
+java
+コードをコピーする
+Connection connection = DriverManager.getConnection(
+    "jdbc:oracle:thin:@localhost:1521/XEPDB1", "test_user", "password");
+localhost:1521/XEPDB1: ホスト名、ポート、サービス名
+test_user: ログインユーザー名
+password: test_userのパスワード
+5. SQLclを使用してログイン
+Oracleが提供するコマンドラインツールSQLclを使用してログインする方法です。
+
+bash
+コードをコピーする
+sql test_user/password@localhost:1521/XEPDB1
+これらの方法の中で適したものを選んで、test_userとしてログインしてみてください。

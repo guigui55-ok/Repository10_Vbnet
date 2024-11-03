@@ -1,0 +1,43 @@
+Oracleテスト環境構築
+
+
+OracleConnectionを使っての開発や動作チェックは、OracleDBのライセンスや実環境がなくてもローカル環境である程度実現可能です。
+以下の方法を検討してみてください：
+
+1. Oracle Databaseの無料版 (Oracle Database Express Edition)
+Oracle Database Express Edition（XE）は、Oracleが提供する無償のデータベースで、
+商用目的でなければライセンスの制限もありません。
+WindowsやLinux環境で手軽にインストールでき、基本的なOracleDBの操作を学習するのに適しています。
+
+メリット：Oracle本番環境に近い操作や接続テストが可能
+インストール：Oracleの公式サイトからダウンロードし、ローカル環境にインストールします。
+--
+https://www.oracle.com/jp/database/technologies/appdev/xe.html
+
+
+
+
+****************
+2. OracleのDockerイメージを使用する
+OracleはDocker Hubで公式のOracle DatabaseのDockerイメージも提供しています。
+これを使えば、ローカルの仮想コンテナ上で簡単にOracleDBの環境を構築できます。
+
+メリット：設定が簡単で、開発環境に柔軟
+準備：Dockerがインストールされている必要があります。
+docker pull oracle/database:19.3.0-se2などのコマンドでイメージを取得し、コンテナを作成します。
+
+
+
+3. Oracle Managed Data Access LibraryとMockライブラリを使用したテスト
+実データベース接続が難しい場合、Oracle Managed Data Accessのライブラリ（NuGetから取得可能）をインストールし、
+テスト環境での接続部分をモックして動作確認を行うこともできます。
+
+方法：例えば、MoqなどのライブラリでOracleConnectionオブジェクトやコマンドの実行結果を模擬し、
+基本的な接続やクエリの動作確認ができます。
+
+
+
+4. Microsoft Data Provider for Oracle (System.Data.OracleClient)
+もし上記が難しい場合、データベースがない環境でも、
+過去に使用されていたMicrosoft Data Provider for Oracle（非推奨ですが）を使って、
+インターフェースの理解だけでも進めることが可能です。

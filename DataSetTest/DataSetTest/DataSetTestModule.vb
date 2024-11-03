@@ -50,4 +50,49 @@
         argDataGridView.DataSource = targetTable
     End Sub
 
+
+    Public Function GetRowAsDictionary(ds As DataSet, tableName As String, rowIndex As Integer) As Dictionary(Of String, Object)
+        Dim result As New Dictionary(Of String, Object)()
+
+        ' Check if the DataTable exists in the DataSet
+        If ds.Tables.Contains(tableName) Then
+            Dim dt As DataTable = ds.Tables(tableName)
+
+            ' Check if the specified rowIndex is within range
+            If rowIndex >= 0 AndAlso rowIndex < dt.Rows.Count Then
+                Dim row As DataRow = dt.Rows(rowIndex)
+
+                ' Iterate through each column in the DataRow and add it to the dictionary
+                For Each col As DataColumn In dt.Columns
+                    result.Add(col.ColumnName, row(col))
+                Next
+            Else
+                Throw New IndexOutOfRangeException("The specified rowIndex is out of range.")
+            End If
+        Else
+            Throw New ArgumentException("The specified table name does not exist in the DataSet.")
+        End If
+
+        Return result
+    End Function
+
+    Public Sub PrettyPrintDictionary(dict As Dictionary(Of String, Object), Optional indent As Integer = 0)
+        Dim indentString As String = New String(" "c, indent)
+
+        For Each kvp As KeyValuePair(Of String, Object) In dict
+            If TypeOf kvp.Value Is Dictionary(Of String, Object) Then
+                ' Handle nested dictionaries
+                Print($"{indentString}{kvp.Key}:")
+                PrettyPrintDictionary(CType(kvp.Value, Dictionary(Of String, Object)), indent + 4)
+            Else
+                Print($"{indentString}{kvp.Key}: {kvp.Value}")
+            End If
+        Next
+    End Sub
+
+    Public Sub Print(value As Object)
+        Dim buf = String.Format("{0}", value)
+        Console.WriteLine(buf)
+        'Debug.Write(buf)
+    End Sub
 End Module
