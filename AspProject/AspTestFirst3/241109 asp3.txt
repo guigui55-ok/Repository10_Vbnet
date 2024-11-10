@@ -1,0 +1,64 @@
+C:\Users\OK\Documents\IISExpress\config
+
+**********
+
+
+エラー: https://localhost:44385/Services/TestA.svc からメタデータを取得できませんこれがアクセス権のある Windows(R) Communication Foundation サービスである場合、指定したアドレスでメタデータの公開が有効になっていることを確認してください。メタデータ公開の有効化のヘルプについては、MSDN ドキュメント (http://go.microsoft.com/fwlink/?LinkId=65455) を参照してください。WS-Metadata Exchange エラー    URI: https://localhost:44385/Services/TestA.svc    メタデータに、解決できない参照が含まれています。'https://localhost:44385/Services/TestA.svc'。    応答メッセージのコンテンツの種類 text/html; charset=utf-8 が、バインド (application/soap+xml; charset=utf-8) のコンテンツの種類と一致しません。カスタム エンコーダーを使用している場合は、IsContentTypeSupported メソッドが正しく実装されていることを確認してください。応答の先頭の 1024 バイトは '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <title>IIS 10.0 Detailed Error - 500.19 - Internal Server Error</title> <style type="text/css"> <!-- body{margin:0;font-size:.7em;font-family:Verdana,Arial,Helvetica,sans-serif;} code{margin:0;color:#006600;font-size:1.1em;font-weight:bold;} .config_source code{font-size:.8em;color:#000000;} pre{margin:0;font-size:1.4em;word-wrap:break-word;} ul,ol{margin:10px 0 10px 5px;} ul.first,ol.first{margin-top:5px;} fieldset{padding:0 15px 10px 15px;word-break:break-all;} .summary-container fieldset{padding-bottom:5px;margin-top:4px;} legend.no-expand-all{padding:2px 15px 4px 10px;margin:0 0 0 -12px;} legend{color:#333333;;margin:4px 0 8px -12px;_margin-top:0px; font-weight:bold;font-size:1em;} a:link,a:visited{color:#007EFF;font-weight:bold;} a:hover{text-decoration:none;} h1{font-size:2.4em;margin:0;color:#FFF;} h2{font-size:1.7em;margin:' でした。    リモート サーバーがエラーを返しました: (500) 内部サーバー エラーですHTTP GET Error    URI: https://localhost:44385/Services/TestA.svc    'https://localhost:44385/Services/TestA.svc' をダウンロード中にエラーが発生しました。    要求は以下のエラーにより失敗しました。--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <title>IIS 10.0 Detailed Error - 500.19 - Internal Server Error</title> <style type="text/css"> <!-- body{margin:0;font-size:.7em;font-family:Verdana,Arial,Helvetica,sans-serif;} code{margin:0;color:#006600;font-size:1.1em;font-weight:bold;} .config_source code{font-size:.8em;color:#000000;} pre{margin:0;font-size:1.4em;word-wrap:break-word;} ul,ol{margin:10px 0 10px 5px;} ul.first,ol.first{margin-top:5px;} fieldset{padding:0 15px 10px 15px;word-break:break-all;} .summary-container fieldset{padding-bottom:5px;margin-top:4px;} legend.no-expand-all{padding:2px 15px 4px 10px;margin:0 0 0 -12px;} legend{color:#333333;;margin:4px 0 8px -12px;_margin-top:0px; font-weight:bold;font-size:1em;} a:link,a:visited{color:#007EFF;font-weight:bold;} a:hover{text-decoration:none;} h1{font-size:2.4em;margin:0;color:#FFF;} h2{font-size:1.7em;margin:0;color:#CC0000;} h3{font-size:1.4em;margin:10px 0 0 0;color:#CC0000;} h4{font-size:1.2em;margin:10px 0 5px 0; }#header{width:96%;margin:0 0 0 0;padding:6px 2% 6px 2%;font-family:"trebuchet MS",Verdana,sans-serif;  color:#FFF;background-color:#5C87B2; }#content{margin:0 0 0 2%;position:relative;} .summary-container,.content-container{background:#FFF;width:96%;margin-top:8px;padding:10px;position:relative;} .content-container p{margin:0 0 10px 0; }#details-left{width:35%;float:left;margin-right:2%; }#details-right{width:63%;float:left;overflow:hidden; }#server_version{width:96%;_height:1px;min-height:1px;margin:0 0 5px 0;padding:11px 2% 8px 2%;color:#FFFFFF;  background-color:#5A7FA5;border-bottom:1px solid #C1CFDD;border-top:1px solid #4A6C8E;font-weight:normal;  font-size:1em;color:#FFF;text-align:right; }#server_version p{margin:5px 0;} table{margin:4px 0 4px 0;width:100%;border:none;} td,th{vertical-align:top;padding:3px 0;text-align:left;font-weight:normal;border:none;} th{width:30%;text-align:right;padding-right:2%;font-weight:bold;} thead th{background-color:#ebebeb;width:25%; }#details-right th{width:20%;} table tr.alt td,table tr.alt th{} .highlight-code{color:#CC0000;font-weight:bold;font-style:italic;} .clear{clear:both;} .preferred{padding:0 5px 2px 5px;font-weight:normal;background:#006633;color:#FFF;font-size:.8em;} --> </style>  </head> <body> <div id="content"> <div class="content-container">   <h3>HTTP Error 500.19 - Internal Server Error</h3>   <h4>ページに関連する構成データが無効であるため、要求されたページにアクセスできません。</h4> </div>  <div class="content-container">  <fieldset><h4>Detailed Error Information:</h4>   <div id="details-left">    <table border="0" cellpadding="0" cellspacing="0">     <tr class="alt"><th>Module</th><td>???IIS Web Core</td></tr>     <tr><th>Notification</th><td>???BeginRequest</td></tr>     <tr class="alt"><th>Handler</th><td>???未定義です</td></tr>     <tr><th>Error Code</th><td>???0x800700b7</td></tr>     <tr class="alt"><th>構成エラー</th><td>???一意のキー属性 'name' が 'svc-Integrated'に設定されている種類 'add' の重複コレクション エントリを追加できません</td></tr> <tr><th>構成ファイル</th><td>???\\?\C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\web.config</td></tr>    </table>   </div>   <div id="details-right">    <table border="0" cellpadding="0" cellspacing="0">     <tr class="alt"><th>Requested URL</th><td>???https://localhost:44385/Services/TestA.svc</td></tr>     <tr><th>Physical Path</th><td>???C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\Services\TestA.svc</td></tr>     <tr class="alt"><th>Logon Method</th><td>???未定義です</td></tr>     <tr><th>Logon User</th><td>???未定義です</td></tr>         </table>    <div class="clear"></div>   </div>  </fieldset> </div>   <div class="config_source content-container">     <fieldset>     <h4>構成ソース:</h4>     <pre><code>   26:     <handlers><span class="highlight-code">   27:       <add name="svc-Integrated" path="*.svc" verb="*" type="System.ServiceModel.Activation.HttpHandler" resourceType="Unspecified" preCondition="integratedMode,runtimeVersionv4.0" /></span>   28:     </handlers></code></pre>     </fieldset>   </div>  <div class="content-container">  <fieldset><h4>More Information:</h4>   このエラーは、Web サーバーまたは Web アプリケーションの構成ファイルの読み取りに問題があるときに発生します。エラーの原因に関する情報が、イベント ログに記録されている場合があります。<p></p><p></p>ブラウザーに "重複する 'system.web.extensions/scripting/scriptResourceHandler' セクションが定義されています" というテキストが表示される場合は、.NET 3.5 ベースのアプリケーションを .NET Framework 4 で実行したことが原因です。WebMatrix を実行している場合は、この問題を解決するために、[設定] ノードに移動して、.NET Framework のバージョンを ".NET 2" に設定します。web.config ファイルの余分なセクションを削除することもできます。   <p><a href="https://go.microsoft.com/fwlink/?LinkID=62293&IIS70Error=500,19,0x800700b7,19045">View more information ≫</a></p>     </fieldset> </div> </div> </body> </html> --.
+
+
+
+エラー内容を見やすく整理し、解決方法を提供します。
+
+エラー内容
+エラー発生時の状況
+
+URI: https://localhost:44385/Services/TestA.svc
+エラーコード: 0x800700b7
+詳細: 一意のキー属性 'name' が 'svc-Integrated' に設定されている種類 'add' の重複エントリが存在します。
+構成ファイル: C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\web.config
+
+
+詳細情報
+エラーメッセージの要点
+
+メタデータ取得時に以下のような問題が発生:
+メタデータに、解決できない参照が含まれています。
+応答のコンテンツタイプが application/soap+xml; charset=utf-8 と一致しません。
+IIS が内部サーバーエラー (500.19) を返しています。
+エラー原因は重複する name 属性のエントリ (svc-Integrated) にあります。
+
+**************
+
+解決方法
+web.config 内の <handlers> セクションを確認:
+
+svc-Integrated エントリが重複していないかを確認し、重複があれば削除します。
+
+web.config の該当部分を次のように確認します。
+
+xml
+コードをコピーする
+<system.webServer>
+  <handlers>
+    <!-- 重複している場合、片方を削除 -->
+    <add name="svc-Integrated" path="*.svc" verb="*" 
+         type="System.ServiceModel.Activation.HttpHandler" 
+         resourceType="Unspecified" preCondition="integratedMode,runtimeVersionv4.0" />
+  </handlers>
+</system.webServer>
+IIS の再構成:
+
+コマンドプロンプトを管理者権限で開き、以下のコマンドを実行して IIS のハンドラーを再構成します。
+cmd
+コードをコピーする
+appcmd set config /section:system.webServer/handlers /clear:true
+プロジェクト構成の確認:
+
+.NET Framework バージョンがプロジェクトと一致しているか確認し、.NET 3.5 アプリケーションを .NET 4.x で実行していないか確認します。
+不要なハンドラー設定がないかを確認します。
+IIS の再起動:
+
+必要であれば、以下のコマンドで IIS を再起動します。
+cmd
+コードをコピーする
+iisreset

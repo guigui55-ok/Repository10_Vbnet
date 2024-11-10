@@ -1,0 +1,265 @@
+asp.netについて、システムの実装の方法の名前についてわからないので教えてください。
+内容は以下の通りです。
+システム構成は、サーバー側はasp.netでクライアント側はvb.netで、
+サーバー側で実装して、デバッグ実行した後、クライアント側(VisualStudio)でサービス参照の追加をして、サーバー側のAPIアドレスを設定して実装する方法です。
+（この時クライアント側に.svcファイルが生成されます）
+この手法の名前がわからないのですが、知っていますか？
+ChatGPT:
+ChatGPT
+あなたが説明している手法は、ASP.NET Webサービスの一種で、特に「ASP.NET Webサービス（ASMX）」や「WCF（Windows Communication Foundation）」と関連するものです。この手法では、サーバー側でWebサービスを実装し、クライアント側のアプリケーションがそのWebサービスをサービス参照として追加することで、サービスを利用する仕組みです。
+
+以下は、それぞれの用語の概要です：
+
+ASP.NET Webサービス（ASMX）: 古い方式で、.asmx拡張子を持つファイルが使用されます。簡単なWebサービスを提供する場合に使われていました。
+
+WCF（Windows Communication Foundation）: より複雑なシナリオに対応可能な、柔軟な通信フレームワークです。Service.svcファイルが使われることが一般的で、SOAPプロトコルや他の通信プロトコルをサポートしています。
+
+あなたの説明にある「サービス参照の追加をして、.svcファイルが生成される」という部分から、おそらくWCFサービスを指している可能性が高いです。WCFでは、Visual Studioでサービス参照を追加すると、クライアント側でサービスを呼び出すためのプロキシクラスが生成され、*.svcファイルを介してサーバー側のAPIにアクセスするように設定されます。
+
+もしこれで納得できるか、追加の詳細が必要であれば教えてください。
+
+***************
+https://aspnet.keicode.com/basic/wcf-simple-service.php
+
+サービスの内容
+----------
+
+
+'※参照設定の追加が必要
+Imports System.ServiceModel
+
+Module ModuleTestAIF
+
+End Module
+
+Namespace MyMath
+
+    <ServiceContract()>
+    Public Interface ICalc
+        <OperationContract()>
+        Function Add(i As Integer, j As Integer) As Integer
+    End Interface
+
+End Namespace
+
+-----------
+Module ModuleTestA
+
+End Module
+
+' メモ ここでインターフェイス名 "IService" を変更する場合は、Web.config で "IService" への参照も更新する必要があります。
+
+Namespace MyMath
+
+    Public Class Calc
+        Implements ICalc
+
+        Public Function Add(i As Integer, j As Integer) As Integer Implements ICalc.Add
+            Return i + j
+        End Function
+
+    End Class
+
+End Namespace
+-------------
+
+
+****************
+https://atmarkit.itmedia.co.jp/fdotnet/zissenwcf/zissenwcf_02/zissenwcf_02_01.html
+
+
+　IISによるWebサービスの提供に必要なファイルは、このほかにService.svcとWeb.configである。前者の.svcファイルについては、前回の「WCFを使用してRSS／Atomフィーダを作成する」でも触れているが、クライアントがサービスにアクセスする入り口となるものだ。
+
+　従来のASP.NET Webサービスでは“.asmxファイル”を作成していたが、WCFでは“.svcファイル”となる。次のリスト3は.asmxファイルの内容だ。
+
+<%@ WebService Language="C#" CodeBehind="~/App_Code/Service.cs" Class="Service" %>
+リスト3 Service.asmxの内容（Visual Studio 2005で自動生成されたもの）
+　これに対して、.svcファイルは次のような内容で生成される。
+
+<%@ ServiceHost Language="C#" Debug="true" Service="wcfwebService.service1" CodeBehind="Service1.svc.cs" %>
+<%@ ServiceHost Language="VB" Debug="true" Service="wcfwebService.service1" CodeBehind="Service1.svc.vb" %>
+リスト4 Service.svcの内容（上：C#、下：VB）
+「WebService」が「ServiceHost」になっており、サービス名が追加されている。
+　WCFのWebサービスを利用するクライアントは、この.svcファイルに、
+
+http://www.hoge.com/wcfservice/sercie.svc
+
+といったURLでアクセスしてサービスを実行することになる
+
+*********
+上記の Calc クラスを Web サービスとするためには、次の内容の svc ファイル CalcService.svc を作成します。
+
+<%@ ServiceHost Language="C#" Service="MyMath.Calc" %>
+
+************
+
+Web.configファイルにWCFサービスを正しく設定するために、以下のような構成を追加してください。
+
+Web.configの例
+Web.configファイル内に以下のセクションを追加または修正します。
+
+xml
+コードをコピーする
+<configuration>
+  <system.serviceModel>
+    <services>
+      <service name="MyMath.Calc">
+        <endpoint address="" binding="basicHttpBinding" contract="MyMath.ICalc" />
+        <host>
+          <baseAddresses>
+            <add baseAddress="http://localhost:8080/Services/CalcService.svc" />
+          </baseAddresses>
+        </host>
+      </service>
+    </services>
+    <behaviors>
+      <serviceBehaviors>
+        <behavior>
+          <!-- サービスの動作を設定 -->
+          <serviceMetadata httpGetEnabled="true" />
+          <serviceDebug includeExceptionDetailInFaults="false" />
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+  </system.serviceModel>
+</configuration>
+重要なポイント
+<service name> 属性には完全修飾名 (Namespace.ClassName) を指定します。ここでは MyMath.Calc を使用。
+<endpoint> 要素の binding 属性は、基本的な basicHttpBinding を指定していますが、必要に応じて wsHttpBinding や netTcpBinding などに変更できます。
+<baseAddresses> にはサービスのベースURLを指定します。プロジェクトのホスティング環境やポート番号に応じて調整してください。
+追加の考慮点
+<serviceMetadata httpGetEnabled="true" /> は、メタデータをHTTP経由で取得できるようにする設定です。これにより、WCF Test Clientや他のクライアントツールでのサービス探索が可能になります。
+開発環境では <serviceDebug includeExceptionDetailInFaults="true" /> と設定して、エラーメッセージを詳細に出力することも検討できますが、本番環境ではfalseにしてください。
+この構成をWeb.configに追加すれば、Calcサービスが正しく動作するはずです。何か追加の設定が必要であれば教えてください。
+
+************
+asp.net プロジェクト実行時
+
+対処方法:
+ディレクトリの参照を有効にしない場合は、既定のドキュメントが構成され、ファイルが確実に存在するようにします。
+ディレクトリの参照を有効にします。
+IIS Express インストール ディレクトリに移動します。
+appcmd set config /section:system.webServer/directoryBrowse /enabled:true を実行して、サーバー レベルでのディレクトリ参照を有効にします。
+appcmd set config ["SITE_NAME"] /section:system.webServer/directoryBrowse /enabled:true を実行して、サイト レベルでのディレクトリ参照を有効にします。
+サイトまたはアプリケーション構成ファイルで configuration/system.webServer/directoryBrowse@enabled 属性が true に設定されていることを確認します。
+
+
+https://learn.microsoft.com/ja-jp/troubleshoot/developer/webapps/iis/health-diagnostic-performance/http-403-14-forbidden-webpage
+
+https://qiita.com/4cres/items/8771ee59d167f329beee
+
+cd C:\Program Files\IIS Express
+
+C:\Program Files\IIS Express>appcmd set config /section:system.webServer/directoryBrowse /enabled:true
+構成変更を構成コミット パス "MACHINE/WEBROOT/APPHOST" の "MACHINE/WEBROOT/APPHOST" のセクション "system.webServer/directoryBrowse" に適用しました
+
+**********
+["SITE_NAME"] の具体的な設定場所は次の通りです：
+
+IIS Express の場合:
+
+applicationhost.config ファイルにサイトの名前が記載されています。このファイルは通常、C:\Users\<ユーザー名>\Documents\IISExpress\config ディレクトリに存在します。
+appcmd コマンドを実行する際は、["SITE_NAME"] を Default Web Site やプロジェクトの名前に置き換えます。
+
+C:\Users\OK\Documents\IISExpress\config
+
+        <sites>
+            <site name="WebSite1"
+
+
+
+**************
+
+エラー: https://localhost:44385/Services/TestA.svc からメタデータを取得できませんこれがアクセス権のある Windows(R) Communication Foundation サービスである場合、指定したアドレスでメタデータの公開が有効になっていることを確認してください。メタデータ公開の有効化のヘルプについては、MSDN ドキュメント (http://go.microsoft.com/fwlink/?LinkId=65455) を参照してください。WS-Metadata Exchange エラー    URI: https://localhost:44385/Services/TestA.svc    メタデータに、解決できない参照が含まれています。'https://localhost:44385/Services/TestA.svc'。    要求されたサービス 'https://localhost:44385/Services/TestA.svc' をアクティブ化できませんでした。詳細については、サーバーの診断トレース ログを参照してください。HTTP GET Error    URI: https://localhost:44385/Services/TestA.svc    'https://localhost:44385/Services/TestA.svc' をダウンロード中にエラーが発生しました。    要求は以下のエラーにより失敗しました。--<!DOCTYPE html><html>    <head>        <title>ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.service1' が見つかりませんでした。</title>        <meta name="viewport" content="width=device-width" />        <style>         body {font-family:"Verdana";font-weight:normal;font-size: .7em;color:black;}          p {font-family:"Verdana";font-weight:normal;color:black;margin-top: -5px}         b {font-family:"Verdana";font-weight:bold;color:black;margin-top: -5px}         H1 { font-family:"Verdana";font-weight:normal;font-size:18pt;color:red }         H2 { font-family:"Verdana";font-weight:normal;font-size:14pt;color:maroon }         pre {font-family:"Consolas","Lucida Console",Monospace;font-size:11pt;margin:0;padding:0.5em;line-height:14pt}         .marker {font-weight: bold; color: black;text-decoration: none;}         .version {color: gray;}         .error {margin-bottom: 10px;}         .expandable { text-decoration:underline; font-weight:bold; color:navy; cursor:pointer; }         @media screen and (max-width: 639px) {          pre { width: 440px; overflow: auto; white-space: pre-wrap; word-wrap: break-word; }         }         @media screen and (max-width: 479px) {          pre { width: 280px; }         }        </style>    </head>    <body bgcolor="white">            <span><H1>'/' アプリケーションでサーバー エラーが発生しました。<hr width=100% size=1 color=silver></H1>            <h2> <i>ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.service1' が見つかりませんでした。</i> </h2></span>            <font face="Arial, Helvetica, Geneva, SunSans-Regular, sans-serif ">            <b> 説明: </b>現在の Web 要求を実行中に、ハンドルされていない例外が発生しました。エラーに関する詳細および例外の発生場所については、スタック トレースを参照してください。            <br><br>            <b> 例外の詳細: </b>System.InvalidOperationException: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.service1' が見つかりませんでした。<br><br>            <b>ソース エラー:</b> <br><br>            <table width=100% bgcolor="#ffffcc">               <tr>                  <td>                      <code>現在の Web 要求の実行中にハンドルされていない例外が生成されました。障害の原因および発生場所に関する情報については、下の例外スタック トレースを使って確認できます。                      </code>                  </td>               </tr>            </table>            <br>            <b>スタック トレース:</b> <br><br>            <table width=100% bgcolor="#ffffcc">               <tr>                  <td>                      <code><pre>[InvalidOperationException: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.service1' が見つかりませんでした。]   System.ServiceModel.Activation.ServiceHostFactory.CreateServiceHost(String constructorString, Uri[] baseAddresses) +737   System.ServiceModel.HostingManager.CreateService(String normalizedVirtualPath, EventTraceActivity eventTraceActivity) +1416   System.ServiceModel.HostingManager.ActivateService(ServiceActivationInfo serviceActivationInfo, EventTraceActivity eventTraceActivity) +53   System.ServiceModel.HostingManager.EnsureServiceAvailable(String normalizedVirtualPath, EventTraceActivity eventTraceActivity) +658[ServiceActivationException: コンパイル中に例外が発生したためサービス '/Services/TestA.svc' をアクティブにできません。例外メッセージ: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.service1' が見つかりませんでした。。]   System.Runtime.AsyncResult.End(IAsyncResult result) +513485   System.ServiceModel.Activation.HostedHttpRequestAsyncResult.End(IAsyncResult result) +172   System.ServiceModel.Activation.ServiceHttpModule.EndProcessRequest(IAsyncResult ar) +26   System.Web.AsyncEventExecutionStep.InvokeEndHandler(IAsyncResult ar) +143   System.Web.AsyncEventExecutionStep.OnAsyncEventCompletion(IAsyncResult ar) +9949949</pre>                      </code>                  </td>               </tr>            </table>            <br>            <hr width=100% size=1 color=silver>            <b>バージョン情報:</b>?Microsoft .NET Framework バージョン:4.0.30319; ASP.NET バージョン:4.8.9277.0            </font>    </body></html><!-- [InvalidOperationException]: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.service1' が見つかりませんでした。   場所 System.ServiceModel.Activation.ServiceHostFactory.CreateServiceHost(String constructorString, Uri[] baseAddresses)   場所 System.ServiceModel.ServiceHostingEnvironment.HostingManager.CreateService(String normalizedVirtualPath, EventTraceActivity eventTraceActivity)   場所 System.ServiceModel.ServiceHostingEnvironment.HostingManager.ActivateService(ServiceActivationInfo serviceActivationInfo, EventTraceActivity eventTraceActivity)   場所 System.ServiceModel.ServiceHostingEnvironment.HostingManager.EnsureServiceAvailable(String normalizedVirtualPath, EventTraceActivity eventTraceActivity)[ServiceActivationException]: コンパイル中に例外が発生したためサービス '/Services/TestA.svc' をアクティブにできません。例外メッセージ: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.service1' が見つかりませんでした。。   場所 System.Runtime.AsyncResult.End[TAsyncResult](IAsyncResult result)   場所 System.ServiceModel.Activation.HostedHttpRequestAsyncResult.End(IAsyncResult result)   場所 System.ServiceModel.Activation.ServiceHttpModule.EndProcessRequest(IAsyncResult ar)   場所 System.Web.HttpApplication.AsyncEventExecutionStep.InvokeEndHandler(IAsyncResult ar)   場所 System.Web.HttpApplication.AsyncEventExecutionStep.OnAsyncEventCompletion(IAsyncResult ar)-->--.
+
+*************
+Svcファイルのパスを「[プロジェクトルート]/Services/TestA.svc」としたとき
+1. .svc ファイル (TestA.svc)
+
+変更前
+<%@ ServiceHost Language="VB" Debug="true" Service="WebSite1.service1" CodeBehind="WebSite1.svc.vb" %>
+
+変更後
+<%@ ServiceHost Language="VB" Debug="true" Service="WebSite1.Services.TestAService" %>
+
+
+<configuration>
+  <system.serviceModel>
+    <services>
+      <service name="WebSite1.Services.TestAService">
+        <endpoint address="" binding="basicHttpBinding" contract="WebSite1.Services.ITestAService" />
+      </service>
+    </services>
+    <behaviors>
+      <serviceBehaviors>
+        <behavior>
+          <!-- Metadata を公開してディスカバリーを有効化 -->
+          <serviceMetadata httpGetEnabled="true" />
+          <serviceDebug includeExceptionDetailInFaults="false" />
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+  </system.serviceModel>
+
+  <system.webServer>
+    <modules runAllManagedModulesForAllRequests="true" />
+    <handlers>
+      <add name="svc-Integrated" path="*.svc" verb="*" type="System.ServiceModel.Activation.HttpHandler" resourceType="Unspecified" preCondition="integratedMode,runtimeVersionv4.0" />
+    </handlers>
+  </system.webServer>
+</configuration>
+
+
+**********************
+エラー: https://localhost:44385/Services/TestA.svc からメタデータを取得できませんこれがアクセス権のある Windows(R) Communication Foundation サービスである場合、指定したアドレスでメタデータの公開が有効になっていることを確認してください。メタデータ公開の有効化のヘルプについては、MSDN ドキュメント (http://go.microsoft.com/fwlink/?LinkId=65455) を参照してください。WS-Metadata Exchange エラー    URI: https://localhost:44385/Services/TestA.svc    メタデータに、解決できない参照が含まれています。'https://localhost:44385/Services/TestA.svc'。    応答メッセージのコンテンツの種類 text/html; charset=utf-8 が、バインド (application/soap+xml; charset=utf-8) のコンテンツの種類と一致しません。カスタム エンコーダーを使用している場合は、IsContentTypeSupported メソッドが正しく実装されていることを確認してください。応答の先頭の 1024 バイトは '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <title>IIS 10.0 Detailed Error - 500.19 - Internal Server Error</title> <style type="text/css"> <!-- body{margin:0;font-size:.7em;font-family:Verdana,Arial,Helvetica,sans-serif;} code{margin:0;color:#006600;font-size:1.1em;font-weight:bold;} .config_source code{font-size:.8em;color:#000000;} pre{margin:0;font-size:1.4em;word-wrap:break-word;} ul,ol{margin:10px 0 10px 5px;} ul.first,ol.first{margin-top:5px;} fieldset{padding:0 15px 10px 15px;word-break:break-all;} .summary-container fieldset{padding-bottom:5px;margin-top:4px;} legend.no-expand-all{padding:2px 15px 4px 10px;margin:0 0 0 -12px;} legend{color:#333333;;margin:4px 0 8px -12px;_margin-top:0px; font-weight:bold;font-size:1em;} a:link,a:visited{color:#007EFF;font-weight:bold;} a:hover{text-decoration:none;} h1{font-size:2.4em;margin:0;color:#FFF;} h2{font-size:1.7em;margin:' でした。    リモート サーバーがエラーを返しました: (500) 内部サーバー エラーですHTTP GET Error    URI: https://localhost:44385/Services/TestA.svc    'https://localhost:44385/Services/TestA.svc' をダウンロード中にエラーが発生しました。    要求は以下のエラーにより失敗しました。--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <title>IIS 10.0 Detailed Error - 500.19 - Internal Server Error</title> <style type="text/css"> <!-- body{margin:0;font-size:.7em;font-family:Verdana,Arial,Helvetica,sans-serif;} code{margin:0;color:#006600;font-size:1.1em;font-weight:bold;} .config_source code{font-size:.8em;color:#000000;} pre{margin:0;font-size:1.4em;word-wrap:break-word;} ul,ol{margin:10px 0 10px 5px;} ul.first,ol.first{margin-top:5px;} fieldset{padding:0 15px 10px 15px;word-break:break-all;} .summary-container fieldset{padding-bottom:5px;margin-top:4px;} legend.no-expand-all{padding:2px 15px 4px 10px;margin:0 0 0 -12px;} legend{color:#333333;;margin:4px 0 8px -12px;_margin-top:0px; font-weight:bold;font-size:1em;} a:link,a:visited{color:#007EFF;font-weight:bold;} a:hover{text-decoration:none;} h1{font-size:2.4em;margin:0;color:#FFF;} h2{font-size:1.7em;margin:0;color:#CC0000;} h3{font-size:1.4em;margin:10px 0 0 0;color:#CC0000;} h4{font-size:1.2em;margin:10px 0 5px 0; }#header{width:96%;margin:0 0 0 0;padding:6px 2% 6px 2%;font-family:"trebuchet MS",Verdana,sans-serif;  color:#FFF;background-color:#5C87B2; }#content{margin:0 0 0 2%;position:relative;} .summary-container,.content-container{background:#FFF;width:96%;margin-top:8px;padding:10px;position:relative;} .content-container p{margin:0 0 10px 0; }#details-left{width:35%;float:left;margin-right:2%; }#details-right{width:63%;float:left;overflow:hidden; }#server_version{width:96%;_height:1px;min-height:1px;margin:0 0 5px 0;padding:11px 2% 8px 2%;color:#FFFFFF;  background-color:#5A7FA5;border-bottom:1px solid #C1CFDD;border-top:1px solid #4A6C8E;font-weight:normal;  font-size:1em;color:#FFF;text-align:right; }#server_version p{margin:5px 0;} table{margin:4px 0 4px 0;width:100%;border:none;} td,th{vertical-align:top;padding:3px 0;text-align:left;font-weight:normal;border:none;} th{width:30%;text-align:right;padding-right:2%;font-weight:bold;} thead th{background-color:#ebebeb;width:25%; }#details-right th{width:20%;} table tr.alt td,table tr.alt th{} .highlight-code{color:#CC0000;font-weight:bold;font-style:italic;} .clear{clear:both;} .preferred{padding:0 5px 2px 5px;font-weight:normal;background:#006633;color:#FFF;font-size:.8em;} --> </style>  </head> <body> <div id="content"> <div class="content-container">   <h3>HTTP Error 500.19 - Internal Server Error</h3>   <h4>ページに関連する構成データが無効であるため、要求されたページにアクセスできません。</h4> </div>  <div class="content-container">  <fieldset><h4>Detailed Error Information:</h4>   <div id="details-left">    <table border="0" cellpadding="0" cellspacing="0">     <tr class="alt"><th>Module</th><td>???IIS Web Core</td></tr>     <tr><th>Notification</th><td>???BeginRequest</td></tr>     <tr class="alt"><th>Handler</th><td>???未定義です</td></tr>     <tr><th>Error Code</th><td>???0x800700b7</td></tr>     <tr class="alt"><th>構成エラー</th><td>???一意のキー属性 'name' が 'svc-Integrated'に設定されている種類 'add' の重複コレクション エントリを追加できません</td></tr> <tr><th>構成ファイル</th><td>???\\?\C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\web.config</td></tr>    </table>   </div>   <div id="details-right">    <table border="0" cellpadding="0" cellspacing="0">     <tr class="alt"><th>Requested URL</th><td>???https://localhost:44385/Services/TestA.svc</td></tr>     <tr><th>Physical Path</th><td>???C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\Services\TestA.svc</td></tr>     <tr class="alt"><th>Logon Method</th><td>???未定義です</td></tr>     <tr><th>Logon User</th><td>???未定義です</td></tr>         </table>    <div class="clear"></div>   </div>  </fieldset> </div>   <div class="config_source content-container">     <fieldset>     <h4>構成ソース:</h4>     <pre><code>   26:     <handlers><span class="highlight-code">   27:       <add name="svc-Integrated" path="*.svc" verb="*" type="System.ServiceModel.Activation.HttpHandler" resourceType="Unspecified" preCondition="integratedMode,runtimeVersionv4.0" /></span>   28:     </handlers></code></pre>     </fieldset>   </div>  <div class="content-container">  <fieldset><h4>More Information:</h4>   このエラーは、Web サーバーまたは Web アプリケーションの構成ファイルの読み取りに問題があるときに発生します。エラーの原因に関する情報が、イベント ログに記録されている場合があります。<p></p><p></p>ブラウザーに "重複する 'system.web.extensions/scripting/scriptResourceHandler' セクションが定義されています" というテキストが表示される場合は、.NET 3.5 ベースのアプリケーションを .NET Framework 4 で実行したことが原因です。WebMatrix を実行している場合は、この問題を解決するために、[設定] ノードに移動して、.NET Framework のバージョンを ".NET 2" に設定します。web.config ファイルの余分なセクションを削除することもできます。   <p><a href="https://go.microsoft.com/fwlink/?LinkID=62293&IIS70Error=500,19,0x800700b7,19045">View more information ≫</a></p>     </fieldset> </div> </div> </body> </html> --.
+
+**************
+IIS のハンドラーを再構成
+appcmd set config /section:system.webServer/handlers /clear:true
+
+IIS を再起動
+iisreset
+
+
+C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\bin\AspTestFirst3.dll.config
+
+
+C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\.vs\AspTestFirst3\config\applicationhost.config
+
+
+
+    <handlers>
+      <add name="svc-Integrated" path="*.svc" verb="*" type="System.ServiceModel.Activation.HttpHandler" resourceType="Unspecified" preCondition="integratedMode,runtimeVersionv4.0" />
+    </handlers>
+
+
+*************
+
+エラー：
+HTTP Error 403.14 - Forbidden
+Web サーバーは、このディレクトリの内容の一覧を表示しないように構成されています。
+
+解決策：
+appcmd コマンドを使用する:
+
+appcmd set config /section:system.webServer/directoryBrowse /enabled:true
+
+appcmd set config "WebSite1" /section:system.webServer/directoryBrowse /enabled:true
+
+
+ディレクトリ参照を有効にする（必要な場合のみ）:
+
+開発中やテスト目的で、ディレクトリの内容を表示させたい場合は、directoryBrowse を有効にします。
+
+
+★web.config に以下を追加します。
+<system.webServer>
+  <directoryBrowse enabled="true" />
+</system.webServer>
+
+
+
+
+
+
+

@@ -1,0 +1,369 @@
+Asp.net(vb.net)のサーバー側の機能を実行すると以下のエラーが発生します。
+解決方法を教えてください。
+（実行時のweb.configも記載しておきます）
+
+[Web.config]
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ASP.NET アプリケーションの構成方法の詳細については、
+  https://go.microsoft.com/fwlink/?LinkId=169433 を参照してください
+  -->
+<configuration>
+  <system.serviceModel>
+    <services>
+      <service name="WebSite1.Services.TestAService">
+        <endpoint address="" binding="basicHttpBinding" contract="WebSite1.Services.ITestAService" />
+      </service>
+      
+    </services>
+    <behaviors>
+      <serviceBehaviors>
+        <behavior>
+          <!-- Metadata を公開してディスカバリーを有効化 -->
+          <serviceMetadata httpGetEnabled="true" />
+          <serviceDebug includeExceptionDetailInFaults="false" />
+        </behavior>
+      </serviceBehaviors>
+    </behaviors>
+  </system.serviceModel>
+
+  <system.webServer>
+    <modules runAllManagedModulesForAllRequests="true" />
+
+    <handlers>
+      <add name="svc-Integrated" path="*.svc" verb="*" type="System.ServiceModel.Activation.HttpHandler" resourceType="Unspecified" preCondition="integratedMode,runtimeVersionv4.0" />
+    </handlers>
+
+  </system.webServer>
+
+  <system.web>
+    <compilation debug="true" strict="false" explicit="true" targetFramework="4.6.1" />
+    <httpRuntime targetFramework="4.6.1" />
+  </system.web>
+  <system.codedom>
+    <compilers>
+      <compiler language="c#;cs;csharp" extension=".cs" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" warningLevel="4" compilerOptions="/langversion:default /nowarn:1659;1699;1701" />
+      <compiler language="vb;vbs;visualbasic;vbscript" extension=".vb" type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" warningLevel="4" compilerOptions="/langversion:default /nowarn:41008 /define:_MYTYPE=\&quot;Web\&quot; /optionInfer+" />
+    </compilers>
+  </system.codedom>
+</configuration>
+
+
+
+[Error]
+HTTP Error 500.19 - Internal Server Error
+ページに関連する構成データが無効であるため、要求されたページにアクセスできません。
+
+Detailed Error Information:
+Module	   IIS Web Core
+Notification	   BeginRequest
+Handler	   未定義です
+Error Code	   0x800700b7
+構成エラー	   一意のキー属性 'name' が 'svc-Integrated'に設定されている種類 'add' の重複コレクション エントリを追加できません
+構成ファイル	   \\?\C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\web.config
+Requested URL	   https://localhost:44385/
+Physical Path	   C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3
+Logon Method	   未定義です
+Logon User	   未定義です
+
+構成ソース:
+   28:     <handlers>
+   29:       <add name="svc-Integrated" path="*.svc" verb="*" type="System.ServiceModel.Activation.HttpHandler" resourceType="Unspecified" preCondition="integratedMode,runtimeVersionv4.0" />
+   30:     </handlers>
+
+**************
+プロジェクト内の以下のパスに同じような設定がありましたが、重複になりますか？
+この場合どうしたらよいですか？
+
+1.
+C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\.vs\AspTestFirst3\config\applicationhost.config
+
+line901:
+<add name="svc-Integrated" path="*.svc" verb="*" type="System.ServiceModel.Activation.HttpHandler, System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" preCondition="integratedMode,runtimeVersionv2.0" />
+
+line930:
+<add name="svc-Integrated-4.0" path="*.svc" verb="*" type="System.ServiceModel.Activation.ServiceHttpHandlerFactory, System.ServiceModel.Activation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" preCondition="integratedMode,runtimeVersionv4.0" />
+
+
+
+*****************
+エラー：
+HTTP Error 403.14 - Forbidden
+Web サーバーは、このディレクトリの内容の一覧を表示しないように構成されています。
+
+解決策：
+appcmd コマンドを使用する:
+
+appcmd set config /section:system.webServer/directoryBrowse /enabled:true
+
+appcmd set config "WebSite1" /section:system.webServer/directoryBrowse /enabled:true
+
+
+ディレクトリ参照を有効にする（必要な場合のみ）:
+
+開発中やテスト目的で、ディレクトリの内容を表示させたい場合は、directoryBrowse を有効にします。
+
+
+★web.config に以下を追加します。
+<system.webServer>
+  <directoryBrowse enabled="true" />
+</system.webServer>
+
+
+*****************
+ディレクトリエラーは解消されましたが、
+
+ブラウザから「https://localhost:44385/Services/TestA.svc」にアクセスすると以下のエラーが発生します。
+解決方法を教えてください。
+
+Error:
+'/' アプリケーションでサーバー エラーが発生しました。
+ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.Services.TestAService' が見つかりませんでした。
+説明: 現在の Web 要求を実行中に、ハンドルされていない例外が発生しました。エラーに関する詳細および例外の発生場所については、スタック トレースを参照してください。
+
+例外の詳細: System.InvalidOperationException: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.Services.TestAService' が見つかりませんでした。
+
+ソース エラー:
+
+現在の Web 要求の実行中にハンドルされていない例外が生成されました。障害の原因および発生場所に関する情報については、下の例外スタック トレースを使って確認できます。
+
+スタック トレース:
+
+
+[InvalidOperationException: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.Services.TestAService' が見つかりませんでした。]
+   System.ServiceModel.Activation.ServiceHostFactory.CreateServiceHost(String constructorString, Uri[] baseAddresses) +737
+   System.ServiceModel.HostingManager.CreateService(String normalizedVirtualPath, EventTraceActivity eventTraceActivity) +1416
+   System.ServiceModel.HostingManager.ActivateService(ServiceActivationInfo serviceActivationInfo, EventTraceActivity eventTraceActivity) +53
+   System.ServiceModel.HostingManager.EnsureServiceAvailable(String normalizedVirtualPath, EventTraceActivity eventTraceActivity) +658
+
+[ServiceActivationException: コンパイル中に例外が発生したためサービス '/Services/TestA.svc' をアクティブにできません。例外メッセージ: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'WebSite1.Services.TestAService' が見つかりませんでした。。]
+   System.Runtime.AsyncResult.End(IAsyncResult result) +513485
+   System.ServiceModel.Activation.HostedHttpRequestAsyncResult.End(IAsyncResult result) +172
+   System.ServiceModel.Activation.ServiceHttpModule.EndProcessRequest(IAsyncResult ar) +26
+   System.Web.AsyncEventExecutionStep.InvokeEndHandler(IAsyncResult ar) +143
+   System.Web.AsyncEventExecutionStep.OnAsyncEventCompletion(IAsyncResult ar) +9949949
+
+-----------------------
+このエラーは、.svc ファイルで指定された Service 属性にある WebSite1.Services.TestAService クラスが見つからないために発生しています。これを解決するためには、以下の点を確認してください。
+
+解決方法
+クラスの名前空間を確認:
+
+TestAService クラスが本当に WebSite1.Services 名前空間に存在していることを確認してください。Visual Studio で TestAService クラスのファイルを開き、Namespace 宣言を確認します。
+Namespace WebSite1.Services で定義されていることを確認します。
+プロジェクトのコンパイル:
+
+プロジェクトをクリーンビルドし、コンパイルエラーが発生していないか確認してください。Build > Clean Solution を実行し、続けて Build Solution を選択します。
+ビルドが成功した場合は、最新の DLL が生成されていることを確認します。
+参照の問題を確認:
+
+クラス WebSite1.Services.TestAService がプロジェクトに正しく参照されていることを確認します。
+サービスのコードファイルが App_Code フォルダーに入っていない場合、アセンブリ内でコンパイルされる必要があります。
+.svc ファイルの Service 属性を確認:
+
+.svc ファイルの中で Service 属性が正しく指定されていることを確認します。
+
+xml
+コードをコピーする
+<%@ ServiceHost Language="VB" Debug="true" Service="WebSite1.Services.TestAService" %>
+Service 属性は、完全修飾名でサービスクラスを指定する必要があります。
+
+web.config ファイルの確認:
+
+web.config 内で指定した name 属性のクラスと、実際のクラス名が一致していることを確認します。
+
+xml
+コードをコピーする
+<system.serviceModel>
+  <services>
+    <service name="WebSite1.Services.TestAService">
+      <endpoint address="" binding="basicHttpBinding" contract="WebSite1.Services.ITestAService" />
+    </service>
+  </services>
+</system.serviceModel>
+アセンブリの配置確認:
+
+WebSite1.Services.TestAService クラスを含む DLL がプロジェクトの bin フォルダに正しく配置されていることを確認してください。
+追加のヒント
+ファイル名の誤り: .svc ファイルの Service 属性で指定した名前空間やクラス名が、正確に一致しているかを再確認してください。
+アクセス権の問題: サービスクラスが外部からアクセス可能であることを確認してください。
+これらの手順を試すことで、エラーが解決し、TestA.svc へのアクセスが正常に行われるようになるはずです。
+**************
+プロジェクトの設定、ファイル構成は以下のようになっていますが、
+seb.config　service name、.svc ファイルの設定はどのようになりますか？
+
+
+ファイル構成：
+[Project Root]
+   > AppCodeフォルダ
+     > ModuleTestA.vb
+     > ModuleTestAIF.vb
+   > Servicesフォルダ
+      > TestA.svc 
+
+サイト名：WebSite1
+
+
+ModuleTestA.vb
+
+Namespace MyMath
+
+    Public Class Calc
+        Implements ICalc
+
+        Public Function Add(i As Integer, j As Integer) As Integer Implements ICalc.Add
+            Return i + j
+        End Function
+
+    End Class
+
+End Namespace
+
+ModuleTestAIF.vb
+Imports System.ServiceModel
+
+Namespace MyMath
+
+    <ServiceContract()>
+    Public Interface ICalc
+        <OperationContract()>
+        Function Add(i As Integer, j As Integer) As Integer
+    End Interface
+
+End Namespace
+
+TestA.svc
+<%@ ServiceHost Language="VB" Debug="true" Service="WebSite1.Services.TestAService" %>
+
+
+********
+<%@ ServiceHost Language="VB" Debug="true" Service="MyMath.Calc" %>
+
+********
+
+クラスの名前空間
+
+ソリューションのクリアは行いました。
+
+
+*************
+上記の調査中に、警告が出ることに気づきました。
+これは関連しているでしょうか？
+
+1.
+重大度レベル	コード	説明	プロジェクト	ファイル	行	抑制状態
+警告		'packages' 要素が宣言されていません。	AspTestFirst3	C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\packages.config	2	
+
+2.
+重大度レベル	コード	説明	プロジェクト	ファイル	行	抑制状態
+警告		'name' 属性は無効です。値 'MyMath.Calc' はデータ型 'serviceNameType' に対して無効です。列挙型制約に失敗しました。	AspTestFirst3	C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\Web.config	9	
+
+3.
+重大度レベル	コード	説明	プロジェクト	ファイル	行	抑制状態
+警告		'contract' 属性は無効です。値 'MyMath.ICalc' はデータ型 'serviceContractType' に対して無効です。列挙型制約に失敗しました。	AspTestFirst3	C:\Users\OK\source\repos\Repository10_VBnet\AspProject\AspTestFirst3\AspTestFirst3\Web.config	10	
+
+
+
+---------------
+https://teratail.com/questions/235243
+VisualStudio2019で解決しました。
+packages.configを開いた状態で、メニューバーの「XML」から「スキーマの作成」を選択します。
+XSDが作成されるので、それを「packages.config」と同じ場所に「packages.xsd」として配置します。プロジェクトに含めるのも忘れないように。
+
+以上で警告が消えました。
+
+
+
+--------------------
+
+エラー: https://localhost:44385/Services/TestA.svc からメタデータを取得できませんこれがアクセス権のある Windows(R) Communication Foundation サービスである場合、指定したアドレスでメタデータの公開が有効になっていることを確認してください。メタデータ公開の有効化のヘルプについては、MSDN ドキュメント (http://go.microsoft.com/fwlink/?LinkId=65455) を参照してください。WS-Metadata Exchange エラー    URI: https://localhost:44385/Services/TestA.svc    メタデータに、解決できない参照が含まれています。'https://localhost:44385/Services/TestA.svc'。    要求されたサービス 'https://localhost:44385/Services/TestA.svc' をアクティブ化できませんでした。詳細については、サーバーの診断トレース ログを参照してください。HTTP GET Error    URI: https://localhost:44385/Services/TestA.svc    'https://localhost:44385/Services/TestA.svc' をダウンロード中にエラーが発生しました。    要求は以下のエラーにより失敗しました。--<!DOCTYPE html><html>    <head>        <title>ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'Calc.Add' が見つかりませんでした。</title>        <meta name="viewport" content="width=device-width" />        <style>         body {font-family:"Verdana";font-weight:normal;font-size: .7em;color:black;}          p {font-family:"Verdana";font-weight:normal;color:black;margin-top: -5px}         b {font-family:"Verdana";font-weight:bold;color:black;margin-top: -5px}         H1 { font-family:"Verdana";font-weight:normal;font-size:18pt;color:red }         H2 { font-family:"Verdana";font-weight:normal;font-size:14pt;color:maroon }         pre {font-family:"Consolas","Lucida Console",Monospace;font-size:11pt;margin:0;padding:0.5em;line-height:14pt}         .marker {font-weight: bold; color: black;text-decoration: none;}         .version {color: gray;}         .error {margin-bottom: 10px;}         .expandable { text-decoration:underline; font-weight:bold; color:navy; cursor:pointer; }         @media screen and (max-width: 639px) {          pre { width: 440px; overflow: auto; white-space: pre-wrap; word-wrap: break-word; }         }         @media screen and (max-width: 479px) {          pre { width: 280px; }         }        </style>    </head>    <body bgcolor="white">            <span><H1>
+
+
+
+'/' アプリケーションでサーバー エラーが発生しました。<hr width=100% size=1 color=silver></H1>            <h2> <i>ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'Calc.Add' が見つかりませんでした。</i> </h2></span>            <font face="Arial, Helvetica, Geneva, SunSans-Regular, sans-serif ">            <b> 説明: </b>現在の Web 要求を実行中に、ハンドルされていない例外が発生しました。エラーに関する詳細および例外の発生場所については、スタック トレースを参照してください。            <br><br>            <b> 例外の詳細: </b>System.InvalidOperationException: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'Calc.Add' が見つかりませんでした。<br><br>            <b>ソース エラー:</b> <br><br>            <table width=100% bgcolor="#ffffcc">               <tr>                  <td>                      <code>現在の Web 要求の実行中にハンドルされていない例外が生成されました。障害の原因および発生場所に関する情報については、下の例外スタック トレースを使って確認できます。                      </code>                  </td>               </tr>            </table>            <br>            <b>スタック トレース:</b> <br><br>            <table width=100% bgcolor="#ffffcc">               <tr>                  <td>                      <code><pre>[InvalidOperationException: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'Calc.Add' が見つかりませんでした。]   System.ServiceModel.Activation.ServiceHostFactory.CreateServiceHost(String constructorString, Uri[] baseAddresses) +737   System.ServiceModel.HostingManager.CreateService(String normalizedVirtualPath, EventTraceActivity eventTraceActivity) +1416   System.ServiceModel.HostingManager.ActivateService(ServiceActivationInfo serviceActivationInfo, EventTraceActivity eventTraceActivity) +53   System.ServiceModel.HostingManager.EnsureServiceAvailable(String normalizedVirtualPath, EventTraceActivity eventTraceActivity) +658[ServiceActivationException: コンパイル中に例外が発生したためサービス '/Services/TestA.svc' をアクティブにできません。例外メッセージ: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'Calc.Add' が見つかりませんでした。。]   System.Runtime.AsyncResult.End(IAsyncResult result) +513485   System.ServiceModel.Activation.HostedHttpRequestAsyncResult.End(IAsyncResult result) +172   System.ServiceModel.Activation.ServiceHttpModule.EndProcessRequest(IAsyncResult ar) +26   System.Web.AsyncEventExecutionStep.InvokeEndHandler(IAsyncResult ar) +143   System.Web.AsyncEventExecutionStep.OnAsyncEventCompletion(IAsyncResult ar) +9949949</pre>                      </code>                  </td>               </tr>            </table>            <br>            <hr width=100% size=1 color=silver>            <b>バージョン情報:</b>?Microsoft .NET Framework バージョン:4.0.30319; ASP.NET バージョン:4.8.9277.0            </font>    </body></html><!-- [InvalidOperationException]: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'Calc.Add' が見つかりませんでした。   場所 System.ServiceModel.Activation.ServiceHostFactory.CreateServiceHost(String constructorString, Uri[] baseAddresses)   場所 System.ServiceModel.ServiceHostingEnvironment.HostingManager.CreateService(String normalizedVirtualPath, EventTraceActivity eventTraceActivity)   場所 System.ServiceModel.ServiceHostingEnvironment.HostingManager.ActivateService(ServiceActivationInfo serviceActivationInfo, EventTraceActivity eventTraceActivity)   場所 System.ServiceModel.ServiceHostingEnvironment.HostingManager.EnsureServiceAvailable(String normalizedVirtualPath, EventTraceActivity eventTraceActivity)[ServiceActivationException]: コンパイル中に例外が発生したためサービス '/Services/TestA.svc' をアクティブにできません。例外メッセージ: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型 'Calc.Add' が見つかりませんでした。。   場所 System.Runtime.AsyncResult.End[TAsyncResult](IAsyncResult result)   場所 System.ServiceModel.Activation.HostedHttpRequestAsyncResult.End(IAsyncResult result)   場所 System.ServiceModel.Activation.ServiceHttpModule.EndProcessRequest(IAsyncResult ar)   場所 System.Web.HttpApplication.AsyncEventExecutionStep.InvokeEndHandler(IAsyncResult ar)   場所 System.Web.HttpApplication.AsyncEventExecutionStep.OnAsyncEventCompletion(IAsyncResult ar)-->--.
+
+
+***************
+モジュールの内容を変更したのですが、この場合はどのような設定になりますか？
+
+ModuleTestA.vb
+Public Class Calc
+    Implements ICalc
+
+    Public Function Add(i As Integer, j As Integer) As Integer Implements ICalc.Add
+        Return i + j
+    End Function
+
+End Class
+
+
+ModuleTestAIF.vb
+Imports System.ServiceModel
+Imports System.ServiceModel.Activation
+
+<ServiceContract(Namespace:="")>
+Public Interface ICalc
+    <OperationContract()>
+    Function Add(i As Integer, j As Integer) As Integer
+End Interface
+
+
+**********************
+System.InvalidOperationException: ServiceHost ディレクティブの Service 属性の値として指定されたか、構成要素 system.serviceModel/serviceHostingEnvironment/serviceActivations で指定された型  が見つかりませんでした。
+
+https://aspnet.keicode.com/aspnet/error-servicecctivations-could-not-be-found.php
+アセンブリを正しく登録するには、アセンブリを bin ディレクトリに置く、あるいはコードファイルを App_Code に配置するなどすれば OK のはずです。 （もちろん、コードが正しく書かれていれば）
+
+★プロジェクトルートのフォルダ名は「App_Code」とする。
+（AppCodeでは上記のエラーとなる）
+
+************************
+https://localhost:44385/Services/TestA.svc
+
+成功時画面
+
+Calc サービス
+
+サービスを作成しました。
+
+このサービスをテストするには、クライアントを作成し、そのクライアントを使用してサービスを呼び出す必要があります。これは、コマンド ラインから次の構文を使用し、svcutil.exe ツールを呼び出すことによって行えます。
+
+
+svcutil.exe http://localhost:54393/Services/TestA.svc?wsdl
+1 つのファイルとしてサービスの説明にアクセスすることもできます:
+
+http://localhost:54393/Services/TestA.svc?singleWsdl
+構成ファイルと、クライアント クラスが含まれたコード ファイルが生成されます。これら 2 つのファイルをクライアント アプリケーションに追加し、生成されたクライアント クラスを使用してサービスを呼び出します。次に例を示します。
+
+C#
+
+class Test
+{
+    static void Main()
+    {
+        CalcClient client = new CalcClient();
+
+        // 'client' 変数を使用して、このサービスで操作を呼び出してください。
+
+        // 常にクライアントを閉じてください。
+        client.Close();
+    }
+}
+
+Visual Basic
+
+Class Test
+    Shared Sub Main()
+        Dim client As CalcClient = New CalcClient()
+        ' 'client' 変数を使用して、このサービスで操作を呼び出してください。
+
+        ' 常にクライアントを閉じてください。
+        client.Close()
+    End Sub
+End Class
+
+
+
+
+
+
