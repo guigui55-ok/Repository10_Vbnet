@@ -4,6 +4,10 @@
 Public Class Calc
     Implements ICalc
 
+    Public Sub New()
+        Console.WriteLine("Calc New")
+    End Sub
+
     Public Function Add(i As Integer, j As Integer) As Integer Implements ICalc.Add
         Return i + j
     End Function
