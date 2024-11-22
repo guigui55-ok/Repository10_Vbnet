@@ -3,10 +3,26 @@ Imports System
 Module Program
     Sub Main(args As String())
         'Console.WriteLine("Hello World!")
-
         TestJoinPath()
     End Sub
 End Module
+
+Module ModuleSample
+    Function SampleMethod(
+                         valueA As String,
+                         ValueB As String)
+        Dim SampleProc = valueA + ValueB
+        Return SampleProc
+    End Function
+
+    Function SampleLongName______________________________Method(
+                                                               valueA As String,
+                                                               ValueB As String)
+        Dim SampleProc = valueA + ValueB + "_________"
+        Return SampleProc
+    End Function
+End Module
+
 
 Public Module CommonAnyModule
     Public Sub DebugPrint(Value As Object)
@@ -58,8 +74,6 @@ Public Module CommonAnyModule
         Dim result As String = pathA & "\" & pathB
         Return result
     End Function
-
-
     '///////////
 
 
