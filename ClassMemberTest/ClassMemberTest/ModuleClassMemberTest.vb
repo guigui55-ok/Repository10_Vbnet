@@ -3,18 +3,46 @@ Imports System.Reflection
 Module ModuleClassMemberTest
 
     Class ConstTest
-        Public Const NUMBER_01 = 1
-        Public Const NUMBER_02 = 2
-        Public Const NUMBER_03 = 3
-        Public Const NUMBER_04 = 4
+        Public Const NUMBER_01 = "Message 01"
+        Public Const NUMBER_02 = "Message 02"
+        Public Const NUMBER_03 = "Message 03"
+        Public Const NUMBER_04 = "Message 04"
     End Class
 
 
     Sub Main()
-
+        '想定する使い方
+        Dim num = GetNumber(ConstTest.NUMBER_01) '戻り値は”01”
+        Debug.Print(String.Format("NUMBER_01 = {0}", num))
     End Sub
 
 
+
+    Function GetNumber(value As Object) As String
+        ' ConstTestクラスの型情報を取得
+        Dim constType As Type = GetType(ConstTest)
+
+        ' 定数フィールドを取得
+        For Each field As FieldInfo In constType.GetFields(BindingFlags.Public Or BindingFlags.Static)
+            ' フィールドが定数かつ型が一致する場合
+            If field.IsLiteral AndAlso field.GetRawConstantValue().GetType().Equals(value.GetType()) Then
+                ' フィールドの値が引数と一致する場合
+                If field.GetRawConstantValue().Equals(value) Then
+                    ' フィールド名から数値部分を抽出して返す
+                    Dim match = System.Text.RegularExpressions.Regex.Match(field.Name, "\d+")
+                    If match.Success Then
+                        Return match.Value
+                    End If
+                End If
+            End If
+        Next
+
+        ' 一致しない場合は空文字を返す
+        Return String.Empty
+    End Function
+
+
+    ' #########
 
     Public Const NUMBER_001 = 1
 
