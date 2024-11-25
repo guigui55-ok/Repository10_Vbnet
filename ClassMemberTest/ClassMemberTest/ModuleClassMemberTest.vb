@@ -1,7 +1,49 @@
 ﻿
 Imports System.Reflection
 Module ModuleClassMemberTest
+
+    Class ConstTest
+        Public Const NUMBER_01 = 1
+        Public Const NUMBER_02 = 2
+        Public Const NUMBER_03 = 3
+        Public Const NUMBER_04 = 4
+    End Class
+
+
     Sub Main()
+
+    End Sub
+
+
+
+    Public Const NUMBER_001 = 1
+
+    Sub MainGetVarName()
+        GetVarNameConst()
+        GetVarName(NUMBER_001)
+    End Sub
+
+    Sub GetVarNameConst()
+        ' 定数の名前を取得
+        Dim type As Type = GetType(ModuleClassMemberTest)
+        Dim fields = type.GetFields(Reflection.BindingFlags.Public Or Reflection.BindingFlags.NonPublic Or Reflection.BindingFlags.Static)
+        For Each field In fields
+            If field.IsLiteral AndAlso Not field.IsInitOnly Then ' 定数フィールドを確認
+                If field.GetValue(Nothing).Equals(NUMBER_001) Then
+                    Debug.Print(String.Format("valueName = {0}", field.Name))
+                End If
+            End If
+        Next
+    End Sub
+
+
+    Sub GetVarName(value As Integer)
+        '引数で渡されたときのの変数名を取得するこの場合「NUMBER_001」
+        Debug.Print(String.Format("valueName = {0}", ""))
+    End Sub
+
+
+    Sub GetClassMemberVarMain()
         Dim obj As New ClassMember With {
             .ValueStr = "Hello",
             .ValueInt = 42,
