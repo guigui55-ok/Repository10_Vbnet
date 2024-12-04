@@ -1,0 +1,96 @@
+ORA-01756 単一引用符が閉じられていません。
+
+ORA-00933: SQLコマンドが正しく終了されていません
+
+https://qiita.com/riekure/items/b54c8a21d77e5fe1776d
+
+
+オラクルのSQL文について、
+以下のSQL文を実行すると、エラーが発生します。解決方法を教えてください。
+*SQL:
+SELECT
+  column_name
+  , data_type
+  , data_length
+FROM
+  all_tab_columns 
+WHERE
+  owner = 'HOGE'
+  AND table_name = 'FUGA'
+ORDER BY
+  column_id;
+
+*Error:
+ORA-00933: SQLコマンドが正しく終了されていません
+
+実行環境は、VB.net （.netFramework v4.6.1）のOracle.DataManagerによって実行しています。
+ChatGPT:
+ChatGPT
+エラー「ORA-00933: SQLコマンドが正しく終了されていません」は、OracleのSQL文の構文に問題があることを示しています。この場合、原因として考えられるのは以下の点です。
+
+問題点
+column_idの指定ミス:
+テーブル all_tab_columns に存在するカラムである column_id を参照していますが、このカラムは通常、システム権限の制約があるため、一般ユーザーでアクセスするとエラーになります。
+カラム名やテーブル名の大文字・小文字の違い:
+Oracleでは、大文字・小文字の区別に注意が必要です。owner や table_name の値は通常、大文字で指定する必要があります。
+修正案
+column_id の代わりに COLUMN_NAME などの適切なカラムでソートするようにします。
+大文字で指定する必要がある値を修正します。
+以下は修正済みのSQL文です。
+
+sql
+コードをコピーする
+SELECT
+  COLUMN_NAME,
+  DATA_TYPE,
+  DATA_LENGTH
+FROM
+  ALL_TAB_COLUMNS
+WHERE
+  OWNER = 'HOGE'
+  AND TABLE_NAME = 'FUGA'
+ORDER BY
+  COLUMN_NAME;
+もし column_id をどうしても使用したい場合は、以下の手順で確認してください。
+
+ユーザー権限の確認:
+
+ALL_TAB_COLUMNS に対して column_id を参照する権限が必要です。DBAに権限付与を依頼するか、DBA_TAB_COLUMNS のような管理者用ビューを使用してください。
+デバッグ情報の確認:
+
+実際のSQLクエリがVB.NETコードで正しく生成されているか確認してください。例えば、文字列結合ミスやSQL文の末尾に不要なセミコロンが含まれると、このエラーが発生する可能性があります。
+VB.NET でのコード例
+以下は、VB.NETから正しいSQLを実行するコード例です。
+
+vb.net
+コードをコピーする
+Imports Oracle.ManagedDataAccess.Client
+
+Module Module1
+    Sub Main()
+        Dim connectionString As String = "User Id=hoge_user;Password=hoge_password;Data Source=YourDataSource;"
+        Dim sql As String = "
+            SELECT
+              COLUMN_NAME,
+              DATA_TYPE,
+              DATA_LENGTH
+            FROM
+              ALL_TAB_COLUMNS
+            WHERE
+              OWNER = 'HOGE'
+              AND TABLE_NAME = 'FUGA'
+            ORDER BY
+              COLUMN_NAME"
+
+        Using connection As New OracleConnection(connectionString)
+            connection.Open()
+            Using command As New OracleCommand(sql, connection)
+                Using reader As OracleDataReader = command.ExecuteReader()
+                    While reader.Read()
+                        Console.WriteLine($"Column: {reader("COLUMN_NAME")} - Type: {reader("DATA_TYPE")}")
+                    End While
+                End Using
+            End Using
+        End Using
+    End Sub
+End Module

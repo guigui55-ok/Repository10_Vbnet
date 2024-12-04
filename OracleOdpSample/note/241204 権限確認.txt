@@ -1,0 +1,80 @@
+1. 現在のユーザー名を確認
+現在接続中のユーザー名を確認するには、以下のSQLを実行します：
+
+sql
+コードをコピーする
+SELECT USER FROM DUAL;
+結果として、現在接続しているユーザー名が返されます。
+
+2. ユーザーのロール（権限セット）を確認
+ユーザーに割り当てられているロールを確認するには、以下のSQLを実行します：
+
+sql
+コードをコピーする
+SELECT * FROM USER_ROLE_PRIVS;
+GRANTED_ROLE カラムに表示されるのが、割り当てられているロール名です。
+一般的なロール:
+CONNECT：基本的な接続権限
+RESOURCE：リソースの作成権限
+DBA：全権限を持つロール
+3. ユーザーに直接付与されている権限を確認
+ユーザーに直接付与されている権限を確認するには、以下のSQLを実行します：
+
+sql
+コードをコピーする
+SELECT * FROM USER_SYS_PRIVS;
+PRIVILEGE カラムには、付与されたシステム権限が表示されます。
+例:
+SELECT ANY TABLE：任意のテーブルを選択できる権限
+CREATE TABLE：テーブルを作成する権限
+4. オブジェクト権限を確認
+ユーザーが特定のテーブルやビューに対して持つ権限を確認するには、以下のSQLを実行します：
+
+sql
+コードをコピーする
+SELECT * FROM USER_TAB_PRIVS;
+TABLE_NAME カラム：アクセス可能なオブジェクトの名前
+PRIVILEGE カラム：権限の種類（例：SELECT, INSERT, UPDATE）
+5. DBAユーザーが権限を確認する場合（管理者用）
+DBAユーザーであれば、任意のユーザーの権限を確認できます。
+
+任意のユーザーのロールを確認
+
+sql
+コードをコピーする
+SELECT * FROM DBA_ROLE_PRIVS WHERE GRANTEE = '対象ユーザー名';
+任意のユーザーに直接付与されている権限を確認
+
+sql
+コードをコピーする
+SELECT * FROM DBA_SYS_PRIVS WHERE GRANTEE = '対象ユーザー名';
+任意のユーザーのオブジェクト権限を確認
+
+sql
+コードをコピーする
+SELECT * FROM DBA_TAB_PRIVS WHERE GRANTEE = '対象ユーザー名';
+
+
+
+************************
+
+DBAに問い合わせる:
+
+必要な権限（例：SELECT ANY TABLE など）を付与してもらう。
+ALL_TAB_COLUMNS にアクセスする場合、通常は SELECT ANY DICTIONARY または SELECT_CATALOG_ROLE 権限が必要です。
+適切なビューに切り替える:
+
+権限が不足している場合、USER_TAB_COLUMNS（現在のユーザーが所有するテーブルの情報のみを表示）を使用することで回避できます。
+sql
+コードをコピーする
+SELECT
+  COLUMN_NAME,
+  DATA_TYPE,
+  DATA_LENGTH
+FROM
+  USER_TAB_COLUMNS
+WHERE
+  TABLE_NAME = 'FUGA'
+ORDER BY
+  COLUMN_NAME;
+
