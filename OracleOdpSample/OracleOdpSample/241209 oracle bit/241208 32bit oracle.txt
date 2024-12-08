@@ -1,0 +1,18 @@
+http://niyodiary.cocolog-nifty.com/blog/2009/05/net-framework64.html
+
+https://qiita.com/takiru/items/38cf009c6baf869d2932
+
+
+set PATH=C:\Windows\System32/oracle_instant_client12_2
+
+echo %PATH%
+
+echo %PATH% | find "C:\Windows\System32/oracle_instant_client12_2"
+
+
+
+https://qiita.com/yaju/items/82df63b97a41720e197c
+nyCPUにしていても「32ビットを優先」にチェックが付いていると、32ビットのレジストリを取得してしまうので、チェックを外す必要があります。
+→チェックを外す
+
+

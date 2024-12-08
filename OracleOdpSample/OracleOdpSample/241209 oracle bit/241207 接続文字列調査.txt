@@ -1,0 +1,173 @@
+ホスト名（またはIPアドレス）
+ポート番号（デフォルトは1521）
+サービス名またはSID
+ユーザー名とパスワード
+
+2. Oracleクライアント環境でtnsnames.oraを確認する
+Oracleクライアントがインストールされている場合、tnsnames.oraファイルに接続情報が記載されていることがあります。
+
+ファイルの場所
+デフォルトパス（Windowsの場合）：
+makefile
+コードをコピーする
+C:\oracle\product\<バージョン>\client_1\network\admin\tnsnames.ora
+
+内容例
+text
+コードをコピーする
+ORCL =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = your_host)(PORT = 1521))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = your_service_name)
+    )
+  )
+この情報から、以下の接続文字列を構築できます：
+
+text
+コードをコピーする
+User Id=your_username;Password=your_password;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=your_host)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=your_service_name)));
+
+-------------------
+@XEPDB1
+
+""
+Fav-@
+test
+root
+testuser
+-----
+test_user : test
+
+tnsnames.ora
+C:\app\OK\product\21c\homes\OraDB21Home1\network\admin
+C:\app\OK\product\21c\homes\OraDB21Home1\network\admin\241103 back
+C:\app\OK\product\21c\admin
+C:\app\OK\product\21c\dbhomeXE\hs\admin
+C:\app\OK\product\21c\dbhomeXE\inventory\Templates\hs\admin
+C:\app\OK\product\21c\dbhomeXE\network\admin\sample
+
+------------
+
+tnsnames.oraのファイルが複数存在する場合、通常は**tnsnames.oraがデータベースクライアントが参照する適切な場所に配置されているか**を確認する必要があります。以下の手順に従って、どのファイルを使用すれば良いかを判断してください。
+
+1. 使用しているOracleホームを特定する
+OracleクライアントがどのOracleホーム（Oracleインストールディレクトリ）を参照しているか確認する必要があります。以下の方法で調べることができます。
+
+環境変数ORACLE_HOMEを確認
+Windowsのコマンドプロンプトで以下を実行：
+
+cmd
+コードをコピーする
+set ORACLE_HOME
+出力例：
+
+makefile
+コードをコピーする
+ORACLE_HOME=C:\app\OK\product\21c\homes\OraDB21Home1
+この場合、C:\app\OK\product\21c\homes\OraDB21Home1 が使用されているOracleホームです。
+
+環境変数が設定されていない場合: その場合、Oracleクライアントツール（例：SQL*PlusやSQL Developer）が使用しているOracleホームを手動で確認する必要があります。
+
+----------
+2. tnsnames.oraがある場所の候補
+上記の情報から、以下のファイルパスについて説明します：
+
+パス候補の分類：
+C:\app\OK\product\21c\homes\OraDB21Home1\network\admin
+
+最も標準的な場所です。
+環境変数ORACLE_HOMEがこのパスに設定されている場合、ここを参照する可能性が高いです。
+C:\app\OK\product\21c\homes\OraDB21Home1\network\admin\241103 back
+
+"241103 back" というフォルダ名から、このフォルダは過去のバックアップ用のフォルダである可能性があります。
+通常使用しません。
+C:\app\OK\product\21c\admin
+
+このパスは標準的なtnsnames.oraの配置先ではありません。
+他の目的（ログや設定など）で使用されるディレクトリである可能性があります。
+C:\app\OK\product\21c\dbhomeXE\hs\admin
+
+これは異なるOracleコンポーネント（例：異機種間接続、Heterogeneous Services）用の設定フォルダです。
+通常のtnsnames.ora参照先ではありません。
+C:\app\OK\product\21c\dbhomeXE\inventory\Templates\hs\admin
+
+これはテンプレート用のディレクトリです。
+実際の接続で使用するtnsnames.oraの配置先ではありません。
+C:\app\OK\product\21c\dbhomeXE\network\admin\sample
+
+サンプル用のtnsnames.oraファイルが配置されている可能性が高いです。
+
+
+------------
+C:\Users\OK>set TNS_ADMIN
+TNS_ADMIN=C:\app\OK\product\21c\homes\OraDB21Home1\network\admin
+
+
+SQL DeveloperのOracle接続
+ 任意のTNSファイルを使用したい場合、ツール -> プリファレンス -> データベース -> 拡張 のTnsnamesディレクトリを設定する。
+
+
+
+************
+1. SQL Developerでtnsnames.oraを参照する設定方法
+手順
+SQL Developerを起動します。
+メニューから 「環境設定」 を探します。
+英語版では Tools > Preferences です。
+環境設定ウィンドウが開いたら、左側のカテゴリから以下を探してください：
+「データベース」 または 「Advanced（詳細）」 セクションを探します。
+Tnsnames Directory または Oracle Client に関連する設定を見つけます。
+Tnsnames Directoryの設定
+「Tnsnames Directory」や「Tnsnames.oraの場所」という設定欄がある場合、そこにtnsnames.oraファイルが存在するディレクトリを設定します。
+例: C:\app\OK\product\21c\homes\OraDB21Home1\network\admin
+設定後、「適用」または「OK」をクリックして設定を保存します。
+見つからない場合
+バージョンによっては、TNS設定を直接行う項目がない場合があります。その場合は次の方法を試してください。
+
+2. tnsnames.oraを直接使用せず、接続情報を手動で入力する方法
+SQL Developerでは、tnsnames.oraを使用しなくても、手動で接続設定を行うことができます。
+
+手順
+メニューから 「接続」 を開きます。
+
+接続タブまたは新しい接続を作成する画面が表示されます。
+「新しい接続」ボタンをクリックします。
+
+以下の項目を手動で入力します：
+
+接続名: 任意の名前（例: MyOracleDB）
+ユーザー名: Oracleデータベースのユーザー名
+パスワード: Oracleデータベースのパスワード
+ホスト名: データベースサーバーのホスト名またはIPアドレス
+ポート: デフォルトは1521
+サービス名またはSID:
+サービス名（SERVICE_NAME）を使用する場合は、**「サービス名」**にチェックを入れて指定します。
+SIDを使用する場合は、**「SID」**にチェックを入れて指定します。
+「接続のテスト」ボタンをクリックし、接続が成功するか確認します。
+
+問題がなければ「保存」して接続を確立します。
+
+3. 環境変数TNS_ADMINを設定してSQL Developerに反映させる方法
+tnsnames.oraの場所を指定するには、環境変数TNS_ADMINを設定する方法もあります。この方法を使うと、SQL Developerや他のOracleツールが指定したディレクトリを参照するようになります。
+
+手順
+環境変数を設定
+
+スタートメニューで「環境変数」と検索し、**「システムの環境変数の編集」**を開きます。
+「システム環境変数」で「新規」をクリックし、以下を入力：
+変数名: TNS_ADMIN
+変数値: tnsnames.oraが存在するフォルダのパス（例: C:\app\OK\product\21c\homes\OraDB21Home1\network\admin）
+保存して「OK」をクリック。
+SQL Developerを再起動 環境変数が反映されるようにSQL Developerを再起動します。
+
+
+
+
+
+ connectionString = User Id=test_user;Password=test;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XEPDB1)));
+
+
+C:\app\OK\product\21c\homes\OraDB21Home1\network\admin
