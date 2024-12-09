@@ -1,4 +1,5 @@
-﻿Imports System.Data.OracleClient
+﻿Imports System.Data.Common
+Imports System.Data.OracleClient
 
 Public Module ModuleOracleManager
     Public Sub ConsoleWriteLine(value As String)
@@ -17,15 +18,219 @@ Public Module ModuleOracleManager
 
         Public Sub ConnectTest(serverInfo As OracleServerInfo, sqlStr As String)
             Console.WriteLine($"現在のプロセスは: {(If(Environment.Is64BitProcess, "64ビット", "32ビット"))} で動作中です。")
-            ConnectTestB(
+            'ConnectTestB(
+            '    serverInfo.UserName,
+            '    serverInfo.Password,
+            '    serverInfo.Host,
+            '    serverInfo.Port,
+            '    serverInfo.ServiceName,
+            '    sqlStr)
+            Dim dataSetValue As DataSet
+            dataSetValue = ConnectTestC(
                 serverInfo.UserName,
                 serverInfo.Password,
                 serverInfo.Host,
                 serverInfo.Port,
                 serverInfo.ServiceName,
                 sqlStr)
+            Dim dictList = ConvertDataSetToDictList(dataSetValue)
+            DebugOutputDictionaryList(dictList)
+
         End Sub
 
+
+        Public Function GetColumnDefString(columnList As List(Of String))
+            'Dim bufList = strValueWithConmma.Split(",")
+            Dim ret = ""
+            For i As Integer = 0 To columnList.Count - 1
+                Dim buf = columnList(i)
+                buf = buf.Trim()
+                buf = String.Format("""{0}""", buf)
+                columnList(i) = buf
+                ret += buf + ", "
+            Next
+            ret = ret.Substring(0, ret.Length - 2)
+            ret = "{ " + ret + " }"
+            'Dim ret = String.Join(",", bufList)
+            'ret = String.Format("{ {0} }", ret)
+            Return ret
+        End Function
+
+
+        Public Function GetColumnNames(
+                serverInfo As OracleServerInfo,
+                sqlStr As String) As List(Of String)
+            Console.WriteLine(" ########## ")
+            Console.WriteLine("GetColumnNames")
+            Dim columnNames As New List(Of String)()
+
+            Try
+                Dim connectionString As String = serverInfo.GetConnectionString()
+                Console.WriteLine(String.Format("ConnectionString = {0}", connectionString))
+
+                Using connection As New OracleConnection(connectionString)
+                    connection.Open()
+                    Console.WriteLine("接続成功!")
+
+                    ' OracleDataAdapterを使用してクエリ結果を取得
+                    Dim result As New DataSet()
+                    Using adapter As New OracleDataAdapter(sqlStr, connection)
+                        adapter.Fill(result, 1) ' DataSetに最初の1行だけを格納
+                    End Using
+
+                    ' DataSetにテーブルが存在するか確認し、カラム名を取得
+                    If result.Tables.Count > 0 Then
+                        Dim table As DataTable = result.Tables(0)
+                        For Each column As DataColumn In table.Columns
+                            columnNames.Add(column.ColumnName)
+                        Next
+                    Else
+                        Console.WriteLine("データが存在しません。")
+                    End If
+                End Using
+            Catch ex As Exception
+                Console.WriteLine("エラーが発生しました: " & ex.Message)
+            End Try
+
+            Return columnNames
+        End Function
+
+
+
+
+        Public Sub ConnectOracleDataAccess(serverInfo As OracleServerInfo, tableName As String)
+            'Oracle.DataAccess.dll 使用Ver
+            Dim providerName As String = "Oracle.DataAccess.Client"
+            Dim connectionString As String = serverInfo.GetConnectionStringDataAccess()
+            Console.WriteLine(String.Format("ConnectionString = {0}", connectionString))
+            Try
+                ' DbProviderFactoryの取得
+                Dim factory As DbProviderFactory = DbProviderFactories.GetFactory(providerName)
+
+                ' コネクションの作成
+                Using connection As DbConnection = factory.CreateConnection()
+                    connection.ConnectionString = connectionString
+                    connection.Open()
+
+                    ' コマンドの作成
+                    Using command As DbCommand = connection.CreateCommand()
+                        command.CommandText = "SELECT * FROM " + tableName
+
+                        ' データリーダーの取得
+                        Using reader As DbDataReader = command.ExecuteReader()
+                            While reader.Read()
+                                ' データの処理
+                                Console.WriteLine(reader(0).ToString())
+                            End While
+                        End Using
+                    End Using
+                End Using
+            Catch ex As DbException
+                Console.WriteLine("データベースエラー: " & ex.Message)
+            Catch ex As Exception
+                Console.WriteLine("一般的なエラー: " & ex.Message)
+            End Try
+        End Sub
+
+
+        Public Function GetColumnNameList(serverInfo As OracleServerInfo, tableName As String)
+            Dim columnNames = New List(Of String)
+            Using connection As New OracleConnection(serverInfo.GetConnectionString())
+                Try
+                    connection.Open()
+
+                    ' SQLクエリでカラム名を取得
+                    Dim query As String = "SELECT COLUMN_NAME FROM USER_TAB_COLUMNS WHERE TABLE_NAME = :TableName"
+
+                    Using command As New OracleCommand(query, connection)
+                        ' テーブル名をパラメータとして設定
+                        command.Parameters.Add(New OracleParameter(":TableName", tableName.ToUpper()))
+
+                        Using reader As OracleDataReader = command.ExecuteReader()
+                            ' カラム名をリストに追加
+                            While reader.Read()
+                                Dim buf = reader.GetString(0)
+                                columnNames.Add(buf.ToString())
+                            End While
+                        End Using
+                    End Using
+
+                Catch ex As Exception
+                    Console.WriteLine($"エラー: {ex.Message}")
+                Finally
+                    connection.Close()
+                End Try
+            End Using
+
+            Return columnNames
+        End Function
+
+
+        Public Function CheckValidColumnName(serverInfo As OracleServerInfo, tableName As String, columns As List(Of String))
+            Dim errorColumns As New List(Of String)
+            Using connection As New OracleConnection(serverInfo.GetConnectionString())
+                Try
+                    connection.Open()
+                    ' 各カラムを1つずつSELECTしてテスト
+                    For Each column As String In columns
+                        Try
+                            Dim testQuery As String = $"SELECT {column} FROM {tableName} WHERE ROWNUM = 1"
+                            Using command As New OracleCommand(testQuery, connection)
+                                command.ExecuteScalar() ' 実行して確認
+                            End Using
+                        Catch ex As Exception
+                            ' エラーが発生したカラムを記録
+                            errorColumns.Add(column)
+                            Console.WriteLine($"エラー発生: カラム {column}, エラー: {ex.Message}")
+                        End Try
+                    Next
+
+                Catch ex As Exception
+                    Console.WriteLine($"接続エラー: {ex.Message}")
+                Finally
+                    connection.Close()
+                End Try
+            End Using
+
+            ' エラーのあるカラムを出力
+            If errorColumns.Count > 0 Then
+                Console.WriteLine("エラーが発生したカラム一覧:")
+                For Each column As String In errorColumns
+                    Console.WriteLine(column)
+                Next
+            Else
+                Console.WriteLine("すべてのカラムでエラーは発生しませんでした。")
+            End If
+        End Function
+
+
+        Public Sub DebugOutputDictionaryList(
+            dictList As List(Of Dictionary(Of String, Object)),
+            Optional separator As String = ", ")
+            For Each dict As Dictionary(Of String, Object) In dictList
+                Dim formattedEntries As String = String.Join(
+                    separator,
+                    dict.Select(Function(kv) String.Format("{0}:{1}", kv.Key, kv.Value))
+                )
+                ConsoleWriteLine(formattedEntries)
+            Next
+        End Sub
+
+        Public Function ConvertDataSetToDictList(dataSet As DataSet) As List(Of Dictionary(Of String, Object))
+            Dim result As New List(Of Dictionary(Of String, Object))()
+
+            If dataSet IsNot Nothing AndAlso dataSet.Tables.Count > 0 Then
+                For Each row As DataRow In dataSet.Tables(0).Rows
+                    Dim rowDict As New Dictionary(Of String, Object)()
+                    For Each column As DataColumn In dataSet.Tables(0).Columns
+                        rowDict(column.ColumnName) = If(row.IsNull(column), Nothing, row(column))
+                    Next
+                    result.Add(rowDict)
+                Next
+            End If
+
+            Return result
+        End Function
 
         Public Function ConnectTestC(
                 userName As String,

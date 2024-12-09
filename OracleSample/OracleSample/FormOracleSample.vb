@@ -8,9 +8,29 @@ Public Class FormOracleSample
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         InitializeOracleAccessInfo()
-        Dim sqlStr = "SELECT * FROM CUSTOMER_INFO"
-        _oracleManager.ConnectTest(_oracleServerInfo, sqlStr)
+        'Dim sqlStr = "SELECT * FROM CUSTOMER_INFO"
+        '_oracleManager.ConnectTest(_oracleServerInfo, sqlStr)
+        Dim columnNameList = _oracleManager.GetColumnNameList(_oracleServerInfo, "CUSTOMER_INFO")
+        'Dim buf = String.Join(", ", columnNameList)
+        Dim buf As String
+        For Each value In columnNameList
+            buf += value.ToString() + ", "
+        Next
+        buf = buf.Substring(0, buf.Length - 2)
+        Console.WriteLine("columnNames = " + buf)
     End Sub
+
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        InitializeOracleAccessInfo()
+        '_oracleManager.ConnectOracleDataAccess(_oracleServerInfo, "CUSTOMER_INFO")
+
+        Dim sqlStr = "SELECT * FROM CUSTOMER_INFO"
+        Dim colNames = _oracleManager.GetColumnNames(_oracleServerInfo, sqlStr)
+        Dim defStr = _oracleManager.GetColumnDefString(colNames)
+        Console.WriteLine("defStr=" + defStr)
+    End Sub
+
 
     Private Sub FormOracleSample_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _oracleServerInfo = New OracleServerInfo()
