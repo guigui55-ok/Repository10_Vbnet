@@ -168,23 +168,30 @@ Public Module ModuleOracleManager
 
         Public Function CheckValidColumnName(serverInfo As OracleServerInfo, tableName As String, columns As List(Of String))
             Dim errorColumns As New List(Of String)
-            Using connection As New OracleConnection(serverInfo.GetConnectionString())
+            Dim connectionString = serverInfo.GetConnectionString()
+            Using connection As New OracleConnection(connectionString)
                 Try
+                    Console.WriteLine(String.Format("ConnectionString = {0}", connectionString))
                     connection.Open()
                     ' 各カラムを1つずつSELECTしてテスト
+                    Dim isValidColumn = False
+                    Dim count = 0
                     For Each column As String In columns
                         Try
                             Dim testQuery As String = $"SELECT {column} FROM {tableName} WHERE ROWNUM = 1"
                             Using command As New OracleCommand(testQuery, connection)
                                 command.ExecuteScalar() ' 実行して確認
                             End Using
+                            isValidColumn = True
                         Catch ex As Exception
                             ' エラーが発生したカラムを記録
                             errorColumns.Add(column)
                             Console.WriteLine($"エラー発生: カラム {column}, エラー: {ex.Message}")
+                            isValidColumn = False
                         End Try
+                        Console.WriteLine(String.Format("[{0}] {1} = {2}", count, column, isValidColumn))
+                        count += 1
                     Next
-
                 Catch ex As Exception
                     Console.WriteLine($"接続エラー: {ex.Message}")
                 Finally
@@ -198,8 +205,10 @@ Public Module ModuleOracleManager
                 For Each column As String In errorColumns
                     Console.WriteLine(column)
                 Next
+                Return False
             Else
                 Console.WriteLine("すべてのカラムでエラーは発生しませんでした。")
+                Return True
             End If
         End Function
 

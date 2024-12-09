@@ -6,31 +6,6 @@ Public Class FormOracleSample
     Dim _oracleManager As OracleManager
     Dim _ini As IniStream
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        InitializeOracleAccessInfo()
-        'Dim sqlStr = "SELECT * FROM CUSTOMER_INFO"
-        '_oracleManager.ConnectTest(_oracleServerInfo, sqlStr)
-        Dim columnNameList = _oracleManager.GetColumnNameList(_oracleServerInfo, "CUSTOMER_INFO")
-        'Dim buf = String.Join(", ", columnNameList)
-        Dim buf As String
-        For Each value In columnNameList
-            buf += value.ToString() + ", "
-        Next
-        buf = buf.Substring(0, buf.Length - 2)
-        Console.WriteLine("columnNames = " + buf)
-    End Sub
-
-
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        InitializeOracleAccessInfo()
-        '_oracleManager.ConnectOracleDataAccess(_oracleServerInfo, "CUSTOMER_INFO")
-
-        Dim sqlStr = "SELECT * FROM CUSTOMER_INFO"
-        Dim colNames = _oracleManager.GetColumnNames(_oracleServerInfo, sqlStr)
-        Dim defStr = _oracleManager.GetColumnDefString(colNames)
-        Console.WriteLine("defStr=" + defStr)
-    End Sub
-
 
     Private Sub FormOracleSample_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _oracleServerInfo = New OracleServerInfo()
@@ -70,4 +45,35 @@ Public Class FormOracleSample
         End Try
     End Sub
 
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        InitializeOracleAccessInfo()
+        'Dim sqlStr = "SELECT * FROM CUSTOMER_INFO"
+        '_oracleManager.ConnectTest(_oracleServerInfo, sqlStr)
+        Dim columnNameList = _oracleManager.GetColumnNameList(_oracleServerInfo, "CUSTOMER_INFO")
+        'Dim buf = String.Join(", ", columnNameList)
+        Dim buf As String
+        For Each value In columnNameList
+            buf += value.ToString() + ", "
+        Next
+        buf = buf.Substring(0, buf.Length - 2)
+        Console.WriteLine("columnNames = " + buf)
+    End Sub
+
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        InitializeOracleAccessInfo()
+        '_oracleManager.ConnectOracleDataAccess(_oracleServerInfo, "CUSTOMER_INFO")
+
+        Dim sqlStr = "SELECT * FROM CUSTOMER_INFO"
+        Dim colNames = _oracleManager.GetColumnNames(_oracleServerInfo, sqlStr)
+        Dim defStr = _oracleManager.GetColumnDefString(colNames)
+        Console.WriteLine("defStr=" + defStr)
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        InitializeOracleAccessInfo()
+        Dim defStrArray = {"ID", "NAME", "AGE", "CITY", "MEMBERSHIP_TYPE_"}
+        Dim ret = _oracleManager.CheckValidColumnName(_oracleServerInfo, "CUSTOMER_INFO", defStrArray.ToList())
+        Console.WriteLine(String.Format("ret = {0}", ret))
+    End Sub
 End Class
