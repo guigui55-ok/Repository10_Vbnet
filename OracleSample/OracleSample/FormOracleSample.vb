@@ -76,7 +76,8 @@ Public Class FormOracleSample
         'Dim ret = _oracleManager.CheckValidColumnName(_oracleServerInfo, "CUSTOMER_INFO", defStrArray.ToList())
         'Console.WriteLine(String.Format("ret = {0}", ret))
 
-        Dim sql = "BEGIN
+        Dim sql = "
+BEGIN
     INSERT INTO CUSTOMER_INFO (ID, NAME)
     VALUES ('', 'Test Name');
 EXCEPTION
@@ -108,6 +109,61 @@ EXCEPTION
     WHEN OTHERS THEN
         RAISE; -- エラーを再スローする
 END;"
+
+
+        sql = "
+BEGIN
+    INSERT INTO CUSTOMER_INFO (ID, NAME) VALUES ('', '');
+EXCEPTION
+    WHEN OTHERS THEN
+        -- 独自メッセージを付与して再スロー
+        RAISE_APPLICATION_ERROR(-20002, 'CustomErrorが発生しました。');
+END;"
+
+        '        sql = "
+        'BEGIN
+        '    DBMS_OUTPUT.PUT_LINE('Hello, World!');
+        'EXCEPTION
+        '    WHEN OTHERS THEN
+        '        -- 独自メッセージを付与して再スロー
+        '        RAISE_APPLICATION_ERROR(-20002, 'CustomErrorが発生しました。');
+        'END;"
+
+        sql = "
+BEGIN
+    INSERT INTO CUSTOMER_INFO (ID, NAME) VALUES ('', '');
+EXCEPTION
+    WHEN OTHERS THEN
+        -- エラー情報をログまたは出力に記録
+        DBMS_OUTPUT.PUT_LINE('エラーコード: ' || SQLCODE);
+        DBMS_OUTPUT.PUT_LINE('エラーメッセージ: ' || SQLERRM);
+
+        -- 独自メッセージを付与して再スロー
+        RAISE_APPLICATION_ERROR(-20002, 'CustomErrorが発生しました。元のエラー: ' || SQLERRM);
+END;"
+
+        sql = "
+BEGIN
+    INSERT INTO CUSTOMER_INFO (ID, NAME) VALUES ('', '');
+EXCEPTION
+    WHEN OTHERS THEN
+        -- トレース情報の記録
+        INSERT INTO ERROR_LOG (ERROR_CODE, ERROR_MESSAGE, TIMESTAMP)
+        VALUES (SQLCODE, SQLERRM, SYSDATE);
+END;"
+
+
+        '最初にRAISEを追加
+        sql = "
+BEGIN
+    INSERT INTO CUSTOMER_INFO (ID, NAME)
+    VALUES ('', 'Test Name');
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE; -- エラーを再スローする
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END;
+"
 
         'SQLERRMでエラーメッセージを出力し、原因を追求します。
         Dim result As Boolean = _oracleManager.ExecutePlSqlWithError(_oracleServerInfo, sql)
