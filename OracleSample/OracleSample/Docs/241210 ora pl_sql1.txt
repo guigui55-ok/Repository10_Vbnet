@@ -1,0 +1,183 @@
+PL/SQL（Procedural Language/SQL）について
+PL/SQLは、Oracle Databaseで使用される拡張SQL言語で、手続き的プログラミング機能を提供します。SQLと手続き型プログラムを組み合わせて使用できるため、より高度なデータベース操作やロジックの実装が可能です。
+
+1. PL/SQLの特徴
+手続き的プログラミング: ループ、条件分岐、例外処理などの手続き型ロジックをサポート。
+SQLの統合: PL/SQLブロック内でSQL文を直接使用可能。
+モジュール化: ストアドプロシージャや関数、パッケージを作成して再利用可能。
+例外処理: 例外（エラー）を捕捉し、適切な処理を実行する仕組みを提供。
+高性能: ネットワーク通信を削減し、効率的なデータベース操作が可能。
+移植性: Oracle Database内で動作し、複数のプラットフォームで使用可能。
+2. PL/SQLブロック構造
+PL/SQLプログラムは、1つ以上の「ブロック」から構成されます。
+
+基本構造
+sql
+コードをコピーする
+DECLARE
+   -- 変数や定数の宣言
+BEGIN
+   -- 実行部分（必須）
+EXCEPTION
+   -- エラーハンドリング（任意）
+END;
+ブロックの構成要素
+DECLAREセクション（任意）
+変数、定数、カーソル、例外を宣言。
+BEGINセクション（必須）
+実行するSQLやロジックを記述。
+EXCEPTIONセクション（任意）
+エラーハンドリングを記述。
+END
+ブロックの終了。
+3. PL/SQLのデータ型
+PL/SQLではSQLと独自のデータ型を使用可能です。
+
+データ型	説明
+NUMBER	数値型（整数や浮動小数点）
+VARCHAR2	可変長文字列
+CHAR	固定長文字列
+DATE	日付型
+BOOLEAN	真偽値（TRUE, FALSE, NULL）
+%TYPE	列や変数と同じ型を指定
+%ROWTYPE	テーブル行全体と同じ型を指定
+4. PL/SQLの制御構文
+条件分岐
+sql
+コードをコピーする
+IF 条件 THEN
+   -- 条件が真の場合の処理
+ELSIF 別の条件 THEN
+   -- 別の条件が真の場合の処理
+ELSE
+   -- 全ての条件が偽の場合の処理
+END IF;
+ループ
+基本ループ
+
+sql
+コードをコピーする
+LOOP
+   -- 処理
+   EXIT WHEN 条件;
+END LOOP;
+WHILEループ
+
+sql
+コードをコピーする
+WHILE 条件 LOOP
+   -- 処理
+END LOOP;
+FORループ
+
+sql
+コードをコピーする
+FOR i IN 1..10 LOOP
+   -- 処理
+END LOOP;
+5. 例外処理
+PL/SQLは、エラー時の例外処理をサポートしています。
+
+例外ハンドリングの基本構造
+sql
+コードをコピーする
+BEGIN
+   -- 実行部分
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+      -- データが見つからない場合の処理
+   WHEN OTHERS THEN
+      -- その他のエラーの場合の処理
+END;
+主な組み込み例外
+例外名	説明
+NO_DATA_FOUND	SELECT文がデータを返さない場合
+TOO_MANY_ROWS	SELECT文が複数行を返す場合
+ZERO_DIVIDE	0による除算が行われた場合
+OTHERS	その他の全ての例外
+6. カーソル
+カーソルは、SQLのクエリ結果を逐次処理するために使用されます。
+
+明示的カーソルの使用
+sql
+コードをコピーする
+DECLARE
+   CURSOR cur IS SELECT col1, col2 FROM table_name;
+   v_col1 table_name.col1%TYPE;
+   v_col2 table_name.col2%TYPE;
+BEGIN
+   OPEN cur;
+   LOOP
+      FETCH cur INTO v_col1, v_col2;
+      EXIT WHEN cur%NOTFOUND;
+      -- カーソルの処理
+   END LOOP;
+   CLOSE cur;
+END;
+7. ストアドプロシージャと関数
+ストアドプロシージャ
+sql
+コードをコピーする
+CREATE OR REPLACE PROCEDURE procedure_name IS
+BEGIN
+   -- 処理
+END procedure_name;
+ストアド関数
+sql
+コードをコピーする
+CREATE OR REPLACE FUNCTION function_name RETURN RETURN_TYPE IS
+BEGIN
+   -- 処理
+   RETURN 値;
+END function_name;
+8. パッケージ
+パッケージは関連するプロシージャ、関数、変数をまとめる単位です。
+
+パッケージ仕様
+sql
+コードをコピーする
+CREATE OR REPLACE PACKAGE package_name IS
+   PROCEDURE proc_name;
+   FUNCTION func_name RETURN RETURN_TYPE;
+END package_name;
+パッケージ本体
+sql
+コードをコピーする
+CREATE OR REPLACE PACKAGE BODY package_name IS
+   PROCEDURE proc_name IS
+   BEGIN
+      -- 処理
+   END proc_name;
+
+   FUNCTION func_name RETURN RETURN_TYPE IS
+   BEGIN
+      -- 処理
+      RETURN 値;
+   END func_name;
+END package_name;
+9. トリガー
+トリガーは、特定のイベント（INSERT, UPDATE, DELETEなど）発生時に自動的に実行されるPL/SQLプログラムです。
+
+トリガーの作成例
+sql
+コードをコピーする
+CREATE OR REPLACE TRIGGER trigger_name
+AFTER INSERT ON table_name
+FOR EACH ROW
+BEGIN
+   -- 処理
+END;
+10. 実際の使用例
+以下は、顧客テーブルに新しい顧客を追加するストアドプロシージャの例です。
+
+sql
+コードをコピーする
+CREATE OR REPLACE PROCEDURE AddCustomer (
+   p_customer_id IN NUMBER,
+   p_customer_name IN VARCHAR2
+) IS
+BEGIN
+   INSERT INTO customers (customer_id, customer_name)
+   VALUES (p_customer_id, p_customer_name);
+   COMMIT;
+END AddCustomer;

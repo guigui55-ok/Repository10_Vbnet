@@ -1,5 +1,12 @@
 ﻿Imports System.Data.Common
 Imports System.Data.OracleClient
+Imports Oracle.DataAccess.Client
+Imports OracleCommand = System.Data.OracleClient.OracleCommand
+Imports OracleConnection = System.Data.OracleClient.OracleConnection
+Imports OracleDataAdapter = System.Data.OracleClient.OracleDataAdapter
+Imports OracleDataReader = System.Data.OracleClient.OracleDataReader
+Imports OracleException = System.Data.OracleClient.OracleException
+Imports OracleParameter = System.Data.OracleClient.OracleParameter
 
 Public Module ModuleOracleManager
     Public Sub ConsoleWriteLine(value As String)
@@ -38,7 +45,58 @@ Public Module ModuleOracleManager
 
         End Sub
 
+        Public Function ExecutePlSqlWithError(serverInfo As OracleServerInfo, sql As String) As Boolean
+            Console.WriteLine("##########")
+            Console.WriteLine("ExecutePlSqlWithError")
+            Try
+                Dim connectionString As String = serverInfo.GetConnectionString()
+                Console.WriteLine(String.Format("ConnectionString = {0}", connectionString))
 
+                Using connection As New OracleConnection(connectionString)
+                    connection.Open()
+                    Console.WriteLine("接続成功!")
+
+                    ' DBMS_OUTPUTを有効化する
+                    Using command As New OracleCommand("BEGIN DBMS_OUTPUT.ENABLE(); END;", connection)
+                        command.ExecuteNonQuery()
+                    End Using
+
+                    ' SQLを実行
+                    Using command As New OracleCommand(sql, connection)
+                        command.CommandType = CommandType.Text
+                        Try
+                            command.ExecuteNonQuery()
+                            Console.WriteLine("SQL 実行成功!")
+                            Return True
+                        Catch ex As OracleException
+                            Console.WriteLine("Oracle エラーが発生しました: " & ex.Message)
+                            Return False
+                        End Try
+                    End Using
+
+                    ' DBMS_OUTPUTの内容を取得
+                    Using command As New OracleCommand("BEGIN DBMS_OUTPUT.GET_LINE(:line, :status); END;", connection)
+                        command.Parameters.Add("line", OracleDbType.Varchar2, 32767).Direction = ParameterDirection.Output
+                        command.Parameters.Add("status", OracleDbType.Int32).Direction = ParameterDirection.Output
+
+                        While True
+                            command.ExecuteNonQuery()
+                            Dim status As Integer = Convert.ToInt32(command.Parameters("status").Value)
+                            If status <> 0 Then
+                                Exit While
+                            End If
+                            Console.WriteLine("DBMS_OUTPUT: " & command.Parameters("line").Value.ToString())
+                        End While
+                    End Using
+                End Using
+            Catch ex As Exception
+                Console.WriteLine("エラーが発生しました: " & ex.Message)
+                Return False
+            End Try
+        End Function
+
+
+        '配列の宣言文字列を作成（コード貼り付けよう）
         Public Function GetColumnDefString(columnList As List(Of String))
             'Dim bufList = strValueWithConmma.Split(",")
             Dim ret = ""
@@ -57,6 +115,7 @@ Public Module ModuleOracleManager
         End Function
 
 
+        '特定のテーブルのカラム一覧取得
         Public Function GetColumnNames(
                 serverInfo As OracleServerInfo,
                 sqlStr As String) As List(Of String)
@@ -97,7 +156,7 @@ Public Module ModuleOracleManager
 
 
 
-
+        'DataAccessでSelect実行
         Public Sub ConnectOracleDataAccess(serverInfo As OracleServerInfo, tableName As String)
             'Oracle.DataAccess.dll 使用Ver
             Dim providerName As String = "Oracle.DataAccess.Client"
@@ -133,6 +192,7 @@ Public Module ModuleOracleManager
         End Sub
 
 
+        'カラム名一覧取得 COLUMN_NAME, USER_TAB_COLUMNS 使用
         Public Function GetColumnNameList(serverInfo As OracleServerInfo, tableName As String)
             Dim columnNames = New List(Of String)
             Using connection As New OracleConnection(serverInfo.GetConnectionString())

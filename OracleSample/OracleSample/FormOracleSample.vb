@@ -72,8 +72,46 @@ Public Class FormOracleSample
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         InitializeOracleAccessInfo()
-        Dim defStrArray = {"ID", "NAME", "AGE", "CITY", "MEMBERSHIP_TYPE_"}
-        Dim ret = _oracleManager.CheckValidColumnName(_oracleServerInfo, "CUSTOMER_INFO", defStrArray.ToList())
-        Console.WriteLine(String.Format("ret = {0}", ret))
+        'Dim defStrArray = {"ID", "NAME", "AGE", "CITY", "MEMBERSHIP_TYPE_"}
+        'Dim ret = _oracleManager.CheckValidColumnName(_oracleServerInfo, "CUSTOMER_INFO", defStrArray.ToList())
+        'Console.WriteLine(String.Format("ret = {0}", ret))
+
+        Dim sql = "BEGIN
+    INSERT INTO CUSTOMER_INFO (ID, NAME)
+    VALUES ('', 'Test Name');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END;
+"
+        '    sql = "INSERT INTO CUSTOMER_INFO (ID, NAME)
+        'VALUES ('', 'Test Name')"
+
+        sql = "BEGIN
+    INSERT INTO CUSTOMER_INFO (ID, NAME)
+    VALUES ('', 'Test Name');
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE; -- エラーを再スローする
+END;"
+
+        sql = "BEGIN
+    SELECT ID, NAME_ FROM CUSTOMER_INFO WHERE ROWNUM <= 1; -- 行数を制限;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE; -- エラーを再スローする
+END;"
+
+        sql = "BEGIN
+    INSERT INTO CUSTOMER_INFO (ID, NAME) VALUES ('', '');
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE; -- エラーを再スローする
+END;"
+
+        'SQLERRMでエラーメッセージを出力し、原因を追求します。
+        Dim result As Boolean = _oracleManager.ExecutePlSqlWithError(_oracleServerInfo, sql)
+        Console.WriteLine("result=" + result.ToString())
+
     End Sub
 End Class
