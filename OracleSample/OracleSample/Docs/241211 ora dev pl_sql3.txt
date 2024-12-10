@@ -1,0 +1,33 @@
+https://oreno-it4.info/archives/128
+
+■
+スキーマ右クリックSQLワークシート
+貼り付け、実行（再生マーク）
+---
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Hello, DBMS_OUTPUT!');
+END;
+/
+
+BEGIN
+    FOR i IN 1..5 LOOP
+        DBMS_OUTPUT.PUT_LINE('Count: ' || i);
+    END LOOP;
+END;
+/
+
+---
+3. 例外処理を含むブロック
+BEGIN
+    -- 故意にエラーを発生させる
+    EXECUTE IMMEDIATE 'DROP TABLE non_existing_table';
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END;
+/
+
+
+---
+■
+メニュー表示上部、DBMS出力
