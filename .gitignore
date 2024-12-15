@@ -13,3 +13,4 @@
 **/obj/**/*.cache
 **/.git/
 ~$*.xlsx
+__test*.csv

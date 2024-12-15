@@ -1,0 +1,56 @@
+https://www.desknets.com/neo/help_apps/ja_JP/appendix/api/002.html
+
+
+実行例
+リクエストヘッダーで渡す場合
+curl
+PowerShell
+curl https://local.yourdomain/cgi-bin/dneo/zrconst.cgi \
+-H 'X-Desknets-Auth: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' \
+-d action=list_users
+リクエストパラメーターで渡す場合
+curl
+PowerShell
+curl https://local.yourdomain/cgi-bin/dneo/zrconst.cgi \
+--data-urlencode access_key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \
+-d action=list_users
+
+
+
+
+https://www.desknets.com/neo/help_apps/ja_JP/appendix/api/002.html
+https://www.desknets.com/neo/download/package.html
+
+https://www.desknets.com/neo/help_apps/ja_JP/appendix/api/001.html
+
+https://www.desknets.com/neo/help_apps/ja_JP/appendix/manhome/001.html
+データ参照API
+https://www.desknets.com/neo/help_apps/ja_JP/appendix/api/001.html#api_get_data
+
+
+
+
+https://www.desknets.com/neo/help_apps/ja_JP/public/apps/003.html#func66
+API用の識別子を設定する
+
+ヘッダーメニューから「オプション機能」の「API設定」を押すと、API設定画面が表示されます。
+識別子とは、AppSuiteのアプリケーションや部品を認識するための情報です。
+AppSuiteコマンドラインツール、Webhook、AppSuite API等で使用します。
+
+
+
+
+
+https://www.desknets.com/neo/help_apps/ja_JP/public/apps/003.html#func66
+
+*****************
+https://www.desknets.com/neo/help_apps/ja_JP/appendix/api/001.html#api_get_data
+
+https://www.desknets.com/neo/help_apps/ja_JP/appendix/api/002.html
+
+------------
+https://note.com/ackyneo/n/nb1f5a25ed7ea
+
+
+
+

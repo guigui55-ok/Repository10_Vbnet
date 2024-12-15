@@ -5,11 +5,19 @@ Public Class CsvStream
     ' リストをCSVファイルに書き出すメソッド
 
     ' デフォルトエンコーディングはShift-JISに設定
-    Private fileEncoding As Encoding = Encoding.GetEncoding("Shift-JIS")
+    'Private fileEncoding As Encoding = Encoding.GetEncoding("Shift-JIS")
+    '241213
+    'SJISだと警告が出ることがある
+    '「開こうとしているファイル'TestDict.csv'の形式は、ファイル拡張子が示す形式と異なります。このファイルを開く前に、ファイルが破損していないこと、信頼できる発行元からのファイルであることを確認してください。」
+    Private fileEncoding As Encoding = New UTF8Encoding(True)
 
     ' エンコーディングを設定するメソッド
     Public Sub SetEncoding(encodingName As String)
         fileEncoding = Encoding.GetEncoding(encodingName)
+    End Sub
+    Sub OutputConsole(value)
+        Dim wVal = String.Format("{0}", value)
+        Debug.WriteLine(wVal)
     End Sub
 
     ' リストをCSVファイルに書き出すメソッド
@@ -23,7 +31,7 @@ Public Class CsvStream
             End Using
         Catch ex As Exception
             ' 例外処理（必要に応じてログを記録することも可能）
-            Console.WriteLine("エラー: " & ex.Message)
+            OutputConsole("エラー: " & ex.Message)
         End Try
     End Sub
 
@@ -55,7 +63,7 @@ Public Class CsvStream
             End Using
         Catch ex As Exception
             ' エラーハンドリング
-            Console.WriteLine("エラー: " & ex.Message)
+            OutputConsole("エラー: " & ex.Message)
         End Try
     End Sub
 
