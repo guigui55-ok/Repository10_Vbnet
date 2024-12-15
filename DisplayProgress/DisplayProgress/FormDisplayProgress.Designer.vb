@@ -28,12 +28,12 @@ Partial Class FormDisplayProgress
         Me.ButtonA_Stop = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.ProgressBar2 = New System.Windows.Forms.ProgressBar()
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.Label_Progress2A = New System.Windows.Forms.Label()
         Me.Button_Stop2 = New System.Windows.Forms.Button()
         Me.Label_Progress2B = New System.Windows.Forms.Label()
         Me.Button_Start2 = New System.Windows.Forms.Button()
-        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
-        Me.ProgressBar2 = New System.Windows.Forms.ProgressBar()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
@@ -104,6 +104,20 @@ Partial Class FormDisplayProgress
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "GroupBox2"
         '
+        'ProgressBar2
+        '
+        Me.ProgressBar2.Location = New System.Drawing.Point(201, 58)
+        Me.ProgressBar2.Name = "ProgressBar2"
+        Me.ProgressBar2.Size = New System.Drawing.Size(197, 23)
+        Me.ProgressBar2.TabIndex = 5
+        '
+        'ProgressBar1
+        '
+        Me.ProgressBar1.Location = New System.Drawing.Point(201, 24)
+        Me.ProgressBar1.Name = "ProgressBar1"
+        Me.ProgressBar1.Size = New System.Drawing.Size(197, 23)
+        Me.ProgressBar1.TabIndex = 4
+        '
         'Label_Progress2A
         '
         Me.Label_Progress2A.AutoSize = True
@@ -141,20 +155,6 @@ Partial Class FormDisplayProgress
         Me.Button_Start2.TabIndex = 2
         Me.Button_Start2.Text = "Button_Start2"
         Me.Button_Start2.UseVisualStyleBackColor = True
-        '
-        'ProgressBar1
-        '
-        Me.ProgressBar1.Location = New System.Drawing.Point(201, 24)
-        Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(234, 23)
-        Me.ProgressBar1.TabIndex = 4
-        '
-        'ProgressBar2
-        '
-        Me.ProgressBar2.Location = New System.Drawing.Point(201, 58)
-        Me.ProgressBar2.Name = "ProgressBar2"
-        Me.ProgressBar2.Size = New System.Drawing.Size(234, 23)
-        Me.ProgressBar2.TabIndex = 5
         '
         'FormDisplayProgress
         '

@@ -45,11 +45,25 @@ Module ModuleProgressBarForm
             progressBarHandlerB = New DisplayProgressBar()
 
             ' ProgressBar を初期化
-            progressBarHandlerA.Initialize(_progressBarA, max:=100)
-            progressBarHandlerB.Initialize(_progressBarB, max:=100)
+            progressBarHandlerA.Initialize(_progressBarA, _labelA, "停止中A", "処理中A", max:=100)
+            progressBarHandlerB.Initialize(_progressBarB, _labelB, "停止中B", "処理中B", max:=100)
 
+            '//
+            '_progressBarA.Style = ProgressBarStyle.Blocks
+            '_progressBarB.Style = ProgressBarStyle.Blocks
+
+            '//
+            'https://dobon.net/vb/dotnet/control/pbmarquee.html
+            'ProgressBarの特殊なスタイルとして、マーキースタイルのプログレスバー（indeterminate progress bar）があります。
+            'マーキースタイルのプログレスバーでは、バーブロックが絶え間なく、連続して左から右に移動し続けます。
+            ''ProgressBar1をマーキースタイルにする
             '_progressBarA.Style = ProgressBarStyle.Marquee
-            '_progressBarA.s
+            ''ブロックの移動速度をデフォルトの倍にする
+            '_progressBarA.MarqueeAnimationSpeed = 50
+
+            '//
+            '_progressBarA.Enabled = False
+            '_progressBarA.TabStop = True
         End Sub
 
         Private Async Sub ButtonStart_Click(sender As Object, e As EventArgs)
@@ -68,7 +82,7 @@ Module ModuleProgressBarForm
             Catch ex As OperationCanceledException
                 ' キャンセルされた場合は無視
                 LogOutput("ButtonStart_Click OperationCanceledException")
-                progressBarHandlerA.SetProgress(0)
+                progressBarHandlerA.SetProgress(0, "停止中")
             Catch ex As Exception
                 MessageBox.Show($"エラーが発生しました: {ex.Message}")
             End Try
@@ -92,7 +106,7 @@ Module ModuleProgressBarForm
                 If token.IsCancellationRequested Then Exit Do
 
                 ' ProgressBar の進捗を設定
-                progressBarHandlerA.SetProgress(progressValue)
+                progressBarHandlerA.SetProgress(progressValue, "処理中")
 
                 ' 最大値に達したらリセット
                 If progressValue >= 100 Then
