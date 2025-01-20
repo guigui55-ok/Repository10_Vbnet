@@ -13,6 +13,8 @@ Public Class FormOracleSample
         _ini = New IniStream("")
     End Sub
 
+
+
     Private Sub InitializeOracleAccessInfo()
 
         Dim iniPath = "C:\Users\OK\source\repos\test_media_files\vbnet_oracle\oracle_setting.ini"
@@ -170,4 +172,45 @@ END;
         Console.WriteLine("result=" + result.ToString())
 
     End Sub
+
+    Private Sub Button_WriteCsv_Click(sender As Object, e As EventArgs) Handles Button_WriteCsv.Click
+
+        InitializeOracleAccessInfo()
+        Dim sqlStr = "SELECT * FROM CUSTOMER_INFO"
+        Dim dataSetValue = New DataSet
+        Dim resultCode = _oracleManager.GetDataByExecuteSqlServerInfo(_oracleServerInfo, sqlStr, dataSetValue)
+        Debug.WriteLine(String.Format("resultCode = {0}", resultCode))
+        Dim buf As String
+        For Each tableData As DataTable In dataSetValue.Tables
+            Dim count = 0
+            For Each row In tableData.Rows
+                Dim dict = DataTableRowToDict(row)
+                Dim bufStr = DictToString(dict)
+                bufStr = String.Format("[{0:D2}] ", count) + bufStr
+                Debug.WriteLine(bufStr)
+                count += 1
+            Next
+        Next
+        Debug.WriteLine("-----")
+    End Sub
+
+    Public Function DataTableRowToDict(dataRowValue As DataRow) As Dictionary(Of String, Object)
+        Dim ret = New Dictionary(Of String, Object)()
+        For Each col In dataRowValue.Table.Columns
+            ret(col.ToString()) = dataRowValue(col)
+        Next
+        Return ret
+    End Function
+
+    Public Function DictToString(dict As Dictionary(Of String, Object), Optional formatStr As String = "[{0}:{1}]", Optional delimita As String = ", ") As String
+        Dim bufList = New List(Of String)()
+        For Each key In dict.Keys
+            Dim buf = String.Format(formatStr, key, dict(key).ToString())
+            bufList.Add(buf)
+        Next
+        Dim ret = ""
+        ret = String.Join(delimita, bufList)
+        Return ret
+    End Function
+
 End Class

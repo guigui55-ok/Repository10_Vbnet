@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class FormOracleSample
+Partial Class FormScreenshotTest
     Inherits System.Windows.Forms.Form
 
     'フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
@@ -24,56 +24,34 @@ Partial Class FormOracleSample
     Private Sub InitializeComponent()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
-        Me.Button3 = New System.Windows.Forms.Button()
-        Me.Button_WriteCsv = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(449, 104)
+        Me.Button1.Location = New System.Drawing.Point(118, 168)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(86, 30)
+        Me.Button1.Size = New System.Drawing.Size(121, 37)
         Me.Button1.TabIndex = 0
-        Me.Button1.Text = "Button1"
+        Me.Button1.Text = "アプリの画面保存"
         Me.Button1.UseVisualStyleBackColor = True
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(331, 104)
+        Me.Button2.Location = New System.Drawing.Point(257, 168)
         Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(97, 30)
+        Me.Button2.Size = New System.Drawing.Size(113, 37)
         Me.Button2.TabIndex = 1
-        Me.Button2.Text = "Button2"
+        Me.Button2.Text = "画面全体保存"
         Me.Button2.UseVisualStyleBackColor = True
         '
-        'Button3
-        '
-        Me.Button3.Location = New System.Drawing.Point(229, 104)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(86, 30)
-        Me.Button3.TabIndex = 2
-        Me.Button3.Text = "Button3"
-        Me.Button3.UseVisualStyleBackColor = True
-        '
-        'Button_WriteCsv
-        '
-        Me.Button_WriteCsv.Location = New System.Drawing.Point(126, 104)
-        Me.Button_WriteCsv.Name = "Button_WriteCsv"
-        Me.Button_WriteCsv.Size = New System.Drawing.Size(86, 30)
-        Me.Button_WriteCsv.TabIndex = 3
-        Me.Button_WriteCsv.Text = "WriteCsv"
-        Me.Button_WriteCsv.UseVisualStyleBackColor = True
-        '
-        'FormOracleSample
+        'FormScreenshotTest
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(547, 174)
-        Me.Controls.Add(Me.Button_WriteCsv)
-        Me.Controls.Add(Me.Button3)
+        Me.ClientSize = New System.Drawing.Size(471, 217)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button1)
-        Me.Name = "FormOracleSample"
+        Me.Name = "FormScreenshotTest"
         Me.Text = "Form1"
         Me.ResumeLayout(False)
 
@@ -81,6 +59,4 @@ Partial Class FormOracleSample
 
     Friend WithEvents Button1 As Button
     Friend WithEvents Button2 As Button
-    Friend WithEvents Button3 As Button
-    Friend WithEvents Button_WriteCsv As Button
 End Class

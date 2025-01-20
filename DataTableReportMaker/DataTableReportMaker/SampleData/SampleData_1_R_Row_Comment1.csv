@@ -1,0 +1,2 @@
+ID,Name,Age,Gender,Country,Email,Phone,CreatedAt,IsActive,Notes
+1,Alice Johnson,28,Female,USA,alice.johnson@example.com,+1-202-555-0114,2025-01-01 10:00:00,True,Prefers email contact

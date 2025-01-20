@@ -1,0 +1,2 @@
+ID,Name,Age,Gender,Country,Email,Phone,CreatedAt,IsActive,Notes
+3,Charlie Brown,42,Male,UK,charlie.brown@example.co.uk,+44-20-7946-0958,2025-01-03 14:15:00,True,Long-time customer

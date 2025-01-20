@@ -1,0 +1,81 @@
+vb.netのWinfowmsで以下のような処理をしたいと考えています。
+各処理について、クラスやモジュールなどを作成してください。
+非効率なところなどがあれば修正してください。
+
+
+概要：
+特定フォルダの中にCsvファイルが複数入っているので、それを別フォルダにコピーする。
+そのCsvファイルは特定の種類ごとに分かれているので、
+その種類ごとに各Csvのデータを1つにまとめてResultフォルダにCsvファイルを作成
+ResultフォルダのCsvをまとめて1つのエクセルに転記する。
+
+備考：
+Formの中にはRichTextBoxと実行ボタンを配置しています。
+アプリ起動後RichTextBoxに文字列を入力した後、ボタンの押下で機能を実行します。
+
+ファイル名（例）
+TableNameA_1__R_250119_0115__commentA.csv
+TableNameA_2__R_250119_0116__commentB.csv
+TableNameA_3__R_250119_0117__commentC.csv
+TableNameB_1__D_250119_0022__commentA.csv
+
+*処理詳細
+定数
+CSV書き込み開始Row
+CSV書き込み開始Col
+表書き込みオフセットRow
+表書き込みオフセットCol
+テーブル間オフセット
+
+特定フォルダからCsvファイルを「実行ファイルのディレクトリ￥csv」にコピーする
+そのcsvのフォルダのCsvのみのファイル一覧（*.csv）を取得してリストに格納する
+　　→CsvFileList
+
+Richテキストボックスの文字列を改行でsplitしてリストに格納する（FilterList）
+nowRow＝CSV書き込み開始Row
+nowCol＝CSV書き込み開始Col
+For Each FilterValue in FilterList
+	CsvFileListからFilterValueが含まれる値を別リストに、TargetCsvList
+	"_\d{1,2}_"でそれぞれ番号を抜き出し、｛番号：リストのindex｝でdictにする（dictに追加する）
+
+　　dictを番号順に並び変える
+
+　　For Each key in dict
+        csvPath = dict(key)
+
+　　　　ファイル名から最後の"_"以降（拡張子は除く）を取得してコメントとして保持する。
+　　　　ファイルの先頭から最初の"_"までをテーブル名として保持する。
+	ファイル名から"_D_"があるか"_R_"があるかで、
+　　　　　　書き込み方向DownかRightかをフラグで保持する。
+　　　　Csvファイルを読み込みDataTableで保持する。
+　　　　このDataTableの一番左の列に1行挿入して、アドレス1,1に"カラム名"を入力
+　　　　その下に、"データ1"、"データ2",....のようにデータの数だけ入力していく
+
+　　　　if 書き込み方向Rightの場合 Then
+　　　　　　ファイル書き込みがRの時は、DataTableの行と列を入れ替える
+　　　　Else
+　　　　　　'書き込み方向がDownの場合
+　　　　EndIf　　　　　
+	
+　　　　データ書き込み用の空のDataTableを用意する
+	nowRow、nowColの位置に、テーブル名
+　　　　nowRow＋＝1
+　　　　nowRow、nowColの位置に、コメント書き込み
+　　　　nowRow＋＝表書き込みオフセットRow
+　　　　nowCol＋＝表書き込みオフセットCol
+　　　　この位置からCsvファイルを読み込んだDataTableを書き込み
+　　　　if 書き込み方向Rightの場合 Then
+　　　　　　nowCol＋＝テーブル間オフセット
+　　　　Else
+　　　　　　'書き込み方向がDownの場合
+　　　　　　nowRow＋＝テーブル間オフセット
+　　　　EndIf　　　　　
+　　　　（あとはこの処理を繰り返し）
+　　　　出力用パス＝アプリのディレクトリ￥Resultyymmdd_hhmmss￥テーブル名_Result_yyyymmdd_hhmmss.csv
+　　　　このデータテーブルをCsvファイルに出力する。
+　　　　テーブル名とファイルパスをdictで保持しておく
+
+出来上がった各Csvファイルを1つのエクセルにまとめる
+　各Csvを読み込んで、シート名＝テーブル名、Csvの内容をそのままシートにコピーする
+
+

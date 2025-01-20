@@ -1,0 +1,2 @@
+ID,Name,Age,Gender,Country,Email,Phone,CreatedAt,IsActive,Notes
+2,Bob Smith,35,Male,Canada,bob.smith@example.com,+1-416-555-0198,2025-01-02 11:30:00,False,Requires follow-up

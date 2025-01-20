@@ -23,7 +23,7 @@ Public Module ModuleOracleManager
 
     Public Class OracleManager
 
-        Public Sub ConnectTest(serverInfo As OracleServerInfo, sqlStr As String)
+        Public Sub ConnectTest(serverInfo As OracleServerInfo, sqlStr As String, ByRef dataSetValue As DataSet)
             Console.WriteLine($"現在のプロセスは: {(If(Environment.Is64BitProcess, "64ビット", "32ビット"))} で動作中です。")
             'ConnectTestB(
             '    serverInfo.UserName,
@@ -32,7 +32,19 @@ Public Module ModuleOracleManager
             '    serverInfo.Port,
             '    serverInfo.ServiceName,
             '    sqlStr)
-            Dim dataSetValue As DataSet
+            dataSetValue = ConnectTestC(
+                serverInfo.UserName,
+                serverInfo.Password,
+                serverInfo.Host,
+                serverInfo.Port,
+                serverInfo.ServiceName,
+                sqlStr)
+            Dim dictList = ConvertDataSetToDictList(dataSetValue)
+            DebugOutputDictionaryList(dictList)
+
+        End Sub
+
+        Public Sub GetDataTableByExecuteSql(serverInfo As OracleServerInfo, sqlStr As String, ByRef dataSetValue As DataSet)
             dataSetValue = ConnectTestC(
                 serverInfo.UserName,
                 serverInfo.Password,
@@ -299,6 +311,48 @@ Public Module ModuleOracleManager
             End If
 
             Return result
+        End Function
+
+        Public Function GetDataByExecuteSqlServerInfo(serverInfo As OracleServerInfo, sqlStr As String, ByRef result As DataSet)
+            Return GetDataByExecuteSql(
+                serverInfo.UserName,
+                serverInfo.Password,
+                serverInfo.Host,
+                serverInfo.Port,
+                serverInfo.ServiceName,
+                sqlStr, result)
+        End Function
+
+        Public Function GetDataByExecuteSql(
+                userName As String,
+                password As String,
+                host As String,
+                port As String,
+                ServiceName As String,
+                sqlStr As String,
+                ByRef result As DataSet) As Integer
+            ConsoleWriteLine(" ########## ")
+            ConsoleWriteLine("GetDataByExecuteSql")
+            Try
+                Dim connectionString As String = String.Format(
+                    "User Id={0};Password={1};Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST={2})(PORT={3}))(CONNECT_DATA=(SERVICE_NAME={4})));",
+                    userName, password, host, port, ServiceName)
+
+                Using connection As New OracleConnection(connectionString)
+                    connection.Open()
+                    ConsoleWriteLine("OracleConnection.Open Success.")
+
+                    ConsoleWriteLine(String.Format("SQL = {0}", sqlStr))
+                    ' OracleDataAdapterを使用してクエリ結果を取得
+                    Using adapter As New OracleDataAdapter(sqlStr, connection)
+                        adapter.Fill(result) ' DataSetにデータを格納
+                    End Using
+                End Using
+                Return 1
+            Catch ex As Exception
+                ConsoleOutputError(ex)
+                Return -1
+            End Try
         End Function
 
         Public Function ConnectTestC(
