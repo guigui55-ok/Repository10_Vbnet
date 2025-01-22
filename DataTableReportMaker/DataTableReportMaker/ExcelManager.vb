@@ -1,6 +1,20 @@
 ﻿Imports Excel = Microsoft.Office.Interop.Excel
+Imports System.Text
 
 Public Class ExcelManager
+    ' エンコーディングを保持するメンバ変数（デフォルトはShift-JIS）
+    Private _encoding As Encoding = Encoding.GetEncoding("Shift-JIS")
+
+    ' エンコーディングを設定するプロパティ
+    Public Property FileEncoding As Encoding
+        Get
+            Return _encoding
+        End Get
+        Set(value As Encoding)
+            _encoding = value
+        End Set
+    End Property
+
     Public Sub WriteToExcel(outputPath As String, csvDict As Dictionary(Of String, String))
         Dim excelApp As Excel.Application = Nothing
         Dim workbook As Excel.Workbook = Nothing
@@ -14,7 +28,9 @@ Public Class ExcelManager
             For Each kvp In csvDict
                 Dim sheet As Excel.Worksheet = workbook.Sheets.Add()
                 sheet.Name = kvp.Key
-                Dim csvContent = IO.File.ReadAllLines(kvp.Value)
+
+                ' エンコーディングを使用してCSVデータを読み込む
+                Dim csvContent = IO.File.ReadAllLines(kvp.Value, _encoding)
 
                 ' CSVデータをシートに書き込み
                 For i As Integer = 0 To csvContent.Length - 1

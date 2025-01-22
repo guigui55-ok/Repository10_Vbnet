@@ -1,8 +1,13 @@
 ﻿Public Class CsvManager
+    ' エンコードを設定するプロパティ
+    'Public Property FileEncoding As System.Text.Encoding = System.Text.Encoding.UTF8
+    Public Property FileEncoding As System.Text.Encoding = System.Text.Encoding.GetEncoding("Shift-JIS")
+
+
     Public Function ReadCsv(filePath As String) As DataTable
         Dim dt As New DataTable()
 
-        Using sr As New IO.StreamReader(filePath)
+        Using sr As New IO.StreamReader(filePath, FileEncoding)
             ' ヘッダー行の読み取りとDataTableの列定義
             Dim headers = sr.ReadLine().Split(","c)
             For Each header In headers
@@ -40,8 +45,8 @@
     End Function
 
     Public Sub WriteCsv(filePath As String, dataTable As DataTable)
-        Using sw As New IO.StreamWriter(filePath)
-            sw.WriteLine(String.Join(",", dataTable.Columns.Cast(Of DataColumn).Select(Function(c) c.ColumnName)))
+        Using sw As New IO.StreamWriter(filePath, False, FileEncoding)
+            'sw.WriteLine(String.Join(",", dataTable.Columns.Cast(Of DataColumn).Select(Function(c) c.ColumnName)))
             For Each row As DataRow In dataTable.Rows
                 sw.WriteLine(String.Join(",", row.ItemArray))
             Next

@@ -22,6 +22,7 @@ Partial Class FormDataTableReportMaker
     'コード エディターを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormDataTableReportMaker))
         Me.RichTextBox1 = New System.Windows.Forms.RichTextBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -31,7 +32,7 @@ Partial Class FormDataTableReportMaker
         '
         'RichTextBox1
         '
-        Me.RichTextBox1.Location = New System.Drawing.Point(12, 59)
+        Me.RichTextBox1.Location = New System.Drawing.Point(29, 138)
         Me.RichTextBox1.Name = "RichTextBox1"
         Me.RichTextBox1.Size = New System.Drawing.Size(250, 151)
         Me.RichTextBox1.TabIndex = 0
@@ -39,7 +40,7 @@ Partial Class FormDataTableReportMaker
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(187, 275)
+        Me.Button1.Location = New System.Drawing.Point(311, 138)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 1
@@ -51,14 +52,14 @@ Partial Class FormDataTableReportMaker
         Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(12, 9)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(262, 36)
+        Me.Label1.Size = New System.Drawing.Size(457, 108)
         Me.Label1.TabIndex = 2
-        Me.Label1.Text = "以下のリストの文字列1行＋""_数字_*.csv""のファイルを" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "読み込み別のCSVファイルに追記していく。" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "書き込み時は行列を反転する。"
+        Me.Label1.Text = resources.GetString("Label1.Text")
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 222)
+        Me.Label2.Location = New System.Drawing.Point(29, 296)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(62, 12)
         Me.Label2.TabIndex = 3
@@ -66,9 +67,9 @@ Partial Class FormDataTableReportMaker
         '
         'TextBox_SrcDirPath
         '
-        Me.TextBox_SrcDirPath.Location = New System.Drawing.Point(14, 237)
+        Me.TextBox_SrcDirPath.Location = New System.Drawing.Point(29, 311)
         Me.TextBox_SrcDirPath.Name = "TextBox_SrcDirPath"
-        Me.TextBox_SrcDirPath.Size = New System.Drawing.Size(248, 19)
+        Me.TextBox_SrcDirPath.Size = New System.Drawing.Size(357, 19)
         Me.TextBox_SrcDirPath.TabIndex = 4
         Me.TextBox_SrcDirPath.Text = "C:\Users\OK\source\repos\Repository10_VBnet\DataTableReportMaker\DataTableReportM" &
     "aker\SampleData"
@@ -77,7 +78,7 @@ Partial Class FormDataTableReportMaker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(290, 310)
+        Me.ClientSize = New System.Drawing.Size(521, 342)
         Me.Controls.Add(Me.TextBox_SrcDirPath)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)

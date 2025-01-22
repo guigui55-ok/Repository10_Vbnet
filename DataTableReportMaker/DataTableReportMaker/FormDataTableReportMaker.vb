@@ -1,6 +1,6 @@
 ﻿Imports System.IO
 Imports System.Text.RegularExpressions
-
+Imports DataTableUtility
 Public Class FormDataTableReportMaker
 
     Class Constants
@@ -13,6 +13,12 @@ Public Class FormDataTableReportMaker
 
     Private Sub FormDataTableReportMaker_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' 初期化処理（必要に応じて記述）
+    End Sub
+
+
+    Private Sub OutputConsole(value As Object)
+        Dim buf = String.Format("{0}", value)
+        Debug.WriteLine(buf)
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -29,7 +35,7 @@ Public Class FormDataTableReportMaker
         End If
 
         Dim sourceDir = IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "csv")
-        Dim destDir = IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ReadData")
+        Dim destDir = IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Result")
         Dim fileManager = New FileManager()
         Dim csvManager = New CsvManager()
         Dim excelManager = New ExcelManager()
@@ -40,6 +46,8 @@ Public Class FormDataTableReportMaker
 
         Dim nowRow = 1
         Dim nowCol = 1
+        Dim beginRow = 1
+        Dim beginCol = 1
         Dim resultDict As New Dictionary(Of String, String)
 
         For Each filterValue In filterList
@@ -50,52 +58,81 @@ Public Class FormDataTableReportMaker
             nowCol = 1
             ' データ書き込み用の空のDataTableを用意する
             Dim tableName As String = ""
-            Dim resultDataTable As DataTable = New DataTable
-
+            Dim resultDataTableUtil As TableDataManager = New TableDataManager
+            Dim FileCount = 0
             For Each file In targetFiles
+                FileCount += 1
                 Dim comment = IO.Path.GetFileNameWithoutExtension(file).Split("_").Last()
                 tableName = IO.Path.GetFileNameWithoutExtension(file).Split("_").First()
+                'tableName = tableName + FileCount.ToString()
+                OutputConsole(" ########## ")
+                OutputConsole(String.Format("tableName = {0}", tableName))
+                OutputConsole(String.Format("comment = {0}", comment))
+                resultDataTableUtil.AddTable(tableName)
                 dataTable = csvManager.ReadCsv(file)
+                OutputConsole(String.Format("datatable.Rows.Count = {0}", dataTable.Rows.Count))
+                OutputConsole(String.Format("datatable.Columns.Count = {0}", dataTable.Columns.Count))
 
                 '############ BEGIN
                 Dim isRight As Boolean = DetermineWriteDirection(file)
 
                 ' データテーブルにヘッダーとデータを追加
                 AddHeaderAndData(dataTable)
+                TableDataManager.PrintDataTableContentsOther(dataTable)
+                OutputConsole(String.Format("datatable.Rows.Count = {0}", dataTable.Rows.Count))
+                OutputConsole(String.Format("datatable.Columns.Count = {0}", dataTable.Columns.Count))
 
                 If isRight Then
+                    nowRow = beginRow
                     ' 行と列を入れ替える
-                    dataTable = TransposeDataTable(dataTable)
+                    dataTable = DataTableConverter.Transpose(dataTable)
+                    TableDataManager.PrintDataTableContentsOther(dataTable)
+                    OutputConsole(String.Format("datatable.Rows.Count = {0}", dataTable.Rows.Count))
+                    OutputConsole(String.Format("datatable.Columns.Count = {0}", dataTable.Columns.Count))
 
                     ' テーブル名とコメントを resultDataTable に書き込む
-                    WriteMetaData(resultDataTable, nowRow, nowCol, tableName, comment)
+                    'WriteMetaData(dataTable, resultDataTable, nowRow, nowCol, tableName, comment)
+                    resultDataTableUtil.InsertPrimitiveData(tableName, tableName, nowRow, nowCol)
+                    nowRow += 1
+                    resultDataTableUtil.InsertPrimitiveData(tableName, comment, nowRow, nowCol)
+                    nowRow += 1
+                    nowRow += 1
+                    nowCol += 1
+                    resultDataTableUtil.InsertData(tableName, dataTable, nowRow, nowCol)
 
                     ' 入れ替え済みのデータを resultDataTable に追加
-                    WriteDataTable(resultDataTable, dataTable, nowRow, nowCol)
+                    'WriteDataTable(resultDataTable, dataTable, nowRow, nowCol)
+                    TableDataManager.PrintDataTableContentsOther(resultDataTableUtil.GetDataTable(tableName))
 
                     nowCol += Constants.NEXT_TABLE_OFFSET
                 Else
                     ' テーブル名とコメントを resultDataTable に書き込む
-                    WriteMetaData(resultDataTable, nowRow, nowCol, tableName, comment)
+                    resultDataTableUtil.InsertPrimitiveData(tableName, tableName, nowRow, nowCol)
+                    resultDataTableUtil.InsertPrimitiveData(tableName, comment, nowRow + 1, nowCol)
 
                     ' データを resultDataTable に追加
-                    WriteDataTable(resultDataTable, dataTable, nowRow, nowCol)
+                    nowRow += 2
+                    resultDataTableUtil.InsertData(tableName, dataTable, nowRow, nowCol + 1)
 
                     nowRow += Constants.NEXT_TABLE_OFFSET
                 End If
                 '############ END
             Next
 
-            Dim outputCsv = IO.Path.Combine(destDir, $"{tableName}_Result.csv")
-            csvManager.WriteCsv(outputCsv, resultDataTable)
-            Debug.WriteLine("outputCsv = " + outputCsv)
-            resultDict(tableName) = outputCsv
+            For Each bufTable As DataTable In resultDataTableUtil.GetDataSet().Tables
+                Dim bufTableName = bufTable.TableName
+                Dim outputCsv = IO.Path.Combine(destDir, $"{bufTableName}_Result.csv")
+                csvManager.WriteCsv(outputCsv, bufTable)
+                OutputConsole("outputCsv = " + outputCsv)
+                resultDict(tableName) = outputCsv
+            Next
         Next
 
-        ' エクセルファイルにまとめて書き込む
-        Dim excelPath = IO.Path.Combine(destDir, "FinalResult.xlsx")
+            ' エクセルファイルにまとめて書き込む
+            Dim excelPath = IO.Path.Combine(destDir, "FinalResult.xlsx")
         excelManager.WriteToExcel(excelPath, resultDict)
-        MessageBox.Show("処理が完了しました。")
+        OutputConsole("excelPath = " + excelPath)
+        OutputConsole("処理が完了しました。")
     End Sub
 
     ' 書き込み方向を判定する関数
@@ -143,8 +180,9 @@ Public Class FormDataTableReportMaker
     End Function
 
     ' メタデータを書き込む関数
-    Private Sub WriteMetaData(resultDataTable As DataTable, nowRow As Integer, nowCol As Integer, tableName As String, comment As String)
-        Dim metaRow As DataRow = resultDataTable.NewRow()
+    Private Sub WriteMetaData(nowTable As DataTable, resultDataTable As DataTable, nowRow As Integer, nowCol As Integer, tableName As String, comment As String)
+        'Dim metaRow As DataRow = resultDataTable.NewRow()
+        Dim metaRow = resultDataTable.Rows(nowRow)
         metaRow(nowCol) = tableName
         resultDataTable.Rows.Add(metaRow)
 
@@ -163,5 +201,9 @@ Public Class FormDataTableReportMaker
             resultDataTable.Rows.Add(newRow)
             nowRow += 1
         Next
+    End Sub
+
+    Private Sub TextBox_SrcDirPath_TextChanged(sender As Object, e As EventArgs) Handles TextBox_SrcDirPath.TextChanged
+
     End Sub
 End Class
