@@ -1,10 +1,9 @@
 # Repository10_VBnet
 
-Memo
-250131
-作成：
-FileListMaker
-ManyFileRenamer
-TextFileSeparator
-TextFileSeparator
+Memo<br>
+250131<br>
+作成：<br>
+* FileListMaker
+* ManyFileRenamer
+* TextFileSeparator
 
