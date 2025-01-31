@@ -2,7 +2,7 @@
 
 Memo
 250131
-�쐬�F
+作成：
 FileListMaker
 ManyFileRenamer
 TextFileSeparator
