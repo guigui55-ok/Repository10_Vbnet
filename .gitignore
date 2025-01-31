@@ -5,6 +5,7 @@
 **/bin/Debug/
 **/bin/Release/
 **/obj/Release/
+**/__test_/
 **/__test_*.*
 **/__test_log.log
 **/__test_log.txt
