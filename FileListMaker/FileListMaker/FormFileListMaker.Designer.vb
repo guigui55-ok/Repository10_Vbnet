@@ -30,12 +30,16 @@ Partial Class FormFileListMaker
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TextBoxIgnoreList = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.TextBoxOutputPath = New System.Windows.Forms.TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.ButtonShowExplorer = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 9)
+        Me.Label1.Location = New System.Drawing.Point(12, 39)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(30, 12)
         Me.Label1.TabIndex = 0
@@ -43,14 +47,14 @@ Partial Class FormFileListMaker
         '
         'TextBoxPath
         '
-        Me.TextBoxPath.Location = New System.Drawing.Point(74, 6)
+        Me.TextBoxPath.Location = New System.Drawing.Point(74, 36)
         Me.TextBoxPath.Name = "TextBoxPath"
         Me.TextBoxPath.Size = New System.Drawing.Size(568, 19)
         Me.TextBoxPath.TabIndex = 1
         '
         'ButtonCreateFile
         '
-        Me.ButtonCreateFile.Location = New System.Drawing.Point(558, 108)
+        Me.ButtonCreateFile.Location = New System.Drawing.Point(558, 138)
         Me.ButtonCreateFile.Name = "ButtonCreateFile"
         Me.ButtonCreateFile.Size = New System.Drawing.Size(84, 23)
         Me.ButtonCreateFile.TabIndex = 2
@@ -60,7 +64,7 @@ Partial Class FormFileListMaker
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 61)
+        Me.Label2.Location = New System.Drawing.Point(12, 91)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(43, 12)
         Me.Label2.TabIndex = 3
@@ -68,7 +72,7 @@ Partial Class FormFileListMaker
         '
         'TextBoxIncludeList
         '
-        Me.TextBoxIncludeList.Location = New System.Drawing.Point(74, 58)
+        Me.TextBoxIncludeList.Location = New System.Drawing.Point(74, 88)
         Me.TextBoxIncludeList.Name = "TextBoxIncludeList"
         Me.TextBoxIncludeList.Size = New System.Drawing.Size(568, 19)
         Me.TextBoxIncludeList.TabIndex = 4
@@ -76,7 +80,7 @@ Partial Class FormFileListMaker
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(13, 40)
+        Me.Label3.Location = New System.Drawing.Point(13, 70)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(483, 12)
         Me.Label3.TabIndex = 5
@@ -84,7 +88,7 @@ Partial Class FormFileListMaker
         '
         'TextBoxIgnoreList
         '
-        Me.TextBoxIgnoreList.Location = New System.Drawing.Point(74, 83)
+        Me.TextBoxIgnoreList.Location = New System.Drawing.Point(74, 113)
         Me.TextBoxIgnoreList.Name = "TextBoxIgnoreList"
         Me.TextBoxIgnoreList.Size = New System.Drawing.Size(568, 19)
         Me.TextBoxIgnoreList.TabIndex = 7
@@ -92,17 +96,55 @@ Partial Class FormFileListMaker
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(12, 86)
+        Me.Label4.Location = New System.Drawing.Point(12, 116)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(38, 12)
         Me.Label4.TabIndex = 6
         Me.Label4.Text = "Ignore:"
         '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(13, 9)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(315, 12)
+        Me.Label5.TabIndex = 8
+        Me.Label5.Text = "フォルダをD＆Dして、そのフォルダのファイル一覧をCsvで出力する。"
+        '
+        'TextBoxOutputPath
+        '
+        Me.TextBoxOutputPath.Location = New System.Drawing.Point(82, 168)
+        Me.TextBoxOutputPath.Name = "TextBoxOutputPath"
+        Me.TextBoxOutputPath.Size = New System.Drawing.Size(461, 19)
+        Me.TextBoxOutputPath.TabIndex = 10
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(12, 171)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(64, 12)
+        Me.Label6.TabIndex = 9
+        Me.Label6.Text = "OutputPath:"
+        '
+        'ButtonShowExplorer
+        '
+        Me.ButtonShowExplorer.Location = New System.Drawing.Point(558, 171)
+        Me.ButtonShowExplorer.Name = "ButtonShowExplorer"
+        Me.ButtonShowExplorer.Size = New System.Drawing.Size(84, 23)
+        Me.ButtonShowExplorer.TabIndex = 11
+        Me.ButtonShowExplorer.Text = "ShowExplorer"
+        Me.ButtonShowExplorer.UseVisualStyleBackColor = True
+        '
         'FormFileListMaker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(654, 140)
+        Me.ClientSize = New System.Drawing.Size(654, 208)
+        Me.Controls.Add(Me.ButtonShowExplorer)
+        Me.Controls.Add(Me.TextBoxOutputPath)
+        Me.Controls.Add(Me.Label6)
+        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.TextBoxIgnoreList)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label3)
@@ -126,4 +168,8 @@ Partial Class FormFileListMaker
     Friend WithEvents Label3 As Label
     Friend WithEvents TextBoxIgnoreList As TextBox
     Friend WithEvents Label4 As Label
+    Friend WithEvents Label5 As Label
+    Friend WithEvents TextBoxOutputPath As TextBox
+    Friend WithEvents Label6 As Label
+    Friend WithEvents ButtonShowExplorer As Button
 End Class

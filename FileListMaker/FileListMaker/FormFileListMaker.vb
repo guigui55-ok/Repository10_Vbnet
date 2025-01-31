@@ -50,6 +50,7 @@ Public Class FormFileListMaker
     End Sub
 
     Private Sub ProcessFiles()
+        TextBoxOutputPath.Text = ""
         Dim targetPath As String = TextBoxPath.Text
         If Not Directory.Exists(targetPath) Then
             OutputLog("Invalid directory path.")
@@ -76,6 +77,8 @@ Public Class FormFileListMaker
         csvLines.AddRange(filteredFiles)
         File.WriteAllLines(outputFilePath, csvLines, Encoding.UTF8)
         OutputLog($"File list created: {outputFilePath}")
+
+        Me.TextBoxOutputPath.Text = outputFilePath
     End Sub
 
     Private Function ExtractPatterns(input As String) As String()
@@ -91,5 +94,18 @@ Public Class FormFileListMaker
         My.Settings.IncludeList = TextBoxIncludeList.Text
         My.Settings.IgnoreList = TextBoxIgnoreList.Text
         My.Settings.Save()
+    End Sub
+
+    Private Sub ButtonShowExplorer_Click(sender As Object, e As EventArgs) Handles ButtonShowExplorer.Click
+        Dim openPath = Path.GetDirectoryName(Me.TextBoxOutputPath.Text)
+        OpenDirectoryInExplorer(openPath)
+    End Sub
+
+    Private Sub OpenDirectoryInExplorer(directoryPath As String)
+        If Directory.Exists(directoryPath) Then
+            Process.Start("explorer.exe", directoryPath)
+        Else
+            MessageBox.Show("指定されたディレクトリは存在しません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
     End Sub
 End Class
