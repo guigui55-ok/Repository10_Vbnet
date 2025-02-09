@@ -3,17 +3,73 @@ Imports System.Text.RegularExpressions
 Imports DataTableUtility
 Public Class FormDataTableReportMaker
 
+    Class ConstErrorFlag
+        Public Shared RESULT_OK = 1
+        Public Shared SYSTEM_ERROR = -2
+        Public Shared RESULT_NG = -3
+        Public Shared FILE_NAME_ERROR = 11
+    End Class
+
     Class Constants
         Public Shared ReadOnly CSV_WRITE_BEGIN_ROW = 1
         Public Shared ReadOnly CSV_WRITE_BEGIN_COL = 1
         Public Shared ReadOnly TABLE_OFFSET_ROW = 1
         Public Shared ReadOnly TABLE_OFFSET_COL = 1
         Public Shared ReadOnly NEXT_TABLE_OFFSET = 2
+        '
+        Public Shared RESULT_RIGHT = 11
+        Public Shared RESULT_DOWN = 12
     End Class
 
     Private Sub FormDataTableReportMaker_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' 初期化処理（必要に応じて記述）
+
+        Me.KeyPreview = True
+
     End Sub
+
+    Private Sub FormDataTableReportMaker_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+
+        If e.KeyCode = Keys.Oem5 AndAlso e.Control Then
+            OutputConsole("KeyDown \ + Ctrl")
+            'Dim dirPath = Path.GetDirectoryName(Application.ExecutablePath)
+            'Dim dirPath = Path.GetDirectoryName(Application.StartupPath)
+            'Dim dirPath = Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location)
+            Dim dirPath = Path.GetDirectoryName(GetExePath())
+            OutputConsole("dirPath=" + dirPath)
+            OpenPath(dirPath)
+        End If
+    End Sub
+
+    Private Sub OpenPath(targetPath As String)
+        ' ファイルが存在するか確認
+        If File.Exists(targetPath) Or Directory.Exists(targetPath) Then
+            ' エクスプローラーでファイルを選択した状態で開く
+            Process.Start("explorer.exe", "/select,""" & targetPath & """")
+        Else
+            MessageBox.Show("指定されたファイルが存在しません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
+    End Sub
+
+
+    Private Function GetExePath() As String
+        ' 実行ファイルの完全なパス（ファイル名を含む）
+        Dim exePath As String = Reflection.Assembly.GetExecutingAssembly().Location
+        ' フォルダーパス（bin\Debug または bin\Release）
+        Dim exeDirectory As String = Path.GetDirectoryName(exePath)
+
+        ' ビルド構成を確認
+        Dim buildConfig As String = If(exeDirectory.ToLower().Contains("debug"), "Debug",
+                                       If(exeDirectory.ToLower().Contains("release"), "Release", "Unknown"))
+
+        '' 結果を表示
+        'MessageBox.Show("EXEファイルのパス: " & exePath & vbCrLf &
+        '                "フォルダーパス: " & exeDirectory & vbCrLf &
+        '                "ビルド構成: " & buildConfig, "実行ファイル情報")
+
+        Dim retPath = Path.Combine(exePath, buildConfig)
+        Return retPath
+    End Function
 
 
     Private Sub OutputConsole(value As Object)
@@ -74,7 +130,7 @@ Public Class FormDataTableReportMaker
                 OutputConsole(String.Format("datatable.Columns.Count = {0}", dataTable.Columns.Count))
 
                 '############ BEGIN
-                Dim isRight As Boolean = DetermineWriteDirection(file)
+                Dim isRightOrDown As Integer = DetermineWriteDirection(file)
 
                 ' データテーブルにヘッダーとデータを追加
                 AddHeaderAndData(dataTable)
@@ -82,7 +138,7 @@ Public Class FormDataTableReportMaker
                 OutputConsole(String.Format("datatable.Rows.Count = {0}", dataTable.Rows.Count))
                 OutputConsole(String.Format("datatable.Columns.Count = {0}", dataTable.Columns.Count))
 
-                If isRight Then
+                If isRightOrDown = Constants.RESULT_RIGHT Then
                     nowRow = beginRow
                     ' 行と列を入れ替える
                     dataTable = DataTableConverter.Transpose(dataTable)
@@ -105,7 +161,7 @@ Public Class FormDataTableReportMaker
                     TableDataManager.PrintDataTableContentsOther(resultDataTableUtil.GetDataTable(tableName))
 
                     nowCol += Constants.NEXT_TABLE_OFFSET
-                Else
+                ElseIf isRightOrDown = Constants.RESULT_DOWN Then
                     ' テーブル名とコメントを resultDataTable に書き込む
                     resultDataTableUtil.InsertPrimitiveData(tableName, tableName, nowRow, nowCol)
                     resultDataTableUtil.InsertPrimitiveData(tableName, comment, nowRow + 1, nowCol)
@@ -115,6 +171,11 @@ Public Class FormDataTableReportMaker
                     resultDataTableUtil.InsertData(tableName, dataTable, nowRow, nowCol + 1)
 
                     nowRow += Constants.NEXT_TABLE_OFFSET
+                Else
+                    Dim msg = "isRightOrDown is Invalid Value"
+                    msg = "ファイル名に '_R_' または '_D_' が含まれていません: " & file
+                    MessageBox.Show(msg)
+                    Exit Sub
                 End If
                 '############ END
             Next
@@ -136,15 +197,17 @@ Public Class FormDataTableReportMaker
     End Sub
 
     ' 書き込み方向を判定する関数
-    Private Function DetermineWriteDirection(fileName As String) As Boolean
+    Private Function DetermineWriteDirection(fileName As String) As Integer
         Dim regexRight As New Regex("_R_")
         Dim regexDown As New Regex("_D_")
         If regexRight.IsMatch(fileName) Then
-            Return True ' Right
+            Return Constants.RESULT_RIGHT ' Right
         ElseIf regexDown.IsMatch(fileName) Then
-            Return False ' Down
+            Return Constants.RESULT_DOWN ' Down
         Else
-            Throw New Exception("ファイル名に '_R_' または '_D_' が含まれていません: " & fileName)
+            Dim msg = "ファイル名に '_R_' または '_D_' が含まれていません: " & fileName
+            'Throw New Exception(msg)
+            Return ConstErrorFlag.FILE_NAME_ERROR
         End If
     End Function
 

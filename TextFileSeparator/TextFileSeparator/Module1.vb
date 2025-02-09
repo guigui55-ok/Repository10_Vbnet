@@ -24,6 +24,11 @@ Module Module1
         "^【受信】"
     }
 
+    ''' <summary>
+    ''' テキストファイル分割ツール
+    ''' <para></para>
+    ''' テクストファイルを特定の目印で区切り、区切った文字列を別のテキストファイルに出力する。
+    ''' </summary>
     Sub Main()
         Dim i As Integer
         Try
