@@ -1,0 +1,280 @@
+vb.netでのDBへアクセスするプログラムがあるとします。このプログラムでは多くの個所で、DBへの接続処理があるのですが、それをプログラム内に実装された接続クラスを使用するものから、プログラム外のASP.NETのWebサーバープログラムを通じてDBへ接続するように変更したいです。
+切り替える方法として、プリプロセッサ（#IF）を使用する案がありますが、これはVisualStudio上のコードが無効かグレーアウトしてしまうため（グレーアウトした部分はコードジャンプ機能が使えなくなる）、あまりプリプロセッサを使用したくありません。
+何か良い方法はありますか？
+----------------------
+
+VB.NETのプリプロセッサ（`#IF`）を使わずに、**プログラム内の接続処理をASP.NET Webサーバー経由に切り替える方法**として、以下のようなアプローチが考えられます。
+
+---
+
+### **方法1: インターフェースを利用したDI（依存性注入）**
+**メリット:**
+- 既存のコードの大きな変更を避けつつ、切り替えが容易。
+- コード補完やジャンプ機能を維持。
+
+**手順:**
+1. **共通のインターフェースを定義**
+   ```vb
+   Public Interface IDatabaseService
+       Function ExecuteQuery(query As String) As DataTable
+   End Interface
+   ```
+
+2. **従来のDB接続クラス（ローカル接続用）**
+   ```vb
+   Public Class LocalDatabaseService
+       Implements IDatabaseService
+
+       Public Function ExecuteQuery(query As String) As DataTable Implements IDatabaseService.ExecuteQuery
+           Dim dt As New DataTable()
+           ' ローカルDBへの接続処理
+           Using conn As New SqlConnection("Server=LOCALHOST;Database=SampleDB;User Id=user;Password=pass;")
+               conn.Open()
+               Using cmd As New SqlCommand(query, conn)
+                   Using adapter As New SqlDataAdapter(cmd)
+                       adapter.Fill(dt)
+                   End Using
+               End Using
+           End Using
+           Return dt
+       End Function
+   End Class
+   ```
+
+3. **WebAPI経由でDBに接続するクラス**
+   ```vb
+   Public Class WebDatabaseService
+       Implements IDatabaseService
+
+       Public Function ExecuteQuery(query As String) As DataTable Implements IDatabaseService.ExecuteQuery
+           Dim dt As New DataTable()
+           Dim json As String = "{""query"":""" & query.Replace("""", "\""") & """}"
+
+           Dim request As HttpWebRequest = CType(WebRequest.Create("http://yourwebserver/api/database"), HttpWebRequest)
+           request.Method = "POST"
+           request.ContentType = "application/json"
+
+           Using streamWriter As New StreamWriter(request.GetRequestStream())
+               streamWriter.Write(json)
+               streamWriter.Flush()
+           End Using
+
+           Dim response As HttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+           Using reader As New StreamReader(response.GetResponseStream())
+               Dim result As String = reader.ReadToEnd()
+               dt = JsonConvert.DeserializeObject(Of DataTable)(result)
+           End Using
+
+           Return dt
+       End Function
+   End Class
+   ```
+
+4. **DI（依存性注入）を使って切り替え**
+   ```vb
+   Public Class DatabaseManager
+       Private Shared _service As IDatabaseService
+
+       Public Shared Sub Initialize(useWeb As Boolean)
+           If useWeb Then
+               _service = New WebDatabaseService()
+           Else
+               _service = New LocalDatabaseService()
+           End If
+       End Sub
+
+       Public Shared Function ExecuteQuery(query As String) As DataTable
+           Return _service.ExecuteQuery(query)
+       End Function
+   End Class
+   ```
+
+5. **使用例**
+   ```vb
+   Sub Main()
+       ' ここで切り替え
+       DatabaseManager.Initialize(useWeb:=True)
+
+       ' 以降はどこでも共通のDatabaseManagerを使用
+       Dim dt As DataTable = DatabaseManager.ExecuteQuery("SELECT * FROM Users")
+   End Sub
+   ```
+
+---
+
+### **方法2: 設定ファイルを利用**
+**メリット:**
+- インターフェースを使うほどの大規模な改修が不要。
+- **configファイルを変更するだけ**で、プログラムの再コンパイルなしに動的に切り替え可能。
+
+1. **App.configに設定を追加**
+   ```xml
+   <appSettings>
+       <add key="DatabaseMode" value="Web"/>
+   </appSettings>
+   ```
+
+2. **DB接続処理を動的に選択**
+   ```vb
+   Public Class DatabaseManager
+       Private Shared _service As IDatabaseService
+
+       Public Shared Sub Initialize()
+           Dim mode As String = ConfigurationManager.AppSettings("DatabaseMode")
+           If mode = "Web" Then
+               _service = New WebDatabaseService()
+           Else
+               _service = New LocalDatabaseService()
+           End If
+       End Sub
+
+       Public Shared Function ExecuteQuery(query As String) As DataTable
+           Return _service.ExecuteQuery(query)
+       End Function
+   End Class
+   ```
+
+3. **Main関数**
+   ```vb
+   Sub Main()
+       DatabaseManager.Initialize()
+       Dim dt As DataTable = DatabaseManager.ExecuteQuery("SELECT * FROM Users")
+   End Sub
+   ```
+
+---
+
+### **まとめ**
+| 方法 | 特徴 | 切り替え方法 |
+|------|------|------------|
+| **方法1: インターフェースを利用したDI** | コードの可読性・保守性が向上、コンパイル時に型チェックができる | `DatabaseManager.Initialize(useWeb:=True/False)` |
+| **方法2: 設定ファイルを利用** | 設定ファイル変更のみで切り替え可能、コンパイル不要 | `App.config` の `DatabaseMode` を変更 |
+
+**おすすめは「方法1（インターフェース）」**  
+理由:  
+✔ コード補完やジャンプが維持される  
+✔ 切り替えの影響が最小限  
+✔ 依存性注入（DI）を適用できるので、将来的にMockテストもしやすい  
+
+**「方法2（設定ファイル）」は、さらに簡単に切り替えたい場合に最適**です。
+
+
+---------------
+
+App.configを使用した場合ですが、
+一般的に客先にアプリをリリースしたときは、exeやdllファイルだけ残して運用されると考えていますが、
+この場合はApp.configで接続先の切り替えは可能ですか？
+
+
+---------------
+### **結論**
+通常、`App.config` は **`MyApp.exe.config`** に変換され、**exeと一緒に配布されれば設定の変更は可能** です。  
+ただし、**設定ファイルが含まれずにexeやdllだけ運用される場合**は、App.config での切り替えはできません。
+
+---
+
+### **詳細**
+#### **1. App.config の動作**
+- 開発時：`App.config` は **コンパイル時に `MyApp.exe.config` に変換** される。
+- 実行時：アプリケーションは `MyApp.exe.config` から設定を読み込む。
+- 配布時：**`MyApp.exe.config` を配布すれば、接続先を後から変更できる。**
+
+**例えば、設定ファイル (`MyApp.exe.config`) の `DatabaseMode` を手動で変更することで、接続先を変更可能**
+```xml
+<appSettings>
+    <add key="DatabaseMode" value="Web"/>
+</appSettings>
+```
+---
+### **2. `MyApp.exe.config` がない場合**
+もし `MyApp.exe.config` を **配布せず、exe や dll だけを運用する場合**、設定ファイルを変更できないため、**App.config を利用した切り替えはできない。**
+
+この場合、**別の方法を検討する必要がある。**
+
+---
+
+### **解決策**
+#### **① 設定ファイルを外部に置く（推奨）**
+「`MyApp.exe.config` は残したくないが、設定の切り替えは可能にしたい」場合、  
+**独自の設定ファイル（XMLやINI、JSONなど）を用意**して読み込む方法がある。
+
+**例：独自の `settings.ini` を作成**
+```
+[Database]
+Mode=Web
+```
+
+**VB.NETでINIファイルを読み込む**
+```vb
+Imports System.IO
+
+Public Class ConfigManager
+    Public Shared Function GetDatabaseMode() As String
+        Dim path As String = "settings.ini"
+        If Not File.Exists(path) Then
+            Return "Local" ' デフォルト値
+        End If
+
+        For Each line As String In File.ReadAllLines(path)
+            If line.StartsWith("Mode=") Then
+                Return line.Split("="c)(1).Trim()
+            End If
+        Next
+
+        Return "Local"
+    End Function
+End Class
+```
+
+**使用例**
+```vb
+Dim mode As String = ConfigManager.GetDatabaseMode()
+If mode = "Web" Then
+    ' WebAPI経由でDB接続
+Else
+    ' ローカルDB接続
+End If
+```
+✅ `settings.ini` を変更するだけで、DBの接続先を切り替え可能。
+
+---
+
+#### **② コマンドライン引数を使う**
+アプリ起動時に**引数でモードを指定**する方法。
+
+```vb
+Sub Main(args As String())
+    Dim mode As String = "Local"
+    If args.Length > 0 AndAlso args(0).ToLower() = "web" Then
+        mode = "Web"
+    End If
+
+    DatabaseManager.Initialize(mode)
+End Sub
+```
+**使い方**
+```
+MyApp.exe web  ← WebAPIを利用
+MyApp.exe local ← ローカルDBを利用
+```
+✅ 実行時に引数を渡せば切り替え可能。  
+⛔ ただし、ショートカットやバッチを作らないとユーザーが変更できない。
+
+---
+
+### **まとめ**
+| 方法 | 設定の変更が可能か | メリット | デメリット |
+|------|----------------|----------|------------|
+| **App.config (`MyApp.exe.config`) を使う** | **可能（設定ファイルを配布する場合）** | 標準的でシンプル | 設定ファイルが消えると変更できない |
+| **独自の設定ファイル（INI/XML/JSON）を使う** | **可能（設定ファイルを配布）** | 柔軟で設定ファイルだけの配布が可能 | 独自の設定読み込み処理が必要 |
+| **コマンドライン引数で切り替え** | **可能** | 設定ファイル不要 | ユーザーが起動オプションを意識する必要がある |
+
+---
+
+### **おすすめの方法**
+- **App.config（`MyApp.exe.config`）を配布できるなら、App.configをそのまま使う。**
+- **もし `MyApp.exe.config` を運用に含めたくないなら、INI/JSON設定ファイルを使うのが最も管理しやすい方法。**
+- **ユーザーごとに自由に選ばせたいなら、コマンドライン引数での切り替えもアリ。**
+
+
+
