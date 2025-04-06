@@ -35,6 +35,25 @@ Public Class FormRealTimeTextViewer
         AddHandler UserControlFindString1.Button_Next.Click, AddressOf FindStringNext
         AddHandler UserControlFindString1.Button_Prev.Click, AddressOf FindStringPrev
 
+        _findString.HideFindControl()
+    End Sub
+
+    Public Sub FitTextBox()
+        _logger.AddLog("FitTextBox")
+        Me.RichTextBox_Main.Location = New Point(0, 0)
+        _logger.AddLog("RichTextBox_Main.Location = (0, 0)")
+        Me.RichTextBox_Main.Size = Me.ClientSize()
+        _logger.AddLog("Me.RichTextBox_Main.Size = " + Me.ClientSize().ToString())
+    End Sub
+    Public Sub FitTextBoxWithFindBar()
+        _logger.AddLog("FitTextBoxWithFindBar")
+        Dim findBarH = _findString.GetSizeParent().Height
+        Me.RichTextBox_Main.Location = New Point(0, findBarH)
+        _logger.AddLog($"RichTextBox_Main.Location = (0, {findBarH})")
+        Dim w = Me.ClientSize().Width
+        Dim h = Me.ClientSize().Height - findBarH
+        Me.RichTextBox_Main.Size = New Size(w, h)
+        _logger.AddLog("Me.RichTextBox_Main.Size = " + New Size(w, h).ToString())
     End Sub
 
     ' RichTextBoxのクリックイベントでカーソル位置を取得
@@ -250,6 +269,8 @@ Public Class FormRealTimeTextViewer
             UpdateRichTextBox(content)
             ' カーソルを末尾に移動
             RichTextBox_Main.SelectionStart = RichTextBox_Main.Text.Length
+
+            Me.Text = " " + Path.GetFileName(_realTimeFileReader._fileName)
 
         Catch ex As Exception
             _logger.AddException(ex, Me, "DragAndDropFileEvent")

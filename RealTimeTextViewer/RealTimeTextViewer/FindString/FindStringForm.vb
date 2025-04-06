@@ -30,6 +30,10 @@
         AddHandler _mainForm.KeyDown, AddressOf MainForm_KeyDown
     End Sub
 
+    Public Function GetSizeParent() As Size
+        Return _parentControl.Size()
+    End Function
+
     Private Sub MainForm_KeyDown(sender As Object, e As KeyEventArgs)
         If e.Control And e.KeyCode = Keys.F Then
             If IsShowFindControl() Then
@@ -48,11 +52,18 @@
         'PrentControlはMenuStripの想定、その中にUserControl（Panel｛TextBox,Button, Button｝）の構成
         _parentControl.Visible = False
         _findMainControl.Visible = False
+
+        Dim mainForm As Object = _mainForm
+        mainForm.FitTextBox()
     End Sub
 
     Public Sub ShowFindControl()
         _parentControl.Visible = True
         _findMainControl.Visible = True
+
+        Dim mainForm As Object = _mainForm
+        mainForm.FitTextBoxWithFindBar()
+
     End Sub
 
     'Public Function ExecuteFindWithControl()

@@ -17,7 +17,7 @@
         sourceTableA.Columns.Add("Col2")
         sourceTableA.Rows.Add("Data1", "Data2")
         sourceTableA.Rows.Add("Data3", "Data4")
-        utility.InsertData("TestTable", sourceTableA, 0, 0)
+        utility.InsertData("TestTable", sourceTableA, 0, 0, False)
 
         ' SourceTableB を準備してデータ挿入
         Dim sourceTableB As New DataTable()
@@ -27,7 +27,7 @@
         sourceTableB.Columns.Add("ColD")
         sourceTableB.Rows.Add("BData1", "BData2", "BData3", "BData4")
         sourceTableB.Rows.Add("BData5", "BData6", "BData7", "BData8")
-        utility.InsertData("TestTable", sourceTableB, 7, 2)
+        utility.InsertData("TestTable", sourceTableB, 7, 2, False)
 
         ' DataSet 情報を出力
         utility.PrintDataSetInfo()

@@ -189,8 +189,8 @@ Public Class FormDataTableReportMaker
             Next
         Next
 
-            ' エクセルファイルにまとめて書き込む
-            Dim excelPath = IO.Path.Combine(destDir, "FinalResult.xlsx")
+        ' エクセルファイルにまとめて書き込む
+        Dim excelPath = IO.Path.Combine(destDir, "FinalResult.xlsx")
         excelManager.WriteToExcel(excelPath, resultDict)
         OutputConsole("excelPath = " + excelPath)
         OutputConsole("処理が完了しました。")

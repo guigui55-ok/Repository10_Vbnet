@@ -49,8 +49,23 @@ Public Class TableDataManager
         End While
 
         ' データを挿入
-        targetTable.Rows(targetRow)(targetCol) = If(value Is Nothing, DBNull.Value, value)
+        Dim buf = value.ToString()
+        targetTable.Rows(targetRow)(targetCol) = If(value Is Nothing, Nothing, buf)
     End Sub
+
+    Public Function GetRowValuesString(rowValue As DataRow) As String
+        Dim retList = New List(Of String)()
+        Dim ret = ""
+        For Each col In rowValue.Table.Columns
+            Dim bufValue As String = rowValue(col).ToString()
+            retList.Add(bufValue)
+            ret += col.ToString() + ":" + bufValue + ", "
+        Next
+        If rowValue.Table.Columns.Count > 0 Then
+            ret = ret.Substring(0, ret.Length - 2)
+        End If
+        Return ret
+    End Function
 
 
     ' ソース DataTable のデータをターゲット DataTable に挿入
@@ -58,7 +73,8 @@ Public Class TableDataManager
         targetTableName As String,
         sourceTable As DataTable,
         beginRow As Integer,
-        beginCol As Integer
+        beginCol As Integer,
+        writeCol As Boolean
     )
         If Not MainDataSet.Tables.Contains(targetTableName) Then
             Throw New ArgumentException($"テーブル '{targetTableName}' は DataSet に存在しません。")
@@ -66,9 +82,32 @@ Public Class TableDataManager
 
         Dim targetTable As DataTable = MainDataSet.Tables(targetTableName)
 
-        For i As Integer = 0 To sourceTable.Rows.Count - 1
+        Dim startRow As Integer = 0
+        If writeCol Then
+            Dim bufRow As Integer
+            Dim bufCol As Integer
+            Dim targetRowIdx As Integer = beginRow + startRow
             For j As Integer = 0 To sourceTable.Columns.Count - 1
-                Dim targetRowIdx As Integer = beginRow + i
+                Dim targetColIdx As Integer = beginCol + j
+                While targetTable.Rows.Count <= targetRowIdx
+                    targetTable.Rows.Add(targetTable.NewRow())
+                End While
+
+                While targetTable.Columns.Count <= targetColIdx
+                    targetTable.Columns.Add()
+                End While
+
+                targetTable.Rows(targetRowIdx)(targetColIdx) = targetTable.Columns(j).ColumnName
+                bufCol = targetColIdx
+            Next
+            Debug.WriteLine("targetRowIdx0 = " + (beginRow + startRow).ToString())
+            Debug.WriteLine($"[j] " + GetRowValuesString(targetTable.Rows(targetRowIdx)))
+            startRow = 1
+        End If
+        For i As Integer = 0 To (sourceTable.Rows.Count - 1)
+            Dim bufRow As Integer
+            Dim targetRowIdx As Integer = beginRow + i + startRow
+            For j As Integer = 0 To sourceTable.Columns.Count - 1
                 Dim targetColIdx As Integer = beginCol + j
 
                 ' ターゲットテーブルに十分な行と列があるか確認し、必要なら追加
@@ -82,7 +121,10 @@ Public Class TableDataManager
 
                 ' データを挿入
                 targetTable.Rows(targetRowIdx)(targetColIdx) = sourceTable.Rows(i)(j)
+                bufRow = targetRowIdx
             Next
+            Debug.WriteLine("targetRowIdx = " + bufRow.ToString())
+            Debug.WriteLine($"[j] " + GetRowValuesString(targetTable.Rows(targetRowIdx)))
         Next
     End Sub
 

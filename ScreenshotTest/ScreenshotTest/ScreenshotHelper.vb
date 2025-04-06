@@ -31,6 +31,35 @@ Public Class ScreenshotHelper
         End Try
     End Sub
 
+
+    ' スクリーンショットを取得しファイルに保存する関数
+    Public Shared Sub SaveScreenshotByRect(savePath As String, left As Integer, top As Integer, width As Integer, height As Integer)
+        Try
+            ' フォームの境界を含む矩形を取得
+            'Dim bounds As Rectangle = form.Bounds
+
+            ' Bitmapを作成してフォームのサイズ分確保
+            Using screenshot As New Bitmap(width, height)
+                ' グラフィックスオブジェクトを作成
+                Using g As Graphics = Graphics.FromImage(screenshot)
+                    ' フォームのスクリーンショットを描画
+                    g.CopyFromScreen(New Point(left, top), Point.Empty, New Size(width, height))
+                End Using
+
+                ' スクリーンショットをファイルに保存
+                screenshot.Save(savePath, ImageFormat.Png)
+
+                'MessageBox.Show($"スクリーンショットを保存しました: {savePath}", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Debug.WriteLine($"スクリーンショットを保存しました: {savePath}")
+            End Using
+        Catch ex As Exception
+            Debug.WriteLine("Error")
+            Debug.WriteLine(ex.GetType().ToString() + ":" + ex.Message)
+            Debug.WriteLine(ex.StackTrace)
+            'MessageBox.Show($"スクリーンショットの保存中にエラーが発生しました: {ex.Message}", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     ' スクリーンショットのファイルパスを作成する関数
     Public Shared Function GenerateScreenshotFilePath() As String
         ' 実行ファイルのディレクトリを取得
