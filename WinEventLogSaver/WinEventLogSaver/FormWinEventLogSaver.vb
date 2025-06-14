@@ -2,6 +2,8 @@
 
 Public Class FormWinEventLogSaver
 
+    Dim EVENT_LOG_MAX_COUNT_DEFAULT As Integer = 10000
+
     Dim _logger As AppLogger
     Dim _iniFilePath As String
     Dim _resultReportFilePath As String
@@ -86,7 +88,7 @@ Public Class FormWinEventLogSaver
         'set max count
         Dim maxCount As Long
         If Not Integer.TryParse(TextBox_MacCount.Text, maxCount) Then
-            maxCount = 100
+            maxCount = EVENT_LOG_MAX_COUNT_DEFAULT
             TextBox_MacCount.Text = maxCount.ToString
         End If
 

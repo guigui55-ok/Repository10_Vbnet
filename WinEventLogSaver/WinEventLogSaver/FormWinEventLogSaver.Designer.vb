@@ -105,13 +105,14 @@ Partial Class FormWinEventLogSaver
         '
         'Button_Save
         '
-        Me.Button_Save.Font = New System.Drawing.Font("Meiryo UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button_Save.Location = New System.Drawing.Point(551, 297)
+        Me.Button_Save.BackColor = System.Drawing.SystemColors.ActiveCaption
+        Me.Button_Save.Font = New System.Drawing.Font("Meiryo UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Button_Save.Location = New System.Drawing.Point(519, 287)
         Me.Button_Save.Name = "Button_Save"
-        Me.Button_Save.Size = New System.Drawing.Size(98, 24)
+        Me.Button_Save.Size = New System.Drawing.Size(130, 34)
         Me.Button_Save.TabIndex = 21
-        Me.Button_Save.Text = "Save"
-        Me.Button_Save.UseVisualStyleBackColor = True
+        Me.Button_Save.Text = "Find And Save"
+        Me.Button_Save.UseVisualStyleBackColor = False
         '
         'Label12
         '
@@ -297,7 +298,7 @@ Partial Class FormWinEventLogSaver
         Me.GroupBox_Output.Size = New System.Drawing.Size(655, 78)
         Me.GroupBox_Output.TabIndex = 1
         Me.GroupBox_Output.TabStop = False
-        Me.GroupBox_Output.Text = "出力"
+        Me.GroupBox_Output.Text = "Report"
         '
         'Button_Explorer
         '
@@ -316,15 +317,15 @@ Partial Class FormWinEventLogSaver
         Me.Button_Copy.Name = "Button_Copy"
         Me.Button_Copy.Size = New System.Drawing.Size(98, 24)
         Me.Button_Copy.TabIndex = 23
-        Me.Button_Copy.Text = "Copy"
+        Me.Button_Copy.Text = "Clipboard"
         Me.Button_Copy.UseVisualStyleBackColor = True
         '
         'TextBox_OutputPath
         '
         Me.TextBox_OutputPath.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.TextBox_OutputPath.Location = New System.Drawing.Point(89, 17)
+        Me.TextBox_OutputPath.Location = New System.Drawing.Point(118, 17)
         Me.TextBox_OutputPath.Name = "TextBox_OutputPath"
-        Me.TextBox_OutputPath.Size = New System.Drawing.Size(456, 24)
+        Me.TextBox_OutputPath.Size = New System.Drawing.Size(424, 24)
         Me.TextBox_OutputPath.TabIndex = 22
         '
         'Label13
@@ -332,9 +333,9 @@ Partial Class FormWinEventLogSaver
         Me.Label13.AutoSize = True
         Me.Label13.Location = New System.Drawing.Point(18, 20)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(68, 17)
+        Me.Label13.Size = New System.Drawing.Size(97, 17)
         Me.Label13.TabIndex = 21
-        Me.Label13.Text = "出力パス："
+        Me.Label13.Text = "Report Path："
         '
         'GroupBox_AppLog
         '
@@ -345,7 +346,7 @@ Partial Class FormWinEventLogSaver
         Me.GroupBox_AppLog.Size = New System.Drawing.Size(655, 101)
         Me.GroupBox_AppLog.TabIndex = 24
         Me.GroupBox_AppLog.TabStop = False
-        Me.GroupBox_AppLog.Text = "Log"
+        Me.GroupBox_AppLog.Text = "AppLog"
         '
         'RichTextBox_AppLog
         '
@@ -361,6 +362,7 @@ Partial Class FormWinEventLogSaver
         Me.TextBox_LogName.Name = "TextBox_LogName"
         Me.TextBox_LogName.Size = New System.Drawing.Size(186, 24)
         Me.TextBox_LogName.TabIndex = 14
+        Me.TextBox_LogName.Text = "Application, Security, System"
         '
         'Label14
         '
