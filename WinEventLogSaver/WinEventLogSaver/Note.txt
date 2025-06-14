@@ -1,0 +1,14 @@
+﻿種別	logName に渡す値	説明
+アプリケーションログ	"Application"	アプリケーションが出力するログ（一般的なアプリエラーなど）
+システムログ	"System"	OS・ドライバなどシステム関連のログ
+セキュリティログ	"Security"	ログオン成功/失敗など（※管理者権限が必要）
+Setupログ	"Setup"	システムの構成や更新時のログ（インストール情報など）
+ForwardedEvents	"ForwardedEvents"	他のPCから転送されたイベント（ドメイン環境などで使用）
+
+
+✅ よく使うログ名（参考）
+ログ名	説明
+"Application"	アプリのログ
+"System"	OS関連ログ
+"Security"	セキュリティログ（管理者権限）
+

@@ -32,7 +32,7 @@ Partial Class FormRealTimeTextViewer
         Me.RichTextBox_Main.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.RichTextBox_Main.Location = New System.Drawing.Point(6, 29)
+        Me.RichTextBox_Main.Location = New System.Drawing.Point(0, 30)
         Me.RichTextBox_Main.Name = "RichTextBox_Main"
         Me.RichTextBox_Main.Size = New System.Drawing.Size(716, 250)
         Me.RichTextBox_Main.TabIndex = 0
