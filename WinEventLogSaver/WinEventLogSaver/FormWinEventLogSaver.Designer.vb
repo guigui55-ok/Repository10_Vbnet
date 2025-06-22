@@ -23,6 +23,12 @@ Partial Class FormWinEventLogSaver
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.GroupBox_Condition = New System.Windows.Forms.GroupBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.TextBox_MacCount = New System.Windows.Forms.TextBox()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.TextBox_LogName = New System.Windows.Forms.TextBox()
+        Me.Label14 = New System.Windows.Forms.Label()
         Me.Button_Save = New System.Windows.Forms.Button()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.TextBox_EventMachineName = New System.Windows.Forms.TextBox()
@@ -52,12 +58,6 @@ Partial Class FormWinEventLogSaver
         Me.Label13 = New System.Windows.Forms.Label()
         Me.GroupBox_AppLog = New System.Windows.Forms.GroupBox()
         Me.RichTextBox_AppLog = New System.Windows.Forms.RichTextBox()
-        Me.TextBox_LogName = New System.Windows.Forms.TextBox()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.TextBox_MacCount = New System.Windows.Forms.TextBox()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label17 = New System.Windows.Forms.Label()
         Me.GroupBox_Condition.SuspendLayout()
         Me.GroupBox_Output.SuspendLayout()
         Me.GroupBox_AppLog.SuspendLayout()
@@ -102,6 +102,58 @@ Partial Class FormWinEventLogSaver
         Me.GroupBox_Condition.TabIndex = 0
         Me.GroupBox_Condition.TabStop = False
         Me.GroupBox_Condition.Text = "検索条件"
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(308, 108)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(179, 17)
+        Me.Label17.TabIndex = 26
+        Me.Label17.Text = "「,」カンマ区切りで複数指定可能"
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(308, 297)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(110, 17)
+        Me.Label16.TabIndex = 25
+        Me.Label16.Text = "イベント1種類あたり"
+        '
+        'TextBox_MacCount
+        '
+        Me.TextBox_MacCount.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.TextBox_MacCount.Location = New System.Drawing.Point(110, 294)
+        Me.TextBox_MacCount.Name = "TextBox_MacCount"
+        Me.TextBox_MacCount.Size = New System.Drawing.Size(186, 24)
+        Me.TextBox_MacCount.TabIndex = 24
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(20, 297)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(73, 17)
+        Me.Label15.TabIndex = 23
+        Me.Label15.Text = "最大件数："
+        '
+        'TextBox_LogName
+        '
+        Me.TextBox_LogName.Location = New System.Drawing.Point(110, 105)
+        Me.TextBox_LogName.Name = "TextBox_LogName"
+        Me.TextBox_LogName.Size = New System.Drawing.Size(186, 24)
+        Me.TextBox_LogName.TabIndex = 14
+        Me.TextBox_LogName.Text = "Application, Security, System"
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(18, 108)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(77, 17)
+        Me.Label14.TabIndex = 22
+        Me.Label14.Text = "ログの種類："
         '
         'Button_Save
         '
@@ -343,7 +395,7 @@ Partial Class FormWinEventLogSaver
         Me.GroupBox_AppLog.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.GroupBox_AppLog.Location = New System.Drawing.Point(12, 444)
         Me.GroupBox_AppLog.Name = "GroupBox_AppLog"
-        Me.GroupBox_AppLog.Size = New System.Drawing.Size(655, 101)
+        Me.GroupBox_AppLog.Size = New System.Drawing.Size(655, 114)
         Me.GroupBox_AppLog.TabIndex = 24
         Me.GroupBox_AppLog.TabStop = False
         Me.GroupBox_AppLog.Text = "AppLog"
@@ -352,67 +404,15 @@ Partial Class FormWinEventLogSaver
         '
         Me.RichTextBox_AppLog.Location = New System.Drawing.Point(6, 23)
         Me.RichTextBox_AppLog.Name = "RichTextBox_AppLog"
-        Me.RichTextBox_AppLog.Size = New System.Drawing.Size(643, 72)
+        Me.RichTextBox_AppLog.Size = New System.Drawing.Size(643, 85)
         Me.RichTextBox_AppLog.TabIndex = 0
         Me.RichTextBox_AppLog.Text = ""
-        '
-        'TextBox_LogName
-        '
-        Me.TextBox_LogName.Location = New System.Drawing.Point(110, 105)
-        Me.TextBox_LogName.Name = "TextBox_LogName"
-        Me.TextBox_LogName.Size = New System.Drawing.Size(186, 24)
-        Me.TextBox_LogName.TabIndex = 14
-        Me.TextBox_LogName.Text = "Application, Security, System"
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(18, 108)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(77, 17)
-        Me.Label14.TabIndex = 22
-        Me.Label14.Text = "ログの種類："
-        '
-        'TextBox_MacCount
-        '
-        Me.TextBox_MacCount.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.TextBox_MacCount.Location = New System.Drawing.Point(110, 294)
-        Me.TextBox_MacCount.Name = "TextBox_MacCount"
-        Me.TextBox_MacCount.Size = New System.Drawing.Size(186, 24)
-        Me.TextBox_MacCount.TabIndex = 24
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(20, 297)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(73, 17)
-        Me.Label15.TabIndex = 23
-        Me.Label15.Text = "最大件数："
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(308, 297)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(110, 17)
-        Me.Label16.TabIndex = 25
-        Me.Label16.Text = "イベント1種類あたり"
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(308, 108)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(179, 17)
-        Me.Label17.TabIndex = 26
-        Me.Label17.Text = "「,」カンマ区切りで複数指定可能"
         '
         'FormWinEventLogSaver
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(679, 557)
+        Me.ClientSize = New System.Drawing.Size(679, 570)
         Me.Controls.Add(Me.GroupBox_AppLog)
         Me.Controls.Add(Me.GroupBox_Output)
         Me.Controls.Add(Me.GroupBox_Condition)
