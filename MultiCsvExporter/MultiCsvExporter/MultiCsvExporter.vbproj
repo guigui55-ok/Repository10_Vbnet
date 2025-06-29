@@ -4,13 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5FE03FA5-290A-45BF-94EE-A1AC8041CA84}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <StartupObject>ExcelReaderPrj.ModuleExcelTest</StartupObject>
-    <RootNamespace>ExcelReaderPrj</RootNamespace>
-    <AssemblyName>ExcelReaderPrj</AssemblyName>
+    <ProjectGuid>{D32C772D-95B7-4150-8202-23BC2EB11863}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>Sub Main</StartupObject>
+    <RootNamespace>MultiCsvExporter</RootNamespace>
+    <AssemblyName>MultiCsvExporter</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>Console</MyType>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -22,7 +22,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>ExcelReaderPrj.xml</DocumentationFile>
+    <DocumentationFile>MultiCsvExporter.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,7 +32,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>ExcelReaderPrj.xml</DocumentationFile>
+    <DocumentationFile>MultiCsvExporter.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -48,12 +48,11 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -66,18 +65,41 @@
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
     <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModuleExcelTest.vb" />
-    <Compile Include="ExcelReaderWriter.vb" />
+    <Compile Include="DataTableManager.vb" />
+    <Compile Include="FileFInder.vb" />
+    <Compile Include="FormConditions.Designer.vb">
+      <DependentUpon>FormConditions.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormConditions.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMultiCsvExporter.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMultiCsvExporter.Designer.vb">
+      <DependentUpon>FormMultiCsvExporter.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogModules\FormLog.Designer.vb">
+      <DependentUpon>FormLog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LogModules\FormLog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModuleMain.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -89,8 +111,26 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="LogModules\AppLogger.vb" />
+    <Compile Include="Util\CommandLineParser.vb" />
+    <Compile Include="Util\CsvStream.vb" />
+    <Compile Include="Util\DictionaryAnyUtil.vb" />
+    <Compile Include="Util\FilterCondition.vb" />
+    <Compile Include="Util\ModulePathUtil.vb" />
+    <Compile Include="Util\MultiConditionFilter - コピー.vb" />
+    <Compile Include="Util\MultiConditionFilter.vb" />
+    <Compile Include="Util\Renamer.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FormConditions.resx">
+      <DependentUpon>FormConditions.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMultiCsvExporter.resx">
+      <DependentUpon>FormMultiCsvExporter.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogModules\FormLog.resx">
+      <DependentUpon>FormLog.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -109,6 +149,12 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\VbUtility\ExcelReaderPrj\ExcelReaderPrj.vbproj">
+      <Project>{5fe03fa5-290a-45bf-94ee-a1ac8041ca84}</Project>
+      <Name>ExcelReaderPrj</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

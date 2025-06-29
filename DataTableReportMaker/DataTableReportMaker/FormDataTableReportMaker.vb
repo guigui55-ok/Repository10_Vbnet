@@ -116,6 +116,7 @@ Public Class FormDataTableReportMaker
             Dim tableName As String = ""
             Dim resultDataTableUtil As TableDataManager = New TableDataManager
             Dim FileCount = 0
+            Dim writeCol As Integer = 1
             For Each file In targetFiles
                 FileCount += 1
                 Dim comment = IO.Path.GetFileNameWithoutExtension(file).Split("_").Last()
@@ -154,7 +155,7 @@ Public Class FormDataTableReportMaker
                     nowRow += 1
                     nowRow += 1
                     nowCol += 1
-                    resultDataTableUtil.InsertData(tableName, dataTable, nowRow, nowCol)
+                    resultDataTableUtil.InsertData(tableName, dataTable, nowRow, nowCol, writeCol)
 
                     ' 入れ替え済みのデータを resultDataTable に追加
                     'WriteDataTable(resultDataTable, dataTable, nowRow, nowCol)
@@ -168,7 +169,7 @@ Public Class FormDataTableReportMaker
 
                     ' データを resultDataTable に追加
                     nowRow += 2
-                    resultDataTableUtil.InsertData(tableName, dataTable, nowRow, nowCol + 1)
+                    resultDataTableUtil.InsertData(tableName, dataTable, nowRow, nowCol + 1, writeCol)
 
                     nowRow += Constants.NEXT_TABLE_OFFSET
                 Else

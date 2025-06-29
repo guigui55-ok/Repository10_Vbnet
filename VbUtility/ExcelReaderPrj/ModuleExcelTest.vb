@@ -1,9 +1,9 @@
-﻿Imports CommonUtilityPrj
+﻿
 
 Module ModuleExcelTest
 
     Sub Main()
-        Dim excelReader As ExcelReader = New ExcelReader()
+        Dim excelReader As ExcelReaderWriter = New ExcelReaderWriter()
         Dim filePath As String
         filePath = "C:\Users\OK\source\repos\Repository10_VBnet\VbUtility\CsvUtility\TestData\Test1.xlsx"
         Dim dataTable As DataTable
@@ -23,7 +23,7 @@ Module ModuleExcelTest
         '    rowCount += 1
         'Next
 
-        Dim dataList2d As List(Of List(Of String)) = CommonGeneralModule.ConvertDataTableToListString(dataTable)
+        Dim dataList2d As List(Of List(Of String)) = ConvertDataTableToListString(dataTable)
         rowCount = 1
         For Each colList As List(Of String) In dataList2d
             bufLine = String.Format("row={0}, ", rowCount)
@@ -33,5 +33,26 @@ Module ModuleExcelTest
 
         Console.ReadKey()
     End Sub
+
+
+    Private Function ConvertDataTableToListString(dataTable As DataTable)
+        Dim rowList As List(Of List(Of String)) = New List(Of List(Of String))()
+        Dim colList As List(Of String)
+
+        colList = New List(Of String)()
+        For Each col In dataTable.Columns
+            colList.Add(col.ToString())
+        Next
+        rowList.Add(colList)
+
+        For Each row As DataRow In dataTable.Rows
+            colList = New List(Of String)()
+            For Each cell In row.ItemArray
+                colList.Add(cell.ToString())
+            Next
+            rowList.Add(colList)
+        Next
+        Return rowList
+    End Function
 
 End Module
