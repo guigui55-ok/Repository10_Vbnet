@@ -16,3 +16,4 @@
 ~$*.xlsx
 __test*.csv
 *.png
+*AppLog_*.log

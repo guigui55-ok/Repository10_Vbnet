@@ -4,8 +4,9 @@ Imports Microsoft.Office.Interop
 ''' <summary>
 ''' ExcelFormatChangeで使用するデータクラス
 ''' </summary>
-Public Class ChangeFormatDataPairList
+Public Class ChangeFormatDataPairManager
 
+#Region "Classes"
     Public Class ConstfilterMode
         Public Const CONTAINS = 0
         Public Const MATCH_ALL = 1
@@ -14,6 +15,7 @@ Public Class ChangeFormatDataPairList
     End Class
 
     Public Class ChangeFormatData
+        Public FilePath As String
         Public FindSheetName As String
         Public FindRangeString As String '値を発見するための範囲
         Public FindValue As String
@@ -34,6 +36,27 @@ Public Class ChangeFormatDataPairList
             'Return $"[#{FilterSheetName}, {FilterRangeString}], {FilterValue}, {FilterMode}"
             Return $"FindValue={FindValue}"
         End Function
+
+        Public Function GetDeepCopyObject() As ChangeFormatData
+            Dim ret = New ChangeFormatData
+            ret.FilePath = Me.FilePath
+            ret.FindSheetName = Me.FindSheetName
+            ret.FindRangeString = Me.FindRangeString
+            ret.FindValue = Me.FindValue
+            ret.FindMode = Me.FindMode
+
+            ret.OffsetRow = Me.OffsetRow
+            ret.OffsetCol = Me.OffsetCol
+            ret.EntireRow = Me.EntireRow
+            ret.EntireCol = Me.EntireCol
+            ret.TargetCountRow = Me.TargetCountRow
+            ret.TargetCountCol = Me.TargetCountCol
+            ret.TargetSheetName = Me.TargetSheetName
+            ret.TargetRangeString = Me.TargetRangeString
+
+            Return ret
+        End Function
+
     End Class
 
     ''' <summary>
@@ -55,47 +78,31 @@ Public Class ChangeFormatDataPairList
             Me.DestItem = dest
         End Sub
 
+        Public Sub SetFilePath(srcFilePath As String, destFilePath As String)
+            SrcItem.FilePath = srcFilePath
+            DestItem.FilePath = destFilePath
+        End Sub
+
         Public Overrides Function ToString() As String
             Return $"Pair: {SrcItem.ToString()} and {DestItem.ToString()}"
         End Function
     End Class
+#End Region
 
     '// ================================================================================
 
-    Public _filterList As List(Of ChangeFormatData)
+    Public _dataPairList As List(Of DataPair)
     Public _srcFilePath = ""
     Public _destFilePath = ""
 
+    Public Event LogoutEvent As EventHandler
+
     Sub New()
-        _filterList = New List(Of ChangeFormatData)
+        _dataPairList = New List(Of DataPair)
     End Sub
 
-    Public Sub SetTestData()
-        Dim srcFilePath = "C:\Users\OK\source\repos\Repository10_VBnet\MultiCsvExporter\MultiCsvExporter\bin\Debug\Output\FormatSrc.xlsx"
-        Dim destFilePath = "C:\Users\OK\source\repos\Repository10_VBnet\MultiCsvExporter\MultiCsvExporter\bin\Debug\Output\Export.xlsx"
-
-        Dim _pairData = New DataPair()
-        Dim filSrc = New ChangeFormatData()
-        filSrc.FindSheetName = "" '無いときはシートインデックス1
-        filSrc.FindRangeString = "A:A"
-        filSrc.FindValue = "■TableA"
-        filSrc.FindMode = ConstfilterMode.CONTAINS
-        filSrc.EntireRow = True
-        'filSrc.TargetCountRow '読み取りfileから動的に設定
-
-        _pairData.ResetValue(filSrc, filSrc)
-
-    End Sub
-
-    Public Sub ExecuteChangeFormat()
-        '変更先ファイル名を読み込む
-        '変更先ファイル名の変更範囲を読み込み、変更範囲を動的に設定
-        '-- 実行
-        '※繰り返し
-        '書式コピー元、フォーマット範囲を検索・設定
-        '書式コピー先範囲を設定
-        'コピーペースト
-
+    Private Sub Logout(value As String)
+        RaiseEvent LogoutEvent(value, EventArgs.Empty)
     End Sub
 
 End Class

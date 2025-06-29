@@ -6,11 +6,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B0164C6E-274D-4058-8370-D96A910ACA3C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>ExcelFormatChanger.My.MyApplication</StartupObject>
+    <StartupObject>Sub Main</StartupObject>
     <RootNamespace>ExcelFormatChanger</RootNamespace>
     <AssemblyName>ExcelFormatChanger</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsForms</MyType>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -73,7 +73,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangeFormatDataList.vb" />
+    <Compile Include="ChangeFormatDataPairManager.vb" />
     <Compile Include="ExcelFormatChangerProc.vb" />
     <Compile Include="FormExcelFormatChanger.vb">
       <SubType>Form</SubType>
@@ -87,6 +87,7 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -98,7 +99,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="UtilExcel\ExcelAddressUtil.vb" />
     <Compile Include="UtilExcel\ExcelAnyUtil.vb" />
+    <Compile Include="UtilExcel\SharedExcelApp.vb" />
     <Compile Include="Util\AppLogger.vb" />
     <Compile Include="Util\FormLog.designer.vb">
       <DependentUpon>FormLog.vb</DependentUpon>

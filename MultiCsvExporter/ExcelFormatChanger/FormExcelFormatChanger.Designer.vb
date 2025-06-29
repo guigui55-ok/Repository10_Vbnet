@@ -22,17 +22,163 @@ Partial Class FormExcelFormatChanger
     'コード エディターを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.GroupBox_Conditions = New System.Windows.Forms.GroupBox()
+        Me.DataGridView_Conditions = New System.Windows.Forms.DataGridView()
+        Me.Button_Execute = New System.Windows.Forms.Button()
+        Me.GroupBox_SrcFilePath = New System.Windows.Forms.GroupBox()
+        Me.TextBox_SrcFilePath = New System.Windows.Forms.TextBox()
+        Me.GroupBox_DestFilePath = New System.Windows.Forms.GroupBox()
+        Me.TextBox_DestFilePath = New System.Windows.Forms.TextBox()
+        Me.Button_ShowDetails = New System.Windows.Forms.Button()
+        Me.GroupBox_DestCondition = New System.Windows.Forms.GroupBox()
+        Me.DataGridView_DestCondition = New System.Windows.Forms.DataGridView()
+        Me.GroupBox_Conditions.SuspendLayout()
+        CType(Me.DataGridView_Conditions, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox_SrcFilePath.SuspendLayout()
+        Me.GroupBox_DestFilePath.SuspendLayout()
+        Me.GroupBox_DestCondition.SuspendLayout()
+        CType(Me.DataGridView_DestCondition, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
+        '
+        'GroupBox_Conditions
+        '
+        Me.GroupBox_Conditions.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox_Conditions.Controls.Add(Me.DataGridView_Conditions)
+        Me.GroupBox_Conditions.Location = New System.Drawing.Point(16, 79)
+        Me.GroupBox_Conditions.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.GroupBox_Conditions.Name = "GroupBox_Conditions"
+        Me.GroupBox_Conditions.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.GroupBox_Conditions.Size = New System.Drawing.Size(735, 145)
+        Me.GroupBox_Conditions.TabIndex = 0
+        Me.GroupBox_Conditions.TabStop = False
+        Me.GroupBox_Conditions.Text = "Conditions"
+        '
+        'DataGridView_Conditions
+        '
+        Me.DataGridView_Conditions.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.DataGridView_Conditions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView_Conditions.Location = New System.Drawing.Point(6, 23)
+        Me.DataGridView_Conditions.Name = "DataGridView_Conditions"
+        Me.DataGridView_Conditions.RowTemplate.Height = 21
+        Me.DataGridView_Conditions.Size = New System.Drawing.Size(723, 115)
+        Me.DataGridView_Conditions.TabIndex = 0
+        '
+        'Button_Execute
+        '
+        Me.Button_Execute.Location = New System.Drawing.Point(657, 19)
+        Me.Button_Execute.Name = "Button_Execute"
+        Me.Button_Execute.Size = New System.Drawing.Size(94, 38)
+        Me.Button_Execute.TabIndex = 1
+        Me.Button_Execute.Text = "Execute"
+        Me.Button_Execute.UseVisualStyleBackColor = True
+        '
+        'GroupBox_SrcFilePath
+        '
+        Me.GroupBox_SrcFilePath.Controls.Add(Me.TextBox_SrcFilePath)
+        Me.GroupBox_SrcFilePath.Location = New System.Drawing.Point(16, 12)
+        Me.GroupBox_SrcFilePath.Name = "GroupBox_SrcFilePath"
+        Me.GroupBox_SrcFilePath.Size = New System.Drawing.Size(627, 60)
+        Me.GroupBox_SrcFilePath.TabIndex = 2
+        Me.GroupBox_SrcFilePath.TabStop = False
+        Me.GroupBox_SrcFilePath.Text = "Source File Path"
+        '
+        'TextBox_SrcFilePath
+        '
+        Me.TextBox_SrcFilePath.Location = New System.Drawing.Point(6, 22)
+        Me.TextBox_SrcFilePath.Name = "TextBox_SrcFilePath"
+        Me.TextBox_SrcFilePath.Size = New System.Drawing.Size(615, 23)
+        Me.TextBox_SrcFilePath.TabIndex = 0
+        '
+        'GroupBox_DestFilePath
+        '
+        Me.GroupBox_DestFilePath.Controls.Add(Me.TextBox_DestFilePath)
+        Me.GroupBox_DestFilePath.Location = New System.Drawing.Point(772, 12)
+        Me.GroupBox_DestFilePath.Name = "GroupBox_DestFilePath"
+        Me.GroupBox_DestFilePath.Size = New System.Drawing.Size(627, 60)
+        Me.GroupBox_DestFilePath.TabIndex = 3
+        Me.GroupBox_DestFilePath.TabStop = False
+        Me.GroupBox_DestFilePath.Text = "Destination File Path"
+        '
+        'TextBox_DestFilePath
+        '
+        Me.TextBox_DestFilePath.Location = New System.Drawing.Point(6, 22)
+        Me.TextBox_DestFilePath.Name = "TextBox_DestFilePath"
+        Me.TextBox_DestFilePath.Size = New System.Drawing.Size(615, 23)
+        Me.TextBox_DestFilePath.TabIndex = 0
+        '
+        'Button_ShowDetails
+        '
+        Me.Button_ShowDetails.Location = New System.Drawing.Point(16, 231)
+        Me.Button_ShowDetails.Name = "Button_ShowDetails"
+        Me.Button_ShowDetails.Size = New System.Drawing.Size(94, 38)
+        Me.Button_ShowDetails.TabIndex = 4
+        Me.Button_ShowDetails.Text = "Detail"
+        Me.Button_ShowDetails.UseVisualStyleBackColor = True
+        '
+        'GroupBox_DestCondition
+        '
+        Me.GroupBox_DestCondition.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox_DestCondition.Controls.Add(Me.DataGridView_DestCondition)
+        Me.GroupBox_DestCondition.Location = New System.Drawing.Point(772, 79)
+        Me.GroupBox_DestCondition.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.GroupBox_DestCondition.Name = "GroupBox_DestCondition"
+        Me.GroupBox_DestCondition.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.GroupBox_DestCondition.Size = New System.Drawing.Size(735, 145)
+        Me.GroupBox_DestCondition.TabIndex = 5
+        Me.GroupBox_DestCondition.TabStop = False
+        Me.GroupBox_DestCondition.Text = "Conditions"
+        '
+        'DataGridView_DestCondition
+        '
+        Me.DataGridView_DestCondition.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.DataGridView_DestCondition.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView_DestCondition.Location = New System.Drawing.Point(6, 23)
+        Me.DataGridView_DestCondition.Name = "DataGridView_DestCondition"
+        Me.DataGridView_DestCondition.RowTemplate.Height = 21
+        Me.DataGridView_DestCondition.Size = New System.Drawing.Size(723, 115)
+        Me.DataGridView_DestCondition.TabIndex = 0
         '
         'FormExcelFormatChanger
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(612, 196)
+        Me.ClientSize = New System.Drawing.Size(1518, 288)
+        Me.Controls.Add(Me.GroupBox_DestCondition)
+        Me.Controls.Add(Me.Button_ShowDetails)
+        Me.Controls.Add(Me.GroupBox_DestFilePath)
+        Me.Controls.Add(Me.GroupBox_SrcFilePath)
+        Me.Controls.Add(Me.Button_Execute)
+        Me.Controls.Add(Me.GroupBox_Conditions)
+        Me.Font = New System.Drawing.Font("Meiryo UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.Name = "FormExcelFormatChanger"
         Me.Text = "ExcelFormatChanger"
+        Me.GroupBox_Conditions.ResumeLayout(False)
+        CType(Me.DataGridView_Conditions, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox_SrcFilePath.ResumeLayout(False)
+        Me.GroupBox_SrcFilePath.PerformLayout()
+        Me.GroupBox_DestFilePath.ResumeLayout(False)
+        Me.GroupBox_DestFilePath.PerformLayout()
+        Me.GroupBox_DestCondition.ResumeLayout(False)
+        CType(Me.DataGridView_DestCondition, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
 
+    Friend WithEvents GroupBox_Conditions As GroupBox
+    Friend WithEvents DataGridView_Conditions As DataGridView
+    Friend WithEvents Button_Execute As Button
+    Friend WithEvents GroupBox_SrcFilePath As GroupBox
+    Friend WithEvents TextBox_SrcFilePath As TextBox
+    Friend WithEvents GroupBox_DestFilePath As GroupBox
+    Friend WithEvents TextBox_DestFilePath As TextBox
+    Friend WithEvents Button_ShowDetails As Button
+    Friend WithEvents GroupBox_DestCondition As GroupBox
+    Friend WithEvents DataGridView_DestCondition As DataGridView
 End Class
