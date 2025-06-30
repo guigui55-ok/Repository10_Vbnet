@@ -32,6 +32,8 @@ Partial Class FormExcelFormatChanger
         Me.Button_ShowDetails = New System.Windows.Forms.Button()
         Me.GroupBox_DestCondition = New System.Windows.Forms.GroupBox()
         Me.DataGridView_DestCondition = New System.Windows.Forms.DataGridView()
+        Me.Button_AddRowSrc = New System.Windows.Forms.Button()
+        Me.Button_RemoveRowSrc = New System.Windows.Forms.Button()
         Me.GroupBox_Conditions.SuspendLayout()
         CType(Me.DataGridView_Conditions, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox_SrcFilePath.SuspendLayout()
@@ -49,7 +51,7 @@ Partial Class FormExcelFormatChanger
         Me.GroupBox_Conditions.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GroupBox_Conditions.Name = "GroupBox_Conditions"
         Me.GroupBox_Conditions.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.GroupBox_Conditions.Size = New System.Drawing.Size(735, 145)
+        Me.GroupBox_Conditions.Size = New System.Drawing.Size(735, 163)
         Me.GroupBox_Conditions.TabIndex = 0
         Me.GroupBox_Conditions.TabStop = False
         Me.GroupBox_Conditions.Text = "Conditions"
@@ -63,12 +65,12 @@ Partial Class FormExcelFormatChanger
         Me.DataGridView_Conditions.Location = New System.Drawing.Point(6, 23)
         Me.DataGridView_Conditions.Name = "DataGridView_Conditions"
         Me.DataGridView_Conditions.RowTemplate.Height = 21
-        Me.DataGridView_Conditions.Size = New System.Drawing.Size(723, 115)
+        Me.DataGridView_Conditions.Size = New System.Drawing.Size(723, 133)
         Me.DataGridView_Conditions.TabIndex = 0
         '
         'Button_Execute
         '
-        Me.Button_Execute.Location = New System.Drawing.Point(657, 19)
+        Me.Button_Execute.Location = New System.Drawing.Point(657, 12)
         Me.Button_Execute.Name = "Button_Execute"
         Me.Button_Execute.Size = New System.Drawing.Size(94, 38)
         Me.Button_Execute.TabIndex = 1
@@ -111,7 +113,7 @@ Partial Class FormExcelFormatChanger
         '
         'Button_ShowDetails
         '
-        Me.Button_ShowDetails.Location = New System.Drawing.Point(16, 231)
+        Me.Button_ShowDetails.Location = New System.Drawing.Point(16, 249)
         Me.Button_ShowDetails.Name = "Button_ShowDetails"
         Me.Button_ShowDetails.Size = New System.Drawing.Size(94, 38)
         Me.Button_ShowDetails.TabIndex = 4
@@ -144,11 +146,33 @@ Partial Class FormExcelFormatChanger
         Me.DataGridView_DestCondition.Size = New System.Drawing.Size(723, 115)
         Me.DataGridView_DestCondition.TabIndex = 0
         '
+        'Button_AddRowSrc
+        '
+        Me.Button_AddRowSrc.Font = New System.Drawing.Font("Meiryo UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Button_AddRowSrc.Location = New System.Drawing.Point(657, 56)
+        Me.Button_AddRowSrc.Name = "Button_AddRowSrc"
+        Me.Button_AddRowSrc.Size = New System.Drawing.Size(34, 28)
+        Me.Button_AddRowSrc.TabIndex = 6
+        Me.Button_AddRowSrc.Text = "＋"
+        Me.Button_AddRowSrc.UseVisualStyleBackColor = True
+        '
+        'Button_RemoveRowSrc
+        '
+        Me.Button_RemoveRowSrc.Font = New System.Drawing.Font("Meiryo UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Button_RemoveRowSrc.Location = New System.Drawing.Point(701, 56)
+        Me.Button_RemoveRowSrc.Name = "Button_RemoveRowSrc"
+        Me.Button_RemoveRowSrc.Size = New System.Drawing.Size(34, 28)
+        Me.Button_RemoveRowSrc.TabIndex = 7
+        Me.Button_RemoveRowSrc.Text = "ー"
+        Me.Button_RemoveRowSrc.UseVisualStyleBackColor = True
+        '
         'FormExcelFormatChanger
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1518, 288)
+        Me.Controls.Add(Me.Button_RemoveRowSrc)
+        Me.Controls.Add(Me.Button_AddRowSrc)
         Me.Controls.Add(Me.GroupBox_DestCondition)
         Me.Controls.Add(Me.Button_ShowDetails)
         Me.Controls.Add(Me.GroupBox_DestFilePath)
@@ -181,4 +205,6 @@ Partial Class FormExcelFormatChanger
     Friend WithEvents Button_ShowDetails As Button
     Friend WithEvents GroupBox_DestCondition As GroupBox
     Friend WithEvents DataGridView_DestCondition As DataGridView
+    Friend WithEvents Button_AddRowSrc As Button
+    Friend WithEvents Button_RemoveRowSrc As Button
 End Class

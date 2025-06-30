@@ -10,6 +10,7 @@
             logger.SetFilePath(logger.GetDefaultLogFilePath())
             logger.Info($"LogFilePath = {logger.FilePath}")
 
+            'xml読み込みをして、dataManagerに格納する（未実装）
             SetTestData(logger, dataManager)
 
             Dim formMain = New FormExcelFormatChanger(logger)

@@ -215,6 +215,11 @@ Public Class AppLogger
         End If
         Return logValue
     End Function
+
+    Public Sub PrintInfo(value As String)
+        Info(value)
+    End Sub
+
     Public Sub AddLog(callerObj As Object, value As String)
         value = AddCaller(callerObj, value)
         Info(value)

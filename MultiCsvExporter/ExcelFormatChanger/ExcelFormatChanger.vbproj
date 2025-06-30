@@ -106,6 +106,7 @@
     <Compile Include="UtilExcel\ExcelAnyUtil.vb" />
     <Compile Include="UtilExcel\SharedExcelApp.vb" />
     <Compile Include="Util\AppLogger.vb" />
+    <Compile Include="Util\DataGridView_AddRemove.vb" />
     <Compile Include="Util\FormLog.designer.vb">
       <DependentUpon>FormLog.vb</DependentUpon>
     </Compile>

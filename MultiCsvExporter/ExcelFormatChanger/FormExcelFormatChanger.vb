@@ -3,6 +3,7 @@
     Public _logger As AppLogger
     Public _formLog As FormLog
     Public _mainProc As ExcelFormatChangerProc
+    Private _dgvAddRemoveUiSrc As DataGridView_AddRemove
 
     Public Class Ui
         Public Shared tableSrc As DataGridView
@@ -28,20 +29,45 @@
         _logger = logger
         Ui.tableSrc = DataGridView_Conditions
         SetupSearchColumns(Ui.tableSrc)
-        Ui.tableSrc.Rows.Add()
+        'Ui.tableSrc.Rows.Add()
 
         Ui.tableDest = DataGridView_DestCondition
         SetupSearchColumns(Ui.tableDest)
-        Ui.tableDest.Rows.Add()
+        'Ui.tableDest.Rows.Add()
 
+        _dgvAddRemoveUiSrc = New DataGridView_AddRemove(_logger, DataGridView_Conditions)
+        _dgvAddRemoveUiSrc.SetButton(Button_AddRowSrc, Button_RemoveRowSrc)
+    End Sub
+    Private Sub FormExcelFormatChanger_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+
+        _dgvAddRemoveUiSrc.EndEditAll()
     End Sub
 
     Private Sub FormExcelFormatChanger_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        SetData(_mainProc._dataPairManager)
     End Sub
 
     Public Sub SetData(dataManager As ChangeFormatDataPairManager)
+        Dim count = 0
+        For Each _dataPair In dataManager._dataPairList
+            Dim bufData = Nothing
+            Dim dgv = Nothing
+            Dim addrow = Nothing
 
+            'src
+            dgv = DataGridView_Conditions
+            Dim srcData = _dataPair.SrcItem
+            bufData = srcData.GetDataArray(count)
+            dgv.Rows.Add(bufData)
+
+            'dest
+            dgv = DataGridView_DestCondition
+            Dim destData = _dataPair.DestItem
+            bufData = destData.GetDataArray(count)
+            dgv.Rows.Add(bufData)
+
+            count += 1
+        Next
     End Sub
 
     Private Function GetAddData(_data As ChangeFormatDataPairManager.ChangeFormatData)
@@ -124,6 +150,15 @@
     Private Sub Button_Execute_Click(sender As Object, e As EventArgs) Handles Button_Execute.Click
         _mainProc.ExecuteChangeFormat()
     End Sub
+
+    Private Sub Button_AddRowSrc_Click(sender As Object, e As EventArgs) Handles Button_AddRowSrc.Click
+
+    End Sub
+
+    Private Sub Button_RemoveRowSrc_Click(sender As Object, e As EventArgs) Handles Button_RemoveRowSrc.Click
+
+    End Sub
+
 
 #End Region
 End Class

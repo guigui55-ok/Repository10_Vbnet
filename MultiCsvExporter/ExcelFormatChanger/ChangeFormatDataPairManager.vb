@@ -37,6 +37,23 @@ Public Class ChangeFormatDataPairManager
             Return $"FindValue={FindValue}"
         End Function
 
+        Public Function GetDataArray(index As Integer) As Object()
+            Dim ret = {
+                index,
+                FindSheetName,
+                FindRangeString,
+                FindValue,
+                FindMode,
+                OffsetRow,
+                OffsetCol,
+                EntireRow,
+                EntireCol,
+                TargetCountRow,
+                TargetCountCol
+            }
+            Return ret
+        End Function
+
         Public Function GetDeepCopyObject() As ChangeFormatData
             Dim ret = New ChangeFormatData
             ret.FilePath = Me.FilePath
