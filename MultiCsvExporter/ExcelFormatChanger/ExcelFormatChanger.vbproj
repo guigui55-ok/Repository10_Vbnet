@@ -99,6 +99,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="UtilDragDrop\DragAndDropControl.vb" />
+    <Compile Include="UtilDragDrop\DragAndDropFile.vb" />
+    <Compile Include="DragDropManager_ExcelFormatChanger.vb" />
     <Compile Include="UtilExcel\ExcelAddressUtil.vb" />
     <Compile Include="UtilExcel\ExcelAnyUtil.vb" />
     <Compile Include="UtilExcel\SharedExcelApp.vb" />
@@ -109,6 +112,7 @@
     <Compile Include="Util\FormLog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Util\TableDataXmlManager.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FormExcelFormatChanger.resx">

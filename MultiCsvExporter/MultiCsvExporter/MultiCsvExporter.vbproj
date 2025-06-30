@@ -112,6 +112,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="LogModules\AppLogger.vb" />
+    <Compile Include="UtilDragDrop\DragAndDropControl.vb" />
+    <Compile Include="UtilDragDrop\DragAndDropFile.vb" />
+    <Compile Include="UtilDragDrop\DragDropManager_MultiCsvExporter.vb" />
     <Compile Include="Util\CommandLineParser.vb" />
     <Compile Include="Util\CsvStream.vb" />
     <Compile Include="Util\DictionaryAnyUtil.vb" />

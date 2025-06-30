@@ -3,7 +3,7 @@
 Imports System.IO
 
 
-' 250614更新
+' 250630更新
 Public Class AppLogger
     Public Enum LogLevel
         [DEF]
@@ -200,5 +200,44 @@ Public Class AppLogger
             Debug.WriteLine("WriteToFile ERROR: " & ex.Message)
         End Try
     End Sub
+
+#Region "旧Verとの互換用"
+
+    ''' <summary>
+    ''' ログの値呼び出し元を追加する
+    ''' </summary>
+    ''' <param name="callerObj"></param>
+    ''' <param name="logValue"></param>
+    ''' <returns></returns>
+    Private Function AddCaller(callerObj As Object, logValue As String) As String
+        If callerObj IsNot Nothing Then
+            logValue = callerObj.ToString + " > " + logValue
+        End If
+        Return logValue
+    End Function
+
+    Public Sub PrintInfo(value As String)
+        Info(value)
+    End Sub
+
+    Public Sub AddLog(callerObj As Object, value As String)
+        value = AddCaller(callerObj, value)
+        Info(value)
+    End Sub
+
+    Public Sub AddLogAlert(value As String)
+        Warn(value)
+    End Sub
+
+    Public Sub AddLogWarning(callerObj As Object, value As String)
+        value = AddCaller(callerObj, value)
+        Warn(value)
+    End Sub
+
+    Public Sub AddException(ex As Exception, callerObj As Object, value As String)
+        value = AddCaller(callerObj, value)
+        Err(ex, value)
+    End Sub
+#End Region
 
 End Class
