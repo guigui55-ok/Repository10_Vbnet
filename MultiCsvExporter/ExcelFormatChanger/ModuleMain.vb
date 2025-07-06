@@ -1,4 +1,15 @@
-﻿Module ModuleMainExcelFormatChanger
+﻿'TODO
+'表とパスのSave,Load（CSV）
+'DragDropで表に反映（エクセル）
+'出力ファイル名が重複していたら、リネーム
+
+'バッチファイル
+'コンソール実行
+
+'OracleDBデータ用意
+
+
+Module ModuleMainExcelFormatChanger
 
     Sub Main()
         Dim logger As AppLogger = Nothing
@@ -52,6 +63,7 @@
         filSrc.FindValue = "■TableA"
         filSrc.FindMode = ChangeFormatDataPairManager.ConstfilterMode.CONTAINS
         filSrc.EntireRow = True
+        filSrc.FilePath = srcFilePath
         'filSrc.TargetCountRow '読み取りfileから動的に設定
 
         Dim fildest = New ChangeFormatDataPairManager.ChangeFormatData()
@@ -60,10 +72,54 @@
         fildest.FindValue = "■TableA"
         fildest.FindMode = ChangeFormatDataPairManager.ConstfilterMode.CONTAINS
         fildest.EntireRow = True
+        fildest.FilePath = destFilePath
 
         _pairData.ResetValue(filSrc, fildest)
-
         _ChangeDataManager._dataPairList.Add(_pairData)
 
+        'Data2行目
+        _pairData = New ChangeFormatDataPairManager.DataPair()
+        filSrc = New ChangeFormatDataPairManager.ChangeFormatData()
+        filSrc.FindSheetName = "" '無いときはシートインデックス1
+        filSrc.FindRangeString = "A:A"
+        filSrc.FindValue = "■TableA_02"
+        filSrc.FindMode = ChangeFormatDataPairManager.ConstfilterMode.CONTAINS
+        filSrc.EntireRow = True
+        filSrc.FilePath = srcFilePath
+
+        fildest = New ChangeFormatDataPairManager.ChangeFormatData()
+
+        _pairData.ResetValue(filSrc, fildest)
+        _ChangeDataManager._dataPairList.Add(_pairData)
+
+        'Data3行目
+        _pairData = New ChangeFormatDataPairManager.DataPair()
+        filSrc = New ChangeFormatDataPairManager.ChangeFormatData()
+        filSrc.FindSheetName = "" '無いときはシートインデックス1
+        filSrc.FindRangeString = "A:A"
+        filSrc.FindValue = "■TableB_01"
+        filSrc.FindMode = ChangeFormatDataPairManager.ConstfilterMode.CONTAINS
+        filSrc.EntireRow = True
+        filSrc.FilePath = srcFilePath
+
+        fildest = New ChangeFormatDataPairManager.ChangeFormatData()
+
+        _pairData.ResetValue(filSrc, fildest)
+        _ChangeDataManager._dataPairList.Add(_pairData)
+
+        'Data4行目
+        _pairData = New ChangeFormatDataPairManager.DataPair()
+        filSrc = New ChangeFormatDataPairManager.ChangeFormatData()
+        filSrc.FindSheetName = "" '無いときはシートインデックス1
+        filSrc.FindRangeString = "A:A"
+        filSrc.FindValue = "■TableB_02"
+        filSrc.FindMode = ChangeFormatDataPairManager.ConstfilterMode.CONTAINS
+        filSrc.EntireRow = True
+        filSrc.FilePath = srcFilePath
+
+        fildest = New ChangeFormatDataPairManager.ChangeFormatData()
+
+        _pairData.ResetValue(filSrc, fildest)
+        _ChangeDataManager._dataPairList.Add(_pairData)
     End Sub
 End Module

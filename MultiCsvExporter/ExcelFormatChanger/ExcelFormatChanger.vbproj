@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeFormatDataPairManager.vb" />
+    <Compile Include="DataGridViewSyncer.vb" />
     <Compile Include="ExcelFormatChangerProc.vb" />
     <Compile Include="FormExcelFormatChanger.vb">
       <SubType>Form</SubType>
@@ -99,6 +100,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="TestDataExcelFormatChanger.vb" />
     <Compile Include="UtilDragDrop\DragAndDropControl.vb" />
     <Compile Include="UtilDragDrop\DragAndDropFile.vb" />
     <Compile Include="DragDropManager_ExcelFormatChanger.vb" />
@@ -106,6 +108,7 @@
     <Compile Include="UtilExcel\ExcelAnyUtil.vb" />
     <Compile Include="UtilExcel\SharedExcelApp.vb" />
     <Compile Include="Util\AppLogger.vb" />
+    <Compile Include="Util\DataGridViewAnyUtil.vb" />
     <Compile Include="Util\DataGridView_AddRemove.vb" />
     <Compile Include="Util\FormLog.designer.vb">
       <DependentUpon>FormLog.vb</DependentUpon>
@@ -113,6 +116,7 @@
     <Compile Include="Util\FormLog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Util\ModulePathUtil.vb" />
     <Compile Include="Util\TableDataXmlManager.vb" />
   </ItemGroup>
   <ItemGroup>

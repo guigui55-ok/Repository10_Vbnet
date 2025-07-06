@@ -34,6 +34,7 @@ Partial Class FormExcelFormatChanger
         Me.DataGridView_DestCondition = New System.Windows.Forms.DataGridView()
         Me.Button_AddRowSrc = New System.Windows.Forms.Button()
         Me.Button_RemoveRowSrc = New System.Windows.Forms.Button()
+        Me.Button_Explorer = New System.Windows.Forms.Button()
         Me.GroupBox_Conditions.SuspendLayout()
         CType(Me.DataGridView_Conditions, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox_SrcFilePath.SuspendLayout()
@@ -129,7 +130,7 @@ Partial Class FormExcelFormatChanger
         Me.GroupBox_DestCondition.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GroupBox_DestCondition.Name = "GroupBox_DestCondition"
         Me.GroupBox_DestCondition.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.GroupBox_DestCondition.Size = New System.Drawing.Size(735, 145)
+        Me.GroupBox_DestCondition.Size = New System.Drawing.Size(735, 163)
         Me.GroupBox_DestCondition.TabIndex = 5
         Me.GroupBox_DestCondition.TabStop = False
         Me.GroupBox_DestCondition.Text = "Conditions"
@@ -143,7 +144,7 @@ Partial Class FormExcelFormatChanger
         Me.DataGridView_DestCondition.Location = New System.Drawing.Point(6, 23)
         Me.DataGridView_DestCondition.Name = "DataGridView_DestCondition"
         Me.DataGridView_DestCondition.RowTemplate.Height = 21
-        Me.DataGridView_DestCondition.Size = New System.Drawing.Size(723, 115)
+        Me.DataGridView_DestCondition.Size = New System.Drawing.Size(723, 133)
         Me.DataGridView_DestCondition.TabIndex = 0
         '
         'Button_AddRowSrc
@@ -166,11 +167,21 @@ Partial Class FormExcelFormatChanger
         Me.Button_RemoveRowSrc.Text = "ー"
         Me.Button_RemoveRowSrc.UseVisualStyleBackColor = True
         '
+        'Button_Explorer
+        '
+        Me.Button_Explorer.Location = New System.Drawing.Point(1407, 19)
+        Me.Button_Explorer.Name = "Button_Explorer"
+        Me.Button_Explorer.Size = New System.Drawing.Size(94, 38)
+        Me.Button_Explorer.TabIndex = 8
+        Me.Button_Explorer.Text = "Explorer"
+        Me.Button_Explorer.UseVisualStyleBackColor = True
+        '
         'FormExcelFormatChanger
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1518, 288)
+        Me.Controls.Add(Me.Button_Explorer)
         Me.Controls.Add(Me.Button_RemoveRowSrc)
         Me.Controls.Add(Me.Button_AddRowSrc)
         Me.Controls.Add(Me.GroupBox_DestCondition)
@@ -207,4 +218,5 @@ Partial Class FormExcelFormatChanger
     Friend WithEvents DataGridView_DestCondition As DataGridView
     Friend WithEvents Button_AddRowSrc As Button
     Friend WithEvents Button_RemoveRowSrc As Button
+    Friend WithEvents Button_Explorer As Button
 End Class

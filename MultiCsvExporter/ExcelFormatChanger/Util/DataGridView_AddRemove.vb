@@ -8,6 +8,8 @@ Public Class DataGridView_AddRemove
     Private _logger As Object
     Private _dataGridView As DataGridView
 
+    Public Event AddedRowEvent As EventHandler
+
     Sub New(logger As Object, dgv As DataGridView)
         _logger = logger
         _dataGridView = dgv
@@ -39,8 +41,9 @@ Public Class DataGridView_AddRemove
         lastRow.Cells()(0).Value = lastRow.Index.ToString
         _dataGridView.CurrentCell = lastRow.Cells(0)
         _dataGridView.EndEdit()
-        Dim ColumunPosition_ItemName_Number = 0
-        SetNoNoDataGridView(_dataGridView, ColumunPosition_ItemName_Number)
+        'Dim ColumunPosition_ItemName_Number = 0
+        'SetNoNoDataGridView(_dataGridView, ColumunPosition_ItemName_Number)
+        RaiseEvent AddedRowEvent(Me, EventArgs.Empty)
     End Sub
 
     Private Sub Button_RemoveRow_Click(sender As Object, e As EventArgs)

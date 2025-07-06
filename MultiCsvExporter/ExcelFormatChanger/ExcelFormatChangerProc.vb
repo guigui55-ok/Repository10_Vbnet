@@ -23,41 +23,62 @@ Public Class ExcelFormatChangerProc
         '-- 実行
         '※繰り返し
         Dim count = 0
-        For Each dataPairValue In _dataPairManager._dataPairList
-            _logger.Info($"execute [{count}]")
-            dataPairValue.SetFilePath(_dataPairManager._srcFilePath, _dataPairManager._destFilePath)
-            ExecuteChangeFormat_Single(dataPairValue)
-            count += 1
-        Next
+        Dim util As New ExcelAnyUtil()
+        Dim srcWb As Workbook = Nothing
+        Dim destWb As Workbook = Nothing
+        Try
+            'open
+            '// Excelオブジェクトを取得
+            srcWb = util.GetWorkBook(_dataPairManager._srcFilePath)
+            destWb = util.GetWorkBook(_dataPairManager._destFilePath)
+
+            For Each dataPairValue In _dataPairManager._dataPairList
+                _logger.Info($"execute [{count}]")
+                dataPairValue.SetFilePath(_dataPairManager._srcFilePath, _dataPairManager._destFilePath)
+                dataPairValue.InputBlankDataSrcToDest()
+
+                ExecuteChangeFormat_Single(util, dataPairValue, srcWb, destWb)
+                count += 1
+            Next
+
+            destWb.Save()
+        Catch ex As Exception
+            _logger.Info(vbCrLf + "**********" + vbCrLf)
+            _logger.Info(ex.GetType.ToString + ":" + ex.Message)
+            _logger.Info(ex.StackTrace)
+            _logger.Info(vbCrLf + "**********" + vbCrLf)
+
+            Throw
+        Finally
+            util.CloseWb(srcWb, Nothing)
+            util.CloseWb(destWb, Nothing)
+            _logger.Info("Close ExcelObject")
+        End Try
         _logger.Info("ExecuteChangeFormat Done.")
     End Sub
-    Public Sub ExecuteChangeFormat_Single(_dataPair As ChangeFormatDataPairManager.DataPair)
+    Public Sub ExecuteChangeFormat_Single(
+            util As ExcelAnyUtil,
+            _dataPair As ChangeFormatDataPairManager.DataPair,
+            srcWb As Workbook,
+            destWb As Workbook
+            )
         'init
-        Dim util As New ExcelAnyUtil()
         Dim conSrc As ChangeFormatDataPairManager.ChangeFormatData 'Condition Source
         Dim conDest As ChangeFormatDataPairManager.ChangeFormatData 'Condition Destination
         conSrc = _dataPair.SrcItem
         conDest = _dataPair.DestItem
 
-        Dim srcWb As Workbook = Nothing
         Dim srcWs As Worksheet = Nothing
-        Dim destWb As Workbook = Nothing
         Dim destWs As Worksheet = Nothing
         Try
+            srcWs = util.GetWorkSheet(srcWb, conSrc.FindSheetName)
+            destWs = util.GetWorkSheet(destWb, conDest.FindSheetName)
+
             _logger.Info($"srcFilePath = {conSrc.FilePath}")
             _logger.Info($"destFilePath = {conDest.FilePath}")
-            '// Excelオブジェクトを取得
-            srcWb = util.GetWorkBook(conSrc.FilePath)
-            srcWs = util.GetWorkSheet(srcWb, conSrc.FindSheetName)
-            destWb = util.GetWorkBook(conDest.FilePath)
-            destWs = util.GetWorkSheet(destWb, conDest.FindSheetName)
 
             '※ src,Dest同じファイルだと以下のエラーが発生する
             '「'System.Runtime.InteropServices.COMException'：起動されたオブジェクトはクライアントから切断されました。 (HRESULT からの例外:0x80010108 (RPC_E_DISCONNECTED))」
-            '_logger.Info($"srcWb = {srcWb.Name}")
-            '_logger.Info($"srcWs = {srcWs.Name}")
-            '_logger.Info($"destWb = {destWb.Name}")
-            '_logger.Info($"destWs = {destWs.Name}")
             _logger.Info($"srcWb = {srcWb.Name}")
             _logger.Info($"srcWs = {srcWs.Name}")
             _logger.Info($"destWb = {destWb.Name}")
@@ -118,17 +139,12 @@ Public Class ExcelFormatChangerProc
                         conDest.TargetRangeString
                     )
         Catch ex As Exception
-            _logger.Info(vbCrLf + "**********" + vbCrLf)
-            _logger.Info(ex.GetType.ToString + ":" + ex.Message)
-            _logger.Info(ex.StackTrace)
-            _logger.Info(vbCrLf + "**********" + vbCrLf)
-
             Throw
-        Finally
-            util.CloseWb(srcWb, srcWs)
-            util.CloseWb(destWb, destWs)
 
+        Finally
             _logger.Info("Close ExcelObject")
+            util.CloseWs(srcWs)
+            util.CloseWs(destWs)
         End Try
     End Sub
 

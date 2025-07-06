@@ -14,6 +14,7 @@ Public Class ChangeFormatDataPairManager
         Public Const ENDS_WITH = 3
     End Class
 
+    '################################################################################
     Public Class ChangeFormatData
         Public FilePath As String
         Public FindSheetName As String
@@ -54,6 +55,31 @@ Public Class ChangeFormatDataPairManager
             Return ret
         End Function
 
+        Public Function SetData(_dataAry() As Object) As Object()
+
+            Dim count = 0
+            FindSheetName = _dataAry(count)
+            count += 1
+            FindRangeString = _dataAry(count)
+            count += 1
+            FindValue = _dataAry(count)
+            count += 1
+            FindMode = _dataAry(count)
+            count += 1
+            OffsetRow = _dataAry(count)
+            count += 1
+            OffsetCol = _dataAry(count)
+            count += 1
+            EntireRow = _dataAry(count)
+            count += 1
+            EntireCol = _dataAry(count)
+            count += 1
+            TargetCountRow = _dataAry(count)
+            count += 1
+            TargetCountCol = _dataAry(count)
+
+        End Function
+
         Public Function GetDeepCopyObject() As ChangeFormatData
             Dim ret = New ChangeFormatData
             ret.FilePath = Me.FilePath
@@ -76,6 +102,7 @@ Public Class ChangeFormatDataPairManager
 
     End Class
 
+    '################################################################################
     ''' <summary>
     ''' ChangeFormatDataのペアで扱うクラス（コピー元 src とコピー先 dest の検索条件を別条件にするため）
     ''' </summary>
@@ -103,10 +130,31 @@ Public Class ChangeFormatDataPairManager
         Public Overrides Function ToString() As String
             Return $"Pair: {SrcItem.ToString()} and {DestItem.ToString()}"
         End Function
+
+        ''' <summary>
+        ''' DestItemのメインのデータ（FindStringなど）が、空の時、SrcItemからコピーする
+        ''' </summary>
+        Public Sub InputBlankDataSrcToDest()
+            Dim NothingMainDataFlagStr = DestItem.FindRangeString + DestItem.FindValue + DestItem.FindSheetName 'ここの入力が無ければ他の項目をコピーする
+            If DestItem.FindRangeString = "" Then DestItem.FindRangeString = SrcItem.FindRangeString
+            If DestItem.FindValue = "" Then DestItem.FindValue = SrcItem.FindValue
+            If DestItem.FindSheetName = "" Then DestItem.FindSheetName = SrcItem.FindSheetName
+
+            If NothingMainDataFlagStr = "" Then
+                If DestItem.FindMode = 0 Then DestItem.FindMode = SrcItem.FindMode
+                If DestItem.OffsetRow = 0 Then DestItem.OffsetRow = SrcItem.OffsetRow
+                If DestItem.OffsetCol = 0 Then DestItem.OffsetCol = SrcItem.OffsetCol
+                If DestItem.EntireRow = 0 Then DestItem.EntireRow = SrcItem.EntireRow
+                If DestItem.EntireCol = 0 Then DestItem.EntireCol = SrcItem.EntireCol
+                If DestItem.TargetCountRow = 0 Then DestItem.TargetCountRow = SrcItem.TargetCountRow
+                If DestItem.TargetCountCol = 0 Then DestItem.TargetCountCol = SrcItem.TargetCountCol
+
+            End If
+        End Sub
     End Class
 #End Region
 
-    '// ================================================================================
+    '################################################################################
 
     Public _dataPairList As List(Of DataPair)
     Public _srcFilePath = ""

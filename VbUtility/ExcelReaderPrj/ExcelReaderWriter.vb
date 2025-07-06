@@ -160,5 +160,63 @@ Public Class ExcelReaderWriter
             GC.Collect()
         End Try
     End Sub
+
+
+    ''' <summary>
+    ''' Excelファイルから指定シートの有効範囲をDataTableとして読み込む
+    ''' </summary>
+    ''' <param name="filePath">Excelファイルのフルパス</param>
+    ''' <param name="sheetName">読み込むシート名</param>
+    ''' <returns>読み込んだDataTable（TableNameはシート名）</returns>
+    Public Shared Function ReadSheetToDataTable(filePath As String, sheetName As String) As Data.DataTable
+        Dim excelApp As New Application()
+        Dim workbook As Workbook = Nothing
+        Dim worksheet As Worksheet = Nothing
+        Dim dt As New Data.DataTable()
+
+        Try
+            workbook = excelApp.Workbooks.Open(filePath)
+            worksheet = CType(workbook.Sheets(sheetName), Worksheet)
+            Dim usedRange As Range = worksheet.UsedRange
+
+            Dim rowCount As Integer = usedRange.Rows.Count
+            Dim colCount As Integer = usedRange.Columns.Count
+
+            ' カラムを追加（1行目の値をヘッダと仮定）
+            For col As Integer = 1 To colCount
+                Dim header As Object = CType(usedRange.Cells(1, col), Range).Value
+                If header Is Nothing Then
+                    header = "Column" & col.ToString()
+                End If
+                dt.Columns.Add(header.ToString())
+            Next
+
+            ' データ行を追加
+            For row As Integer = 2 To rowCount
+                Dim dr As Data.DataRow = dt.NewRow()
+                For col As Integer = 1 To colCount
+                    dr(col - 1) = CType(usedRange.Cells(row, col), Range).Value
+                Next
+                dt.Rows.Add(dr)
+            Next
+
+            ' DataTable名にシート名を設定
+            dt.TableName = sheetName
+
+        Catch ex As Exception
+            Throw New Exception("Excel読み込み中にエラーが発生しました: " & ex.Message)
+        Finally
+            ' Excelリソースの解放
+            If workbook IsNot Nothing Then
+                workbook.Close(False)
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook)
+            End If
+            excelApp.Quit()
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp)
+        End Try
+
+        Return dt
+    End Function
+
 End Class
 

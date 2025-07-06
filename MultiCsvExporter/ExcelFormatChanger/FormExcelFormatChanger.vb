@@ -5,6 +5,8 @@
     Public _mainProc As ExcelFormatChangerProc
     Private _dgvAddRemoveUiSrc As DataGridView_AddRemove
 
+    Private _dgvSyncer As DataGridViewSyncer
+
     Public Class Ui
         Public Shared tableSrc As DataGridView
         Public Shared tableDest As DataGridView
@@ -29,25 +31,37 @@
         _logger = logger
         Ui.tableSrc = DataGridView_Conditions
         SetupSearchColumns(Ui.tableSrc)
-        'Ui.tableSrc.Rows.Add()
+        Ui.tableSrc.EditMode = DataGridViewEditMode.EditOnEnter
 
         Ui.tableDest = DataGridView_DestCondition
         SetupSearchColumns(Ui.tableDest)
-        'Ui.tableDest.Rows.Add()
+        Ui.tableDest.EditMode = DataGridViewEditMode.EditOnEnter
 
         _dgvAddRemoveUiSrc = New DataGridView_AddRemove(_logger, DataGridView_Conditions)
         _dgvAddRemoveUiSrc.SetButton(Button_AddRowSrc, Button_RemoveRowSrc)
+        AddHandler _dgvAddRemoveUiSrc.AddedRowEvent, AddressOf ChangeRowAmountEvent
+
+        DataGridView_Conditions.AllowUserToAddRows = False
+        DataGridView_DestCondition.AllowUserToAddRows = False
+        _dgvSyncer = New DataGridViewSyncer(DataGridView_Conditions, DataGridView_DestCondition)
+
     End Sub
     Private Sub FormExcelFormatChanger_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
 
+        '★最初にRowを調整する
+        SetNoNoDataGridViewBoth(DataGridView_Conditions, DataGridView_DestCondition, 0)
         _dgvAddRemoveUiSrc.EndEditAll()
     End Sub
 
     Private Sub FormExcelFormatChanger_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        TextBox_SrcFilePath.Text = _mainProc._dataPairManager._srcFilePath
+        TextBox_DestFilePath.Text = _mainProc._dataPairManager._destFilePath
         SetData(_mainProc._dataPairManager)
     End Sub
 
     Public Sub SetData(dataManager As ChangeFormatDataPairManager)
+        'DataGridViewにセットする
         Dim count = 0
         For Each _dataPair In dataManager._dataPairList
             Dim bufData = Nothing
@@ -64,18 +78,48 @@
             dgv = DataGridView_DestCondition
             Dim destData = _dataPair.DestItem
             bufData = destData.GetDataArray(count)
-            dgv.Rows.Add(bufData)
+            'dgv.Rows.Add(bufData) 'DataGridViewの１と２は、行追加・削除時に行数が同期されるのでaddは不要
+            SetChangeFormatDataToDataGridView(dgv, bufData)
 
             count += 1
         Next
     End Sub
 
-    Private Function GetAddData(_data As ChangeFormatDataPairManager.ChangeFormatData)
-
+    Private Function GetAddDataToDataPairManager(_data As ChangeFormatDataPairManager.ChangeFormatData)
+        'Formで実行ボタンを押したときに実行される
+        'DataGridViewからGetする
+        GetDataDataGridView_DataPair()
     End Function
 
 
 #Region "DataGridView"
+
+    Public Sub SetChangeFormatDataToDataGridView(dgv As DataGridView, dataAry() As Object)
+        DataGridViewAnyUtil.SetRowValuesFromArray(dgv, dgv.Rows.Count - 1, dataAry, 0)
+    End Sub
+
+    Public Function GetDataDataGridView_DataPair()
+        _mainProc._dataPairManager._dataPairList.Clear()
+        For i = 0 To DataGridView_Conditions.Rows.Count - 1
+            Dim _dataPair = GetDataDataGridViewRow(i)
+            _mainProc._dataPairManager._dataPairList.Add(_dataPair)
+        Next
+    End Function
+    Public Function GetDataDataGridViewRow(rowIndex As Integer) As ChangeFormatDataPairManager.DataPair
+        Dim aryA() = DataGridViewAnyUtil.GetRowValues(DataGridView_Conditions, rowIndex)
+        Dim itemSrc = New ChangeFormatDataPairManager.ChangeFormatData()
+        itemSrc.SetData(aryA)
+
+        Dim aryB() = DataGridViewAnyUtil.GetRowValues(DataGridView_DestCondition, rowIndex)
+        Dim itemDest = New ChangeFormatDataPairManager.ChangeFormatData()
+        itemSrc.SetData(aryB)
+
+        Dim _dataPair = New ChangeFormatDataPairManager.DataPair()
+        _dataPair.SrcItem = itemSrc
+        _dataPair.DestItem = itemDest
+        Return _dataPair
+    End Function
+
     ''' <summary>
     ''' 指定の DataGridView に検索用カラムを設定する
     ''' </summary>
@@ -120,6 +164,23 @@
         _logger.Info($"dgv.Width = {dgv.Width}") '※これ＋40を親フォーム.widthにすると大体ちょうどよい
     End Sub
 
+    Public Sub SetNoNoDataGridView(dgv As DataGridView, colIndex As Integer, Optional startNum As Integer = 1)
+        Dim count = 0
+        For Each row As DataGridViewRow In dgv.Rows
+            row.Cells(colIndex).Value = (startNum + count).ToString
+            count += 1
+        Next
+    End Sub
+
+    Public Sub SetNoNoDataGridViewBoth(dgvA As DataGridView, dgvB As DataGridView, colIndex As Integer, Optional startNum As Integer = 1)
+        SetNoNoDataGridView(dgvA, colIndex, startNum)
+        SetNoNoDataGridView(dgvB, colIndex, startNum)
+    End Sub
+
+    Public Sub ChangeRowAmountEvent(sender As Object, e As EventArgs)
+        SetNoNoDataGridViewBoth(DataGridView_Conditions, DataGridView_DestCondition, 0)
+    End Sub
+
     ''' <summary>
     ''' テキスト列を作成する
     ''' </summary>
@@ -142,6 +203,9 @@
         col.HeaderText = headerText
         Return col
     End Function
+#End Region
+
+#Region ""
 
     Private Sub Button_ShowDetails_Click(sender As Object, e As EventArgs) Handles Button_ShowDetails.Click
 
@@ -151,14 +215,17 @@
         _mainProc.ExecuteChangeFormat()
     End Sub
 
-    Private Sub Button_AddRowSrc_Click(sender As Object, e As EventArgs) Handles Button_AddRowSrc.Click
+    'Private Sub Button_AddRowSrc_Click(sender As Object, e As EventArgs) Handles Button_AddRowSrc.Click
 
+    'End Sub
+
+    'Private Sub Button_RemoveRowSrc_Click(sender As Object, e As EventArgs) Handles Button_RemoveRowSrc.Click
+
+    'End Sub
+
+    Private Sub Button_Explorer_Click(sender As Object, e As EventArgs) Handles Button_Explorer.Click
+        If Not IO.File.Exists(TextBox_DestFilePath.Text) Then Exit Sub
+        FileExplorerHelper.OpenInExplorer(TextBox_DestFilePath.Text)
     End Sub
-
-    Private Sub Button_RemoveRowSrc_Click(sender As Object, e As EventArgs) Handles Button_RemoveRowSrc.Click
-
-    End Sub
-
-
 #End Region
 End Class

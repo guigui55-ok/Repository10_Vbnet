@@ -1,0 +1,15 @@
+﻿
+引数の設計（Key と 値）
+引数	説明	値の例
+--mode	実行モードを指定するキー	form または console
+--config	任意：設定ファイルやその他の指定が可能	config.json など
+
+例：
+MyApp.exe --mode form
+MyApp.exe --mode console --config "setting.json"
+
+
+
+ビルドターゲット
+VbDotNetOracleWrapper プロジェクト、プロパティ＞コンパイル＞ターゲットCPU＞x64
+OracleManager　も上記と同じにそろえる
