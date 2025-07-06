@@ -35,6 +35,8 @@ Partial Class FormExcelFormatChanger
         Me.Button_AddRowSrc = New System.Windows.Forms.Button()
         Me.Button_RemoveRowSrc = New System.Windows.Forms.Button()
         Me.Button_Explorer = New System.Windows.Forms.Button()
+        Me.Button_SetTestData = New System.Windows.Forms.Button()
+        Me.Button_Save = New System.Windows.Forms.Button()
         Me.GroupBox_Conditions.SuspendLayout()
         CType(Me.DataGridView_Conditions, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox_SrcFilePath.SuspendLayout()
@@ -176,11 +178,31 @@ Partial Class FormExcelFormatChanger
         Me.Button_Explorer.Text = "Explorer"
         Me.Button_Explorer.UseVisualStyleBackColor = True
         '
+        'Button_SetTestData
+        '
+        Me.Button_SetTestData.Location = New System.Drawing.Point(138, 249)
+        Me.Button_SetTestData.Name = "Button_SetTestData"
+        Me.Button_SetTestData.Size = New System.Drawing.Size(94, 38)
+        Me.Button_SetTestData.TabIndex = 9
+        Me.Button_SetTestData.Text = "SetTestData"
+        Me.Button_SetTestData.UseVisualStyleBackColor = True
+        '
+        'Button_Save
+        '
+        Me.Button_Save.Location = New System.Drawing.Point(260, 249)
+        Me.Button_Save.Name = "Button_Save"
+        Me.Button_Save.Size = New System.Drawing.Size(94, 38)
+        Me.Button_Save.TabIndex = 10
+        Me.Button_Save.Text = "Save"
+        Me.Button_Save.UseVisualStyleBackColor = True
+        '
         'FormExcelFormatChanger
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1518, 288)
+        Me.Controls.Add(Me.Button_Save)
+        Me.Controls.Add(Me.Button_SetTestData)
         Me.Controls.Add(Me.Button_Explorer)
         Me.Controls.Add(Me.Button_RemoveRowSrc)
         Me.Controls.Add(Me.Button_AddRowSrc)
@@ -219,4 +241,6 @@ Partial Class FormExcelFormatChanger
     Friend WithEvents Button_AddRowSrc As Button
     Friend WithEvents Button_RemoveRowSrc As Button
     Friend WithEvents Button_Explorer As Button
+    Friend WithEvents Button_SetTestData As Button
+    Friend WithEvents Button_Save As Button
 End Class

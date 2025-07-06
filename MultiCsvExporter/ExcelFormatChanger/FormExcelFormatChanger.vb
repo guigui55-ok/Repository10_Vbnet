@@ -7,6 +7,11 @@
 
     Private _dgvSyncer As DataGridViewSyncer
 
+    Private _dgvSaverSrc As DataGridViewSaver
+    Private _dgvSaverDest As DataGridViewSaver
+
+    Private _dgvSaver As DataGridViewSaver
+
     Public Class Ui
         Public Shared tableSrc As DataGridView
         Public Shared tableDest As DataGridView
@@ -28,39 +33,62 @@
 
         ' InitializeComponent() 呼び出しの後で初期化を追加します。
 
+        'init
         _logger = logger
+
+        'dgv src
         Ui.tableSrc = DataGridView_Conditions
         SetupSearchColumns(Ui.tableSrc)
         Ui.tableSrc.EditMode = DataGridViewEditMode.EditOnEnter
 
+        'dgv dest
         Ui.tableDest = DataGridView_DestCondition
         SetupSearchColumns(Ui.tableDest)
         Ui.tableDest.EditMode = DataGridViewEditMode.EditOnEnter
 
+        'dgv event1
         _dgvAddRemoveUiSrc = New DataGridView_AddRemove(_logger, DataGridView_Conditions)
         _dgvAddRemoveUiSrc.SetButton(Button_AddRowSrc, Button_RemoveRowSrc)
         AddHandler _dgvAddRemoveUiSrc.AddedRowEvent, AddressOf ChangeRowAmountEvent
 
+        'dgv event2
         DataGridView_Conditions.AllowUserToAddRows = False
         DataGridView_DestCondition.AllowUserToAddRows = False
         _dgvSyncer = New DataGridViewSyncer(DataGridView_Conditions, DataGridView_DestCondition)
 
+        'saver src
+        _dgvSaverSrc = New DataGridViewSaver
+        Dim csvPathSrc = Application.StartupPath + "\" + "SettingSrc.csv"
+        Dim textPathSrc = Application.StartupPath + "\" + "SettingExcelPathSrc.txt"
+        _dgvSaverSrc.Init(DataGridViewSaver.EnumSaveMode.CSV, Ui.tableSrc, csvPathSrc, textPathSrc)
+
+        'saver dest
+        _dgvSaverDest = New DataGridViewSaver
+        Dim csvPathDest = Application.StartupPath + "\" + "SettingDest.csv"
+        Dim textPathDest = Application.StartupPath + "\" + "SettingExcelPathDest.txt"
+        _dgvSaverDest.Init(DataGridViewSaver.EnumSaveMode.CSV, Ui.tableDest, csvPathDest, textPathDest)
+
     End Sub
     Private Sub FormExcelFormatChanger_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
 
-        '★最初にRowを調整する
+        '最初にRowを調整する
         SetNoNoDataGridViewBoth(DataGridView_Conditions, DataGridView_DestCondition, 0)
         _dgvAddRemoveUiSrc.EndEditAll()
+        LoadCsv()
     End Sub
 
     Private Sub FormExcelFormatChanger_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        TextBox_SrcFilePath.Text = _mainProc._dataPairManager._srcFilePath
-        TextBox_DestFilePath.Text = _mainProc._dataPairManager._destFilePath
         SetData(_mainProc._dataPairManager)
     End Sub
 
+
+
     Public Sub SetData(dataManager As ChangeFormatDataPairManager)
+        'path
+        TextBox_SrcFilePath.Text = _mainProc._dataPairManager._srcFilePath
+        TextBox_DestFilePath.Text = _mainProc._dataPairManager._destFilePath
+
         'DataGridViewにセットする
         Dim count = 0
         For Each _dataPair In dataManager._dataPairList
@@ -226,6 +254,27 @@
     Private Sub Button_Explorer_Click(sender As Object, e As EventArgs) Handles Button_Explorer.Click
         If Not IO.File.Exists(TextBox_DestFilePath.Text) Then Exit Sub
         FileExplorerHelper.OpenInExplorer(TextBox_DestFilePath.Text)
+    End Sub
+
+    Private Sub Button_SetTestData_Click(sender As Object, e As EventArgs) Handles Button_SetTestData.Click
+        SetTestData(_logger, _mainProc._dataPairManager)
+        SetData(_mainProc._dataPairManager)
+    End Sub
+
+    Private Sub Button_Save_Click(sender As Object, e As EventArgs) Handles Button_Save.Click
+        _dgvSaverSrc.SaveMain(_mainProc._dataPairManager._srcFilePath)
+        _dgvSaverDest.SaveMain(_mainProc._dataPairManager._destFilePath)
+
+        _logger.Info("SaveCsv srcPath = " + _dgvSaverSrc._filePathCsv)
+        _logger.Info("SaveCsv destPath = " + _dgvSaverDest._filePathCsv)
+    End Sub
+
+    Private Sub LoadCsv()
+        _dgvSaverSrc.LoadMain()
+        _dgvSaverDest.LoadMain()
+        TextBox_SrcFilePath.Text = _dgvSaverSrc._filePathExcel
+        TextBox_DestFilePath.Text = _dgvSaverDest._filePathExcel
+        _logger.Info("LoadCsv Done.")
     End Sub
 #End Region
 End Class

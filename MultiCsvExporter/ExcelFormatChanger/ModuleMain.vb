@@ -1,6 +1,6 @@
 ﻿'TODO
-'表とパスのSave,Load（CSV）
-'DragDropで表に反映（エクセル）
+'表とパスのSave,Load（CSV）（エクセル）
+'DragDropで表に反映（CSV）（エクセル）
 '出力ファイル名が重複していたら、リネーム
 
 'バッチファイル
@@ -21,9 +21,11 @@ Module ModuleMainExcelFormatChanger
             logger.SetFilePath(logger.GetDefaultLogFilePath())
             logger.Info($"LogFilePath = {logger.FilePath}")
 
-            'xml読み込みをして、dataManagerに格納する（未実装）
-            SetTestData(logger, dataManager)
+            'csv読み込みをして、dataManagerに格納する（未実装）
+            'SetTestData(logger, dataManager)
 
+            dataManager = New ChangeFormatDataPairManager()
+            AddHandler dataManager.LogoutEvent, AddressOf logger.RecieveLogoutEvent
             Dim formMain = New FormExcelFormatChanger(logger)
             Dim formLog = New FormLog
             formMain._formLog = formLog
@@ -50,8 +52,8 @@ Module ModuleMainExcelFormatChanger
         Dim srcFilePath = "C:\Users\OK\source\repos\Repository10_VBnet\MultiCsvExporter\MultiCsvExporter\bin\Debug\Output\FormatSrc.xlsx"
         Dim destFilePath = "C:\Users\OK\source\repos\Repository10_VBnet\MultiCsvExporter\MultiCsvExporter\bin\Debug\Output\Export.xlsx"
 
-        _ChangeDataManager = New ChangeFormatDataPairManager()
-        AddHandler _ChangeDataManager.LogoutEvent, AddressOf logger.RecieveLogoutEvent
+        '_ChangeDataManager = New ChangeFormatDataPairManager()
+        'AddHandler _ChangeDataManager.LogoutEvent, AddressOf logger.RecieveLogoutEvent
 
         _ChangeDataManager._srcFilePath = srcFilePath
         _ChangeDataManager._destFilePath = destFilePath

@@ -55,6 +55,35 @@ Public Class ChangeFormatDataPairManager
             Return ret
         End Function
 
+        Public Function SetData(row As DataRow)
+            'No  Sheet	Range	Value	Mode	OffsetRow	OffsetCol	EntireRow	EntireCol	RowCount	ColCount
+            Dim colOrder = {
+                "Sheet",
+                "Range",
+                "Value",
+                "Mode",
+                "OffsetRow",
+                "OffsetCol",
+                "EntireRow",
+                "EntireCol",
+                "RowCount",
+                "ColCount"
+            }
+            Dim _list = New List(Of String)
+            For Each targetName In colOrder
+                For Each col As DataColumn In row.Table.Columns
+                    If targetName = col.ColumnName Then
+                        Dim buf = row(col)
+                        If buf Is Nothing Or IsDBNull(buf) Then
+                            buf = ""
+                        End If
+                        _list.Add(buf)
+                    End If
+                Next
+            Next
+            SetData(_list.ToArray)
+        End Function
+
         Public Function SetData(_dataAry() As Object) As Object()
 
             Dim count = 0
@@ -170,4 +199,85 @@ Public Class ChangeFormatDataPairManager
         RaiseEvent LogoutEvent(value, EventArgs.Empty)
     End Sub
 
+
+    Public Sub SetSrcDataTable(dtSrc As Data.DataTable, srcFilePath As String, dtDest As Data.DataTable, destFilePath As String)
+
+        _srcFilePath = srcFilePath
+
+        Dim count = 0
+        For Each row As DataRow In dtSrc.Rows
+            Dim _pairData = New ChangeFormatDataPairManager.DataPair()
+
+            ' filter src
+            Dim filSrc = New ChangeFormatDataPairManager.ChangeFormatData()
+            filSrc.SetData(row)
+            filSrc.FilePath = srcFilePath
+
+            If dtDest.Rows.Count <= count Then
+                Continue For
+            End If
+
+            '※Destは無いこともある
+            'filter dest
+            Dim filDest = New ChangeFormatDataPairManager.ChangeFormatData()
+
+            count += 1
+        Next
+
+        'Dim fildest = New ChangeFormatDataPairManager.ChangeFormatData()
+        'fildest.FindSheetName = "" '無いときはシートインデックス1
+        'fildest.FindRangeString = "A:A"
+        'fildest.FindValue = "■TableA"
+        'fildest.FindMode = ChangeFormatDataPairManager.ConstfilterMode.CONTAINS
+        'fildest.EntireRow = True
+        'fildest.FilePath = destFilePath
+
+        '_pairData.ResetValue(filSrc, fildest)
+        '_dataPairList.Add(_pairData)
+
+        ''Data2行目
+        '_pairData = New ChangeFormatDataPairManager.DataPair()
+        'filSrc = New ChangeFormatDataPairManager.ChangeFormatData()
+        'filSrc.FindSheetName = "" '無いときはシートインデックス1
+        'filSrc.FindRangeString = "A:A"
+        'filSrc.FindValue = "■TableA_02"
+        'filSrc.FindMode = ChangeFormatDataPairManager.ConstfilterMode.CONTAINS
+        'filSrc.EntireRow = True
+        'filSrc.FilePath = srcFilePath
+
+        'fildest = New ChangeFormatDataPairManager.ChangeFormatData()
+
+        '_pairData.ResetValue(filSrc, fildest)
+        '_ChangeDataManager._dataPairList.Add(_pairData)
+
+        ''Data3行目
+        '_pairData = New ChangeFormatDataPairManager.DataPair()
+        'filSrc = New ChangeFormatDataPairManager.ChangeFormatData()
+        'filSrc.FindSheetName = "" '無いときはシートインデックス1
+        'filSrc.FindRangeString = "A:A"
+        'filSrc.FindValue = "■TableB_01"
+        'filSrc.FindMode = ChangeFormatDataPairManager.ConstfilterMode.CONTAINS
+        'filSrc.EntireRow = True
+        'filSrc.FilePath = srcFilePath
+
+        'fildest = New ChangeFormatDataPairManager.ChangeFormatData()
+
+        '_pairData.ResetValue(filSrc, fildest)
+        '_ChangeDataManager._dataPairList.Add(_pairData)
+
+        ''Data4行目
+        '_pairData = New ChangeFormatDataPairManager.DataPair()
+        'filSrc = New ChangeFormatDataPairManager.ChangeFormatData()
+        'filSrc.FindSheetName = "" '無いときはシートインデックス1
+        'filSrc.FindRangeString = "A:A"
+        'filSrc.FindValue = "■TableB_02"
+        'filSrc.FindMode = ChangeFormatDataPairManager.ConstfilterMode.CONTAINS
+        'filSrc.EntireRow = True
+        'filSrc.FilePath = srcFilePath
+
+        'fildest = New ChangeFormatDataPairManager.ChangeFormatData()
+
+        '_pairData.ResetValue(filSrc, fildest)
+        '_ChangeDataManager._dataPairList.Add(_pairData)
+    End Sub
 End Class
