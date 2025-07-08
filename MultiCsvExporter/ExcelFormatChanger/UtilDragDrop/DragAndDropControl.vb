@@ -81,7 +81,7 @@
     Private Sub _SampleDragDropEvent(sender As Object, e As EventArgs)
 
         Dim _logger As Object = Nothing
-        Dim targetControl As Control
+        Dim targetControl As Control = Nothing
         Dim _dragAndDropControl As DragAndDropControl = New DragAndDropControl(_logger, targetControl)
         Dim RichTextBox_Paths As RichTextBox = Nothing
 

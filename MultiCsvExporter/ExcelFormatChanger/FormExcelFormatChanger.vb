@@ -12,6 +12,8 @@
 
     Private _dgvSaver As DataGridViewSaver
 
+    Private _dragDropManager As DragDropManager_FormExcelFormatChanger
+
     Public Class Ui
         Public Shared tableSrc As DataGridView
         Public Shared tableDest As DataGridView
@@ -35,6 +37,10 @@
 
         'init
         _logger = logger
+        Me.AllowDrop = True
+
+        'drag drop
+        _dragDropManager = New DragDropManager_FormExcelFormatChanger(_logger, Me)
 
         'dgv src
         Ui.tableSrc = DataGridView_Conditions
@@ -54,19 +60,18 @@
         'dgv event2
         DataGridView_Conditions.AllowUserToAddRows = False
         DataGridView_DestCondition.AllowUserToAddRows = False
-        _dgvSyncer = New DataGridViewSyncer(DataGridView_Conditions, DataGridView_DestCondition)
 
         'saver src
         _dgvSaverSrc = New DataGridViewSaver
         Dim csvPathSrc = Application.StartupPath + "\" + "SettingSrc.csv"
         Dim textPathSrc = Application.StartupPath + "\" + "SettingExcelPathSrc.txt"
-        _dgvSaverSrc.Init(DataGridViewSaver.EnumSaveMode.CSV, Ui.tableSrc, csvPathSrc, textPathSrc)
+        _dgvSaverSrc.Init(_logger, DataGridViewSaver.EnumSaveMode.CSV, Ui.tableSrc, csvPathSrc, textPathSrc)
 
         'saver dest
         _dgvSaverDest = New DataGridViewSaver
         Dim csvPathDest = Application.StartupPath + "\" + "SettingDest.csv"
         Dim textPathDest = Application.StartupPath + "\" + "SettingExcelPathDest.txt"
-        _dgvSaverDest.Init(DataGridViewSaver.EnumSaveMode.CSV, Ui.tableDest, csvPathDest, textPathDest)
+        _dgvSaverDest.Init(_logger, DataGridViewSaver.EnumSaveMode.CSV, Ui.tableDest, csvPathDest, textPathDest)
 
     End Sub
     Private Sub FormExcelFormatChanger_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
@@ -74,7 +79,12 @@
         '最初にRowを調整する
         SetNoNoDataGridViewBoth(DataGridView_Conditions, DataGridView_DestCondition, 0)
         _dgvAddRemoveUiSrc.EndEditAll()
+
+        'Csvからデータ追加
         LoadCsv()
+
+        '★以下のSyncerクラスは、上記データをセットした後でなければ、片方を上書きしてしまう為注意★
+        _dgvSyncer = New DataGridViewSyncer(DataGridView_Conditions, DataGridView_DestCondition)
     End Sub
 
     Private Sub FormExcelFormatChanger_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -117,8 +127,34 @@
         'Formで実行ボタンを押したときに実行される
         'DataGridViewからGetする
         GetDataDataGridView_DataPair()
+        _mainProc._dataPairManager._srcFilePath = TextBox_SrcFilePath.Text
+        _mainProc._dataPairManager._destFilePath = TextBox_DestFilePath.Text
+        Return Nothing
     End Function
 
+
+    ''' <summary>
+    ''' 指定インデックスの要素を削除した新しい配列を返します
+    ''' </summary>
+    ''' <typeparam name="T">任意の型</typeparam>
+    ''' <param name="sourceArray">元の配列</param>
+    ''' <param name="indexToRemove">削除したい要素のインデックス</param>
+    ''' <returns>指定要素を削除した新しい配列</returns>
+    Public Function RemoveAtIndex(Of T)(sourceArray As T(), indexToRemove As Integer) As T()
+        If sourceArray Is Nothing Then Throw New ArgumentNullException(NameOf(sourceArray))
+        If indexToRemove < 0 OrElse indexToRemove >= sourceArray.Length Then Throw New ArgumentOutOfRangeException(NameOf(indexToRemove))
+
+        Dim newArray(sourceArray.Length - 2) As T ' 1つ要素が少ない配列を作成
+        Dim newIndex As Integer = 0
+
+        For i As Integer = 0 To sourceArray.Length - 1
+            If i = indexToRemove Then Continue For
+            newArray(newIndex) = sourceArray(i)
+            newIndex += 1
+        Next
+
+        Return newArray
+    End Function
 
 #Region "DataGridView"
 
@@ -132,19 +168,41 @@
             Dim _dataPair = GetDataDataGridViewRow(i)
             _mainProc._dataPairManager._dataPairList.Add(_dataPair)
         Next
+        Return Nothing
     End Function
-    Public Function GetDataDataGridViewRow(rowIndex As Integer) As ChangeFormatDataPairManager.DataPair
-        Dim aryA() = DataGridViewAnyUtil.GetRowValues(DataGridView_Conditions, rowIndex)
-        Dim itemSrc = New ChangeFormatDataPairManager.ChangeFormatData()
-        itemSrc.SetData(aryA)
 
-        Dim aryB() = DataGridViewAnyUtil.GetRowValues(DataGridView_DestCondition, rowIndex)
+
+    Public Function GetDataDataGridViewRow(rowIndex As Integer) As ChangeFormatDataPairManager.DataPair
+
+        'ary src
+        Dim arySrc() = DataGridViewAnyUtil.GetRowValues(DataGridView_Conditions, rowIndex)
+        arySrc = RemoveAtIndex(arySrc, 0) '最初の"No"カラムは除外
+        '_logger.Info($"[{rowIndex}]arySrc = {String.Join(" ,", arySrc)}")
+
+        Dim itemSrc = New ChangeFormatDataPairManager.ChangeFormatData()
+        itemSrc.SetData(arySrc)
+
+        'ary dest
+        Dim aryDest() = DataGridViewAnyUtil.GetRowValues(DataGridView_DestCondition, rowIndex)
+        aryDest = RemoveAtIndex(aryDest, 0) '最初の"No"カラムは除外
+        '_logger.Info($"[{rowIndex}]aryDest = {String.Join(" ,", aryDest)}")
+
         Dim itemDest = New ChangeFormatDataPairManager.ChangeFormatData()
-        itemSrc.SetData(aryB)
+        itemDest.SetData(aryDest)
 
         Dim _dataPair = New ChangeFormatDataPairManager.DataPair()
         _dataPair.SrcItem = itemSrc
         _dataPair.DestItem = itemDest
+
+        If Not _dataPair.SrcItem.DataIsValid() Then
+            _dataPair.SrcItem = itemDest.GetDeepCopyObject()
+        Else
+            'pass
+        End If
+
+        _logger.Info($"[{rowIndex}]DestItem = {String.Join(" ,", itemDest.GetDataArray(rowIndex))}")
+        _logger.Info($"[{rowIndex}]SrcItem = {String.Join(" ,", itemSrc.GetDataArray(rowIndex))}")
+
         Return _dataPair
     End Function
 
@@ -233,13 +291,14 @@
     End Function
 #End Region
 
-#Region ""
+#Region "Events"
 
     Private Sub Button_ShowDetails_Click(sender As Object, e As EventArgs) Handles Button_ShowDetails.Click
 
     End Sub
 
     Private Sub Button_Execute_Click(sender As Object, e As EventArgs) Handles Button_Execute.Click
+        GetAddDataToDataPairManager(Nothing)
         _mainProc.ExecuteChangeFormat()
     End Sub
 
@@ -262,19 +321,23 @@
     End Sub
 
     Private Sub Button_Save_Click(sender As Object, e As EventArgs) Handles Button_Save.Click
+        _logger.Info("SaveInfo (Button_Save_Click)")
+        _mainProc._dataPairManager._srcFilePath = TextBox_SrcFilePath.Text
+        _mainProc._dataPairManager._destFilePath = TextBox_DestFilePath.Text
         _dgvSaverSrc.SaveMain(_mainProc._dataPairManager._srcFilePath)
         _dgvSaverDest.SaveMain(_mainProc._dataPairManager._destFilePath)
-
-        _logger.Info("SaveCsv srcPath = " + _dgvSaverSrc._filePathCsv)
-        _logger.Info("SaveCsv destPath = " + _dgvSaverDest._filePathCsv)
     End Sub
 
     Private Sub LoadCsv()
         _dgvSaverSrc.LoadMain()
         _dgvSaverDest.LoadMain()
-        TextBox_SrcFilePath.Text = _dgvSaverSrc._filePathExcel
-        TextBox_DestFilePath.Text = _dgvSaverDest._filePathExcel
+        TextBox_SrcFilePath.Text = _dgvSaverSrc._targetFilePath
+        TextBox_DestFilePath.Text = _dgvSaverDest._targetFilePath
         _logger.Info("LoadCsv Done.")
+    End Sub
+
+    Private Sub FormExcelFormatChanger_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Button_Save_Click(Nothing, EventArgs.Empty)
     End Sub
 #End Region
 End Class

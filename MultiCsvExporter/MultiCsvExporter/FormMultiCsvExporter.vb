@@ -6,7 +6,7 @@ Public Class FormMultiCsvExporter
     Public _logger As AppLogger
     Public _formLog As FormLog
     Public _formConditions As FormConditions
-    Public _filterCondition As FilterCondition
+    'Public _filterCondition As FilterCondition
 
     Sub New()
 
@@ -30,6 +30,7 @@ Public Class FormMultiCsvExporter
     End Sub
 
     Private Sub FormMultiCsvExporter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         SetTestData()
     End Sub
 
@@ -38,7 +39,7 @@ Public Class FormMultiCsvExporter
         '出力形式はCsvかExcelか 済
         '貼り付け順番は、ファイル種別ごとか、フォルダごとか（未）
         '縦書きか、横書きか（保留）
-        'DragAndDrop
+        'DragAndDrop　済
         '設定保存機能（My.Setting）
         '引数を読み込んで、Formなしで処理をする（未）
 
@@ -86,7 +87,7 @@ Public Class FormMultiCsvExporter
         Dim wDir = TextBox_OutputDirPath.Text
         Dim wFilename = TextBox_OutputFileName.Text
 
-        ExecuteMain(_logger, _filterCondition, _fileFinder._filePathList.ToArray(), wDir, wFilename)
+        ExecuteMain(_logger, _formConditions._filterCondition, _fileFinder._filePathList.ToArray(), wDir, wFilename)
     End Sub
 
     ''' <summary>
@@ -214,5 +215,30 @@ Public Class FormMultiCsvExporter
 
     Private Sub Button_Condition_Click(sender As Object, e As EventArgs) Handles Button_Condition.Click
         Me._formConditions.Show()
+    End Sub
+
+
+
+    ' クラス内で宣言
+    Private _isTextSelected As Boolean = False
+
+    Private Sub TextBox_OutputDirPath_Enter(sender As Object, e As EventArgs) Handles TextBox_OutputDirPath.Enter
+        TextBox_OutputDirPath.SelectAll()
+        _isTextSelected = False
+    End Sub
+
+    Private Sub TextBox_OutputDirPath_MouseUp(sender As Object, e As MouseEventArgs) Handles TextBox_OutputDirPath.MouseUp
+        If Not _isTextSelected Then
+            TextBox_OutputDirPath.SelectAll()
+            _isTextSelected = True
+        End If
+    End Sub
+
+    Private Sub Button_ClearDirPath_Click(sender As Object, e As EventArgs) Handles Button_ClearDirPath.Click
+        RichTextBox_DirPaths.Text = ""
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button_OtherTool.Click
+
     End Sub
 End Class

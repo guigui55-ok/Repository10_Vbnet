@@ -84,6 +84,37 @@ Public Class ExcelFormatChangerProc
             _logger.Info($"destWb = {destWb.Name}")
             _logger.Info($"destWs = {destWs.Name}")
 
+            '//まず、コピペ先の長さを読み込み、範囲を決定する
+
+            '範囲決定時に、xlDownとするかのオプションは追加する？
+
+            '// 書式コピー先範囲を設定
+            'dest
+            Dim foundAddrDest = util.FindCellAddress(
+                    destWs,
+                    conDest.FindRangeString,
+                    conDest.FindValue,
+                    True)
+            _logger.Info("dest 検索結果: " & foundAddrDest)
+
+            'endXl
+            Dim endAddr = util.GetEndAddress(
+                srcWs,
+                foundAddrDest, Microsoft.Office.Interop.Excel.XlDirection.xlDown)
+            _logger.Info("src endAddr: " & endAddr)
+            Dim newRangeAddr = ExcelAddressUtil.GetUnionRangeAddress(endAddr, foundAddrDest)
+            _logger.Info("dest newRangeAddr: " & newRangeAddr)
+
+            'set src Address
+            conDest.TargetCountRow = conSrc.TargetCountRow
+            _logger.Info($"dest TargetCountRow: {conDest.TargetCountRow}")
+
+            conDest.TargetRangeString = ExcelAddressUtil.ExpandExcelAddress(
+                foundAddrDest, conDest.TargetCountRow, 0, entireRow:=True, entireCol:=False)
+            _logger.Info($"dest TargetRangeString: {conDest.TargetRangeString}")
+
+
+
             '// 変更先ファイル名を読み込む
             '// 変更先ファイル名の変更範囲を読み込み、変更範囲を動的に設定
             '書式コピー元、フォーマット範囲を検索・設定
@@ -95,13 +126,13 @@ Public Class ExcelFormatChangerProc
                     True)
             _logger.Info("src 検索結果: " & foundAddrSrc)
 
-            'endXl
-            Dim endAddr = util.GetEndAddress(
-                srcWs,
-                foundAddrSrc, Microsoft.Office.Interop.Excel.XlDirection.xlDown)
-            _logger.Info("src endAddr: " & endAddr)
-            Dim newRangeAddr = ExcelAddressUtil.GetUnionRangeAddress(endAddr, foundAddrSrc)
-            _logger.Info("src newRangeAddr: " & newRangeAddr)
+            ''endXl
+            'Dim endAddr = util.GetEndAddress(
+            '    srcWs,
+            '    foundAddrSrc, Microsoft.Office.Interop.Excel.XlDirection.xlDown)
+            '_logger.Info("src endAddr: " & endAddr)
+            'Dim newRangeAddr = ExcelAddressUtil.GetUnionRangeAddress(endAddr, foundAddrSrc)
+            '_logger.Info("src newRangeAddr: " & newRangeAddr)
 
             'set src Address
             conSrc.TargetCountRow = ExcelAddressUtil.GetRowCount(newRangeAddr)
@@ -111,23 +142,6 @@ Public Class ExcelFormatChangerProc
             conSrc.TargetRangeString = ExcelAddressUtil.ExpandExcelAddress(
                 newRangeAddr, conSrc.TargetCountRow, 0, entireRow:=True, entireCol:=False)
             _logger.Info($"src TargetRangeString: {conSrc.TargetRangeString}")
-
-            '// 書式コピー先範囲を設定
-            'dest
-            Dim foundAddrDest = util.FindCellAddress(
-                    destWs,
-                    conDest.FindRangeString,
-                    conDest.FindValue,
-                    True)
-            _logger.Info("dest 検索結果: " & foundAddrDest)
-
-            'set src Address
-            conDest.TargetCountRow = conSrc.TargetCountRow
-            _logger.Info($"dest TargetCountRow: {conDest.TargetCountRow}")
-
-            conDest.TargetRangeString = ExcelAddressUtil.ExpandExcelAddress(
-                foundAddrDest, conDest.TargetCountRow, 0, entireRow:=True, entireCol:=False)
-            _logger.Info($"dest TargetRangeString: {conDest.TargetRangeString}")
 
             '// コピーペースト
             util.CopyFormatBetweenBooks(

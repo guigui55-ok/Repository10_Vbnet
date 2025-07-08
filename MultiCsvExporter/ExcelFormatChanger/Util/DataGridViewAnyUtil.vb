@@ -59,23 +59,38 @@
 
 
     ''' <summary>
-    ''' 指定した DataTable のデータを DataGridView に設定します。
+    ''' 指定した DataTable のデータを DataGridView に設定します（DataSourceは使用しません）。
     ''' </summary>
     ''' <param name="dataGridView">データを表示する DataGridView</param>
     ''' <param name="dataTable">表示元の DataTable</param>
-    Public Shared Sub SetDataTableToDataGridView(dataGridView As DataGridView, dataTable As DataTable)
+    Public Shared Sub SetDataTableToDataGridView(dataGridView As DataGridView, dataTable As DataTable, isSetColumn As Boolean)
         If dataGridView Is Nothing OrElse dataTable Is Nothing Then
             Throw New ArgumentNullException("DataGridView または DataTable が null です。")
         End If
+
         ' DataSourceの解除
         dataGridView.DataSource = Nothing
 
-        ' データグリッドビューの既存データとカラムをクリア
-        dataGridView.Columns.Clear()
+        ' 既存のカラムと行をクリア
+        'dataGridView.Columns.Clear()
         dataGridView.Rows.Clear()
 
-        ' DataSourceを使う方法（推奨）
-        dataGridView.DataSource = dataTable.Copy()
+        ' DataSourceを使うと DataGridViewSyncer でエラーが発生する
+        'エラー：System.InvalidOperationException:コントロールがデータバインドされているとき、DataGridView の行コレクションにプログラムで行を追加することはできません。
+        'dataGridView.DataSource = dataTable.Copy()
+
+        If isSetColumn Then
+            ' DataTable のカラムを DataGridView に追加
+            For Each column As DataColumn In dataTable.Columns
+                dataGridView.Columns.Add(column.ColumnName, column.ColumnName)
+            Next
+        End If
+
+        'Error: ハンドルされていない例外: System.InvalidOperationException: 列を含んでいない DataGridView コントロールに行を追加することはできません。列を最初に追加してください。
+        ' DataTable の行を DataGridView に追加
+        For Each row As DataRow In dataTable.Rows
+            dataGridView.Rows.Add(row.ItemArray)
+        Next
     End Sub
 
     ''' <summary>

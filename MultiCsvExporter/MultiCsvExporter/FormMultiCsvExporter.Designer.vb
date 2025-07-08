@@ -34,6 +34,8 @@ Partial Class FormMultiCsvExporter
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Button_Execute = New System.Windows.Forms.Button()
         Me.Button_Condition = New System.Windows.Forms.Button()
+        Me.Button_ClearDirPath = New System.Windows.Forms.Button()
+        Me.Button_OtherTool = New System.Windows.Forms.Button()
         Me.GroupBox_Output.SuspendLayout()
         Me.GroupBox_Input.SuspendLayout()
         Me.SuspendLayout()
@@ -48,7 +50,7 @@ Partial Class FormMultiCsvExporter
         Me.GroupBox_Output.Margin = New System.Windows.Forms.Padding(4)
         Me.GroupBox_Output.Name = "GroupBox_Output"
         Me.GroupBox_Output.Padding = New System.Windows.Forms.Padding(4)
-        Me.GroupBox_Output.Size = New System.Drawing.Size(668, 104)
+        Me.GroupBox_Output.Size = New System.Drawing.Size(661, 104)
         Me.GroupBox_Output.TabIndex = 0
         Me.GroupBox_Output.TabStop = False
         Me.GroupBox_Output.Text = "Output"
@@ -87,11 +89,12 @@ Partial Class FormMultiCsvExporter
         '
         'GroupBox_Input
         '
+        Me.GroupBox_Input.Controls.Add(Me.Button_OtherTool)
         Me.GroupBox_Input.Controls.Add(Me.RichTextBox_DirPaths)
         Me.GroupBox_Input.Controls.Add(Me.RichTextBox_RegexPatterns)
         Me.GroupBox_Input.Controls.Add(Me.Label4)
         Me.GroupBox_Input.Controls.Add(Me.Label3)
-        Me.GroupBox_Input.Location = New System.Drawing.Point(13, 124)
+        Me.GroupBox_Input.Location = New System.Drawing.Point(13, 136)
         Me.GroupBox_Input.Name = "GroupBox_Input"
         Me.GroupBox_Input.Size = New System.Drawing.Size(797, 342)
         Me.GroupBox_Input.TabIndex = 1
@@ -100,17 +103,21 @@ Partial Class FormMultiCsvExporter
         '
         'RichTextBox_DirPaths
         '
+        Me.RichTextBox_DirPaths.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RichTextBox_DirPaths.Location = New System.Drawing.Point(10, 46)
         Me.RichTextBox_DirPaths.Name = "RichTextBox_DirPaths"
-        Me.RichTextBox_DirPaths.Size = New System.Drawing.Size(770, 87)
+        Me.RichTextBox_DirPaths.Size = New System.Drawing.Size(781, 87)
         Me.RichTextBox_DirPaths.TabIndex = 8
         Me.RichTextBox_DirPaths.Text = ""
         '
         'RichTextBox_RegexPatterns
         '
+        Me.RichTextBox_RegexPatterns.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RichTextBox_RegexPatterns.Location = New System.Drawing.Point(10, 156)
         Me.RichTextBox_RegexPatterns.Name = "RichTextBox_RegexPatterns"
-        Me.RichTextBox_RegexPatterns.Size = New System.Drawing.Size(770, 180)
+        Me.RichTextBox_RegexPatterns.Size = New System.Drawing.Size(640, 180)
         Me.RichTextBox_RegexPatterns.TabIndex = 7
         Me.RichTextBox_RegexPatterns.Text = ""
         '
@@ -136,7 +143,7 @@ Partial Class FormMultiCsvExporter
         '
         Me.Button_Execute.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_Execute.Location = New System.Drawing.Point(696, 29)
+        Me.Button_Execute.Location = New System.Drawing.Point(690, 22)
         Me.Button_Execute.Name = "Button_Execute"
         Me.Button_Execute.Size = New System.Drawing.Size(114, 32)
         Me.Button_Execute.TabIndex = 2
@@ -147,18 +154,41 @@ Partial Class FormMultiCsvExporter
         '
         Me.Button_Condition.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button_Condition.Location = New System.Drawing.Point(696, 85)
+        Me.Button_Condition.Location = New System.Drawing.Point(690, 60)
         Me.Button_Condition.Name = "Button_Condition"
         Me.Button_Condition.Size = New System.Drawing.Size(114, 32)
         Me.Button_Condition.TabIndex = 3
         Me.Button_Condition.Text = "SetCondition"
         Me.Button_Condition.UseVisualStyleBackColor = True
         '
+        'Button_ClearDirPath
+        '
+        Me.Button_ClearDirPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_ClearDirPath.Location = New System.Drawing.Point(690, 98)
+        Me.Button_ClearDirPath.Name = "Button_ClearDirPath"
+        Me.Button_ClearDirPath.Size = New System.Drawing.Size(114, 32)
+        Me.Button_ClearDirPath.TabIndex = 4
+        Me.Button_ClearDirPath.Text = "Clear Dir Path"
+        Me.Button_ClearDirPath.UseVisualStyleBackColor = True
+        '
+        'Button_OtherTool
+        '
+        Me.Button_OtherTool.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button_OtherTool.Location = New System.Drawing.Point(677, 156)
+        Me.Button_OtherTool.Name = "Button_OtherTool"
+        Me.Button_OtherTool.Size = New System.Drawing.Size(114, 43)
+        Me.Button_OtherTool.TabIndex = 9
+        Me.Button_OtherTool.Text = "Not " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Implemented"
+        Me.Button_OtherTool.UseVisualStyleBackColor = True
+        '
         'FormMultiCsvExporter
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 17.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(824, 478)
+        Me.ClientSize = New System.Drawing.Size(824, 488)
+        Me.Controls.Add(Me.Button_ClearDirPath)
         Me.Controls.Add(Me.Button_Condition)
         Me.Controls.Add(Me.Button_Execute)
         Me.Controls.Add(Me.GroupBox_Input)
@@ -187,4 +217,6 @@ Partial Class FormMultiCsvExporter
     Friend WithEvents RichTextBox_DirPaths As RichTextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents Button_Condition As Button
+    Friend WithEvents Button_ClearDirPath As Button
+    Friend WithEvents Button_OtherTool As Button
 End Class

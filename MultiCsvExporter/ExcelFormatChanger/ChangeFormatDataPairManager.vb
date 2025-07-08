@@ -38,6 +38,14 @@ Public Class ChangeFormatDataPairManager
             Return $"FindValue={FindValue}"
         End Function
 
+        Public Function DataIsValid() As Boolean
+            If FindSheetName = "" And FindRangeString = "" And FindValue = "" Then
+                Return False
+            Else
+                Return True
+            End If
+        End Function
+
         Public Function GetDataArray(index As Integer) As Object()
             Dim ret = {
                 index,
@@ -82,6 +90,7 @@ Public Class ChangeFormatDataPairManager
                 Next
             Next
             SetData(_list.ToArray)
+            Return Nothing
         End Function
 
         Public Function SetData(_dataAry() As Object) As Object()
@@ -106,7 +115,7 @@ Public Class ChangeFormatDataPairManager
             TargetCountRow = _dataAry(count)
             count += 1
             TargetCountCol = _dataAry(count)
-
+            Return Nothing
         End Function
 
         Public Function GetDeepCopyObject() As ChangeFormatData

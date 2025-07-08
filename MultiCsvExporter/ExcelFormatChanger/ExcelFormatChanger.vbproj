@@ -104,6 +104,7 @@
     <Compile Include="UtilDragDrop\DragAndDropControl.vb" />
     <Compile Include="UtilDragDrop\DragAndDropFile.vb" />
     <Compile Include="DragDropManager_ExcelFormatChanger.vb" />
+    <Compile Include="UtilDragDrop\DragDropManager_ExcelFormatChanger.vb" />
     <Compile Include="UtilExcel\ExcelAddressUtil.vb" />
     <Compile Include="UtilExcel\ExcelAnyUtil.vb" />
     <Compile Include="UtilExcel\SharedExcelApp.vb" />
@@ -112,6 +113,7 @@
     <Compile Include="Util\DataGridViewAnyUtil.vb" />
     <Compile Include="Util\DataGridViewSaver.vb" />
     <Compile Include="Util\DataGridView_AddRemove.vb" />
+    <Compile Include="Util\DataTableAnyUtil.vb" />
     <Compile Include="Util\FormLog.designer.vb">
       <DependentUpon>FormLog.vb</DependentUpon>
     </Compile>
