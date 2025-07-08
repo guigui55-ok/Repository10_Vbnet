@@ -122,6 +122,7 @@ Public Class ExcelAddressUtil
         Dim maxCol As Integer = Integer.MinValue
 
         For Each addr In addresses
+            addr = addr.Replace("$", "")
             ' アドレスを分割（複数の":"を含んでもOK）
             Dim parts = addr.Split(":"c)
 

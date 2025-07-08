@@ -101,7 +101,7 @@ Public Class ExcelFormatChangerProc
             Dim endAddr = util.GetEndAddress(
                 srcWs,
                 foundAddrDest, Microsoft.Office.Interop.Excel.XlDirection.xlDown)
-            _logger.Info("src endAddr: " & endAddr)
+            _logger.Info("dest endAddr: " & endAddr)
             Dim newRangeAddr = ExcelAddressUtil.GetUnionRangeAddress(endAddr, foundAddrDest)
             _logger.Info("dest newRangeAddr: " & newRangeAddr)
 
@@ -131,8 +131,8 @@ Public Class ExcelFormatChangerProc
             '    srcWs,
             '    foundAddrSrc, Microsoft.Office.Interop.Excel.XlDirection.xlDown)
             '_logger.Info("src endAddr: " & endAddr)
-            'Dim newRangeAddr = ExcelAddressUtil.GetUnionRangeAddress(endAddr, foundAddrSrc)
-            '_logger.Info("src newRangeAddr: " & newRangeAddr)
+            newRangeAddr = ExcelAddressUtil.GetUnionRangeAddress(foundAddrSrc, srcWs.Range(foundAddrSrc).Offset(conSrc.TargetCountRow, 0).Address)
+            _logger.Info("src newRangeAddr: " & newRangeAddr)
 
             'set src Address
             conSrc.TargetCountRow = ExcelAddressUtil.GetRowCount(newRangeAddr)
