@@ -110,18 +110,50 @@
             dgv = DataGridView_Conditions
             Dim srcData = _dataPair.SrcItem
             bufData = srcData.GetDataArray(count)
+            bufData = ConvertRowToDataGridViewTypes(dgv, bufData)
             dgv.Rows.Add(bufData)
 
             'dest
             dgv = DataGridView_DestCondition
             Dim destData = _dataPair.DestItem
             bufData = destData.GetDataArray(count)
+            bufData = ConvertRowToDataGridViewTypes(dgv, bufData)
             'dgv.Rows.Add(bufData) 'DataGridViewの１と２は、行追加・削除時に行数が同期されるのでaddは不要
             SetChangeFormatDataToDataGridView(dgv, bufData)
 
             count += 1
         Next
     End Sub
+    ''' <summary>
+    ''' DataGridView のカラム型に基づいて bufData の型を変換した配列を返します
+    ''' </summary>
+    ''' <param name="dgv">対象の DataGridView</param>
+    ''' <param name="bufData">元のデータ配列</param>
+    ''' <returns>変換後のデータ配列</returns>
+    Private Function ConvertRowToDataGridViewTypes(dgv As DataGridView, bufData() As Object) As Object()
+        Dim convertedData(dgv.Columns.Count - 1) As Object
+
+        For i As Integer = 0 To dgv.Columns.Count - 1
+            Dim colType As Type = dgv.Columns(i).ValueType
+            Debug.WriteLine("colType = " + colType.ToString)
+            If i < bufData.Length Then
+                Dim value = bufData(i)
+                If value Is Nothing OrElse IsDBNull(value) Then
+                    convertedData(i) = DBNull.Value
+                Else
+                    Try
+                        convertedData(i) = Convert.ChangeType(value, colType)
+                    Catch ex As Exception
+                        convertedData(i) = value ' 変換できなければ元の値を保持
+                    End Try
+                End If
+            Else
+                convertedData(i) = DBNull.Value
+            End If
+        Next
+
+        Return convertedData
+    End Function
 
     Private Function GetAddDataToDataPairManager(_data As ChangeFormatDataPairManager.ChangeFormatData)
         'Formで実行ボタンを押したときに実行される

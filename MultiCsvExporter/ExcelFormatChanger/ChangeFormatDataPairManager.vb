@@ -94,7 +94,7 @@ Public Class ChangeFormatDataPairManager
         End Function
 
         Public Function SetData(_dataAry() As Object) As Object()
-
+            Dim valName = ""
             Dim count = 0
             FindSheetName = _dataAry(count)
             count += 1
@@ -102,21 +102,55 @@ Public Class ChangeFormatDataPairManager
             count += 1
             FindValue = _dataAry(count)
             count += 1
-            FindMode = _dataAry(count)
+            valName = "FileMode"
+            FindMode = ToInt(_dataAry(count), valName)
             count += 1
-            OffsetRow = _dataAry(count)
+            valName = "OffsetRow"
+            OffsetRow = ToInt(_dataAry(count), valName)
             count += 1
-            OffsetCol = _dataAry(count)
+            valName = "OffsetCol"
+            OffsetCol = ToInt(_dataAry(count), valName)
             count += 1
-            EntireRow = _dataAry(count)
+            valName = "EntireRow"
+            EntireRow = ToBool(_dataAry(count), valName)
             count += 1
-            EntireCol = _dataAry(count)
+            valName = "EntireCol"
+            EntireCol = ToBool(_dataAry(count), valName)
             count += 1
-            TargetCountRow = _dataAry(count)
+            valName = "TargetCountRow"
+            TargetCountRow = ToInt(_dataAry(count), valName)
             count += 1
-            TargetCountCol = _dataAry(count)
+            valName = "TargetCountCol"
+            TargetCountCol = ToInt(_dataAry(count), valName)
             Return Nothing
         End Function
+
+        Private Function ToInt(value As Object, Optional valName As String = "") As Integer
+            If IsNumeric(value.ToString) Then
+                Return CInt(value.ToString)
+            Else
+                outputWarning(valName, value)
+                Return 0
+            End If
+        End Function
+        Private Function ToBool(value As Object, Optional valName As String = "") As Boolean
+            If IsNumeric(value.ToString.Trim) Then
+                If CInt(value.ToString.Trim) = 0 Then
+                    Return False
+                Else
+                    Return True
+                End If
+            ElseIf value.ToString.ToLower.Trim = "true" Then
+                Return True
+            Else
+                outputWarning(valName, value)
+                Return 0
+            End If
+        End Function
+
+        Private Sub outputWarning(valName As String, value As Object)
+            Debug.WriteLine($"[WARNING ]  Convert Error  {valName} = {value.ToString}")
+        End Sub
 
         Public Function GetDeepCopyObject() As ChangeFormatData
             Dim ret = New ChangeFormatData

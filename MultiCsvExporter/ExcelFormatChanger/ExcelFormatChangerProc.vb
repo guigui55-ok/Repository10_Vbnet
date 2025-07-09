@@ -88,6 +88,7 @@ Public Class ExcelFormatChangerProc
 
             '範囲決定時に、xlDownとするかのオプションは追加する？
 
+            _logger.Info($"dest 検索条件 , Range={conDest.FindRangeString}, value={conDest.FindValue}")
             '// 書式コピー先範囲を設定
             'dest
             Dim foundAddrDest = util.FindCellAddress(
@@ -99,14 +100,14 @@ Public Class ExcelFormatChangerProc
 
             'endXl
             Dim endAddr = util.GetEndAddress(
-                srcWs,
+                destWs,
                 foundAddrDest, Microsoft.Office.Interop.Excel.XlDirection.xlDown)
             _logger.Info("dest endAddr: " & endAddr)
             Dim newRangeAddr = ExcelAddressUtil.GetUnionRangeAddress(endAddr, foundAddrDest)
             _logger.Info("dest newRangeAddr: " & newRangeAddr)
 
             'set src Address
-            conDest.TargetCountRow = conSrc.TargetCountRow
+            conDest.TargetCountRow = ExcelAddressUtil.GetRowCount(newRangeAddr) - 1
             _logger.Info($"dest TargetCountRow: {conDest.TargetCountRow}")
 
             conDest.TargetRangeString = ExcelAddressUtil.ExpandExcelAddress(
@@ -117,6 +118,7 @@ Public Class ExcelFormatChangerProc
 
             '// 変更先ファイル名を読み込む
             '// 変更先ファイル名の変更範囲を読み込み、変更範囲を動的に設定
+            _logger.Info($"src 検索条件 , Range={conSrc.FindRangeString}, value={conSrc.FindValue}")
             '書式コピー元、フォーマット範囲を検索・設定
             'src
             Dim foundAddrSrc = util.FindCellAddress(
@@ -131,11 +133,12 @@ Public Class ExcelFormatChangerProc
             '    srcWs,
             '    foundAddrSrc, Microsoft.Office.Interop.Excel.XlDirection.xlDown)
             '_logger.Info("src endAddr: " & endAddr)
-            newRangeAddr = ExcelAddressUtil.GetUnionRangeAddress(foundAddrSrc, srcWs.Range(foundAddrSrc).Offset(conSrc.TargetCountRow, 0).Address)
-            _logger.Info("src newRangeAddr: " & newRangeAddr)
+            'newRangeAddr = ExcelAddressUtil.GetUnionRangeAddress(foundAddrSrc, srcWs.Range(foundAddrSrc).Offset(conSrc.TargetCountRow, 0).Address)
+            newRangeAddr = foundAddrSrc
+            _logger.Info("src newRangeAddr: " & foundAddrSrc)
 
             'set src Address
-            conSrc.TargetCountRow = ExcelAddressUtil.GetRowCount(newRangeAddr)
+            conSrc.TargetCountRow = conDest.TargetCountRow
             _logger.Info($"src TargetCountRow: {conSrc.TargetCountRow}")
 
             'Dim countCol = ExcelAddressUtil.GetColCount(foundAddrSrc, newRangeAddr)

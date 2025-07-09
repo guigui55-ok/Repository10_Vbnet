@@ -10,6 +10,9 @@
 'コンソール実行
 '引数対応（ログ、対象パスsrc,dest、対処の条件src,dest）
 
+'DataGridVie右で削除できない（左を削除すると右が削除される）
+
+
 Module ModuleMainExcelFormatChanger
 
     Sub Main()
