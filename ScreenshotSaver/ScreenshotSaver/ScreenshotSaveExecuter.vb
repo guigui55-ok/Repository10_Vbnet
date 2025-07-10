@@ -15,7 +15,7 @@
     Public Function CreateFilePath(fileDirPath As String, fileName As String)
         If fileName = "" Then
             'default filename
-            fileName = "image_" + DateTime.Now.ToString("yyyy_MM_dd_HHmmss") + ".png"
+            fileName = "image_" + DateTime.Now.ToString("yyyy_MM_dd_HHmmss_fff") + ".png"
         End If
         Dim filePath = IO.Path.Combine(fileDirPath, fileName)
         Return filePath
