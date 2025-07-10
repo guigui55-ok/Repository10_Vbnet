@@ -19,7 +19,7 @@
         "-",
         "Start",
         "Start",
-        "Start",
+        "Stop",
         "Stop",
         "Stop"
     }

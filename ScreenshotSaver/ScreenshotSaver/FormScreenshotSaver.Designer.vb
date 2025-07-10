@@ -84,7 +84,7 @@ Partial Class FormScreenshotSaver
         '
         Me.TextBox_Timeout.Location = New System.Drawing.Point(18, 20)
         Me.TextBox_Timeout.Name = "TextBox_Timeout"
-        Me.TextBox_Timeout.Size = New System.Drawing.Size(130, 23)
+        Me.TextBox_Timeout.Size = New System.Drawing.Size(106, 23)
         Me.TextBox_Timeout.TabIndex = 1
         '
         'GroupBox_Timeout
@@ -101,11 +101,11 @@ Partial Class FormScreenshotSaver
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(154, 23)
+        Me.Label1.Location = New System.Drawing.Point(137, 23)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(35, 15)
+        Me.Label1.Size = New System.Drawing.Size(57, 15)
         Me.Label1.TabIndex = 4
-        Me.Label1.Text = "[ms]"
+        Me.Label1.Text = "[second]"
         '
         'FormScreenshotSaver
         '

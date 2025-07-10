@@ -1,5 +1,10 @@
 ﻿Module ScreenshotSaverMain
 
+    '予定
+    'カウントダウン（時間表示）
+    '検討中：対象のアプリが実行されてい無いときは動作しない
+
+
     Sub Main()
 
         Dim logger = New AppLogger

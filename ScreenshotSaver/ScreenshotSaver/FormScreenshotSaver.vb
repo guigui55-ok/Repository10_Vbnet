@@ -16,8 +16,12 @@
         TextBox_OutputDir.Text = picturesPath
         _mainProc.SetSaveDirPath(picturesPath)
 
-        TextBox_Timeout.Text = "3000"
+        TextBox_Timeout.Text = "60"
     End Sub
+    Private Sub FormScreenshotSaver_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        _appStatus.DoWait()
+    End Sub
+
     Private Function GetTimeout() As Integer
         Dim tb = TextBox_Timeout
         If IsNumeric(tb.Text) Then
@@ -35,19 +39,14 @@
             _appStatus.DoStop()
         Else
             Dim timeoutVal = GetTimeout()
-            _logger.Info($"timeoutVal = {timeoutVal}")
+            _logger.Info($"GetTimeout = {timeoutVal}")
             If timeoutVal < 1 Then Exit Sub
+            timeoutVal = timeoutVal * 1000
             _appStatus.DoStart()
             _clickWatcher.Start()
-            _timerController.StartExecution(timeoutVal, AddressOf OnExecutionTimeout) ' 3秒で自動終了
+            _timerController.StartExecution(timeoutVal, AddressOf OnExecutionTimeout)
         End If
     End Sub
-
-
-    Private Sub FormScreenshotSaver_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-        _appStatus.DoWait()
-    End Sub
-
 
     Private Sub OnExecutionTimeout()
         If Me.InvokeRequired Then
@@ -57,4 +56,7 @@
             _appStatus.DoStop()
         End If
     End Sub
+
+
+
 End Class
