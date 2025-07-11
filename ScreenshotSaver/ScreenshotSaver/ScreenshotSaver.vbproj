@@ -104,6 +104,10 @@
     <Compile Include="ScreenshotSaverProc.vb" />
     <Compile Include="StatusControlManager.vb" />
     <Compile Include="Util\AppLogger.vb" />
+    <Compile Include="BalloonTipNotifier.vb" />
+    <Compile Include="Util\AsyncTimer.vb" />
+    <Compile Include="Util\CountDownTimer.vb" />
+    <Compile Include="Util\ModulePathUtil.vb" />
     <Compile Include="Util\ScreenshotUtilAny.vb" />
   </ItemGroup>
   <ItemGroup>

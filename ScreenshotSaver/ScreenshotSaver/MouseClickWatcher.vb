@@ -5,6 +5,7 @@ Public Class MouseClickWatcher
     ' イベント定義
     Public Event MouseClicked(button As MouseButtons)
     Public Event MouseDoubleClicked(button As MouseButtons)
+    Public Event MouseReleased(button As MouseButtons) ' ←追加
 
     ' 定数
     Private Const WH_MOUSE_LL As Integer = 14
@@ -12,6 +13,9 @@ Public Class MouseClickWatcher
     Private Const WM_RBUTTONDOWN As Integer = &H204
     Private Const WM_LBUTTONDBLCLK As Integer = &H203
     Private Const WM_RBUTTONDBLCLK As Integer = &H206
+
+    Private Const WM_LBUTTONUP As Integer = &H202  ' ←追加
+    Private Const WM_RBUTTONUP As Integer = &H205  ' ←追加
 
     ' デリゲートとハンドル保持
     Private hookProc As LowLevelMouseProc
@@ -82,6 +86,12 @@ Public Class MouseClickWatcher
                 Case WM_RBUTTONDBLCLK
                     button = MouseButtons.Right
                     RaiseEvent MouseDoubleClicked(button)
+                Case WM_LBUTTONUP
+                    button = MouseButtons.Left
+                    RaiseEvent MouseReleased(button)
+                Case WM_RBUTTONUP
+                    button = MouseButtons.Right
+                    RaiseEvent MouseReleased(button)
             End Select
         End If
         Return CallNextHookEx(hookId, nCode, wParam, lParam)
