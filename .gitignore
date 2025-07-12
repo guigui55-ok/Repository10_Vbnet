@@ -17,3 +17,4 @@
 __test*.csv
 *.png
 *AppLog_*.log
+**/packages/
