@@ -1,0 +1,10 @@
+﻿
+カスタマイズ例
+一時ファイルを除外
+ExcludeFilePredicate = Function(p) Path.GetFileName(p).StartsWith("~$")
+
+指定フォルダ名で除外
+ExcludeFolderPredicate = Function(p) p.Contains("バックアップ")
+
+フォルダごとのインターバル
+.SleepPerFolderMs = 100

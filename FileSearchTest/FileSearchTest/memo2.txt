@@ -1,0 +1,82 @@
+﻿Imports System.IO
+Imports System.Threading
+
+''' <summary>
+''' 検索オプション
+''' </summary>
+Public Class FileSearchOptions
+    Public Property SearchPattern As String = "*.*"
+    Public Property SleepPerFolderMs As Integer = 0
+
+    ' 除外条件（必要に応じて null チェック）
+    Public Property ExcludeFolderPredicate As Func(Of String, Boolean) = Nothing
+    Public Property ExcludeFilePredicate As Func(Of String, Boolean) = Nothing
+End Class
+
+''' <summary>
+''' 検索キャンセル制御用クラス
+''' </summary>
+Public Class FileSearchController
+    Public Property IsCancelRequested As Boolean = False
+
+    Public Sub Cancel()
+        IsCancelRequested = True
+    End Sub
+End Class
+
+''' <summary>
+''' ファイル検索ロジック本体
+''' </summary>
+Public Class FileSearcher
+    Private ReadOnly _options As FileSearchOptions
+    Private ReadOnly _controller As FileSearchController
+
+    Public Sub New(options As FileSearchOptions, controller As FileSearchController)
+        _options = options
+        _controller = controller
+    End Sub
+
+    Public Function SearchFiles(rootPath As String) As List(Of String)
+        Dim results As New List(Of String)
+        SearchRecursive(rootPath, results)
+        Return results
+    End Function
+
+    Private Sub SearchRecursive(currentPath As String, results As List(Of String))
+        If _controller.IsCancelRequested Then Return
+
+        ' ファイル取得
+        Try
+            Dim files = Directory.GetFiles(currentPath, _options.SearchPattern, SearchOption.TopDirectoryOnly)
+            For Each file In files
+                If _controller.IsCancelRequested Then Exit For
+                If _options.ExcludeFilePredicate IsNot Nothing AndAlso _options.ExcludeFilePredicate(file) Then
+                    Continue For
+                End If
+                results.Add(file)
+            Next
+        Catch ex As Exception
+            ' アクセス拒否などは無視
+        End Try
+
+        If _controller.IsCancelRequested Then Return
+        ' サブフォルダ探索
+        Try
+            Dim subDirs = Directory.GetDirectories(currentPath)
+            For Each _dir In subDirs
+                If _controller.IsCancelRequested Then Exit For
+                If _options.ExcludeFolderPredicate IsNot Nothing AndAlso _options.ExcludeFolderPredicate(_dir) Then
+                    Continue For
+                End If
+
+                If _options.SleepPerFolderMs > 0 Then
+                    Thread.Sleep(_options.SleepPerFolderMs)
+                End If
+
+                SearchRecursive(_dir, results)
+            Next
+        Catch ex As Exception
+            ' アクセス拒否などは無視
+        End Try
+    End Sub
+End Class
