@@ -46,6 +46,20 @@ Public Class FileSearcher
         _outputBox = outputBox
     End Sub
 
+#Region ""
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="folderPath"></param>
+    ''' <param name="StartsWithStr"></param>
+    ''' <returns></returns>
+    Public Shared Function IsMatchFilterPathName(folderPath As String, StartsWithStr As String) As Boolean
+        If StartsWithStr = "" Then Return False
+        Return IO.Path.GetFileName(folderPath).StartsWith(StartsWithStr)
+    End Function
+
+#End Region
+
     Public Function SearchFiles(rootPath As String) As List(Of String)
         Dim results As New List(Of String)
         _logger.Info($"検索開始: {rootPath}")
@@ -84,7 +98,8 @@ Public Class FileSearcher
             Dim subDirs = Directory.GetDirectories(currentPath)
             For Each _dir In subDirs
                 If _controller.IsCancelRequested Then Exit For
-                If _options.ExcludeFolderPredicate IsNot Nothing AndAlso _options.ExcludeFolderPredicate(_dir) Then
+                Dim flagA = _options.ExcludeFolderPredicate(_dir)
+                If _options.ExcludeFolderPredicate IsNot Nothing AndAlso flagA Then
                     _logger.Info($"除外フォルダ: {_dir}")
                     Continue For
                 End If

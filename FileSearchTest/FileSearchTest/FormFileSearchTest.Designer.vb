@@ -31,9 +31,15 @@ Partial Class FormFileSearchTest
         Me.TextBox_Filter = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Button_Cancel = New System.Windows.Forms.Button()
+        Me.GroupBox_UiThread = New System.Windows.Forms.GroupBox()
+        Me.TextBox_Count = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.ButtonUp = New System.Windows.Forms.Button()
+        Me.ButtonDown = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox_Log.SuspendLayout()
         Me.GroupBox_Settings.SuspendLayout()
+        Me.GroupBox_UiThread.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -65,7 +71,7 @@ Partial Class FormFileSearchTest
         'GroupBox_Log
         '
         Me.GroupBox_Log.Controls.Add(Me.RichTextBox1)
-        Me.GroupBox_Log.Location = New System.Drawing.Point(12, 190)
+        Me.GroupBox_Log.Location = New System.Drawing.Point(12, 263)
         Me.GroupBox_Log.Name = "GroupBox_Log"
         Me.GroupBox_Log.Size = New System.Drawing.Size(764, 156)
         Me.GroupBox_Log.TabIndex = 2
@@ -116,11 +122,59 @@ Partial Class FormFileSearchTest
         Me.Button_Cancel.Text = "Cancel"
         Me.Button_Cancel.UseVisualStyleBackColor = True
         '
+        'GroupBox_UiThread
+        '
+        Me.GroupBox_UiThread.Controls.Add(Me.ButtonDown)
+        Me.GroupBox_UiThread.Controls.Add(Me.ButtonUp)
+        Me.GroupBox_UiThread.Controls.Add(Me.Label2)
+        Me.GroupBox_UiThread.Controls.Add(Me.TextBox_Count)
+        Me.GroupBox_UiThread.Location = New System.Drawing.Point(12, 197)
+        Me.GroupBox_UiThread.Name = "GroupBox_UiThread"
+        Me.GroupBox_UiThread.Size = New System.Drawing.Size(630, 60)
+        Me.GroupBox_UiThread.TabIndex = 5
+        Me.GroupBox_UiThread.TabStop = False
+        Me.GroupBox_UiThread.Text = "UI Thread Proc"
+        '
+        'TextBox_Count
+        '
+        Me.TextBox_Count.Location = New System.Drawing.Point(83, 27)
+        Me.TextBox_Count.Name = "TextBox_Count"
+        Me.TextBox_Count.Size = New System.Drawing.Size(70, 23)
+        Me.TextBox_Count.TabIndex = 0
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(21, 30)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(46, 15)
+        Me.Label2.TabIndex = 1
+        Me.Label2.Text = "Count:"
+        '
+        'ButtonUp
+        '
+        Me.ButtonUp.Location = New System.Drawing.Point(174, 27)
+        Me.ButtonUp.Name = "ButtonUp"
+        Me.ButtonUp.Size = New System.Drawing.Size(56, 23)
+        Me.ButtonUp.TabIndex = 2
+        Me.ButtonUp.Text = "Up"
+        Me.ButtonUp.UseVisualStyleBackColor = True
+        '
+        'ButtonDown
+        '
+        Me.ButtonDown.Location = New System.Drawing.Point(247, 27)
+        Me.ButtonDown.Name = "ButtonDown"
+        Me.ButtonDown.Size = New System.Drawing.Size(56, 23)
+        Me.ButtonDown.TabIndex = 3
+        Me.ButtonDown.Text = "Down"
+        Me.ButtonDown.UseVisualStyleBackColor = True
+        '
         'FormFileSearchTest
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(794, 364)
+        Me.ClientSize = New System.Drawing.Size(794, 431)
+        Me.Controls.Add(Me.GroupBox_UiThread)
         Me.Controls.Add(Me.Button_Cancel)
         Me.Controls.Add(Me.GroupBox_Settings)
         Me.Controls.Add(Me.GroupBox_Log)
@@ -135,6 +189,8 @@ Partial Class FormFileSearchTest
         Me.GroupBox_Log.ResumeLayout(False)
         Me.GroupBox_Settings.ResumeLayout(False)
         Me.GroupBox_Settings.PerformLayout()
+        Me.GroupBox_UiThread.ResumeLayout(False)
+        Me.GroupBox_UiThread.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -148,4 +204,9 @@ Partial Class FormFileSearchTest
     Friend WithEvents TextBox_Filter As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Button_Cancel As Button
+    Friend WithEvents GroupBox_UiThread As GroupBox
+    Friend WithEvents ButtonDown As Button
+    Friend WithEvents ButtonUp As Button
+    Friend WithEvents Label2 As Label
+    Friend WithEvents TextBox_Count As TextBox
 End Class

@@ -24,7 +24,7 @@
 
         Dim searchPattern = "*.png"
         Dim targetPath = "C:\ZMyFolder\newDoc\0ProgramingAll\ImageViewerMain"
-        Dim FolderStartsWithStr = "ImageViewer"
+        Dim FolderStartsWithStr = ""
         Dim FileStartsWithStr = ""
 
         Button_Start.Enabled = False
@@ -33,11 +33,17 @@
 
         _searchController = New FileSearchController()
 
+        '    Dim options As New FileSearchOptions With {
+        '    .SearchPattern = searchPattern,
+        '    .SleepPerFolderMs = 100,
+        '    .ExcludeFolderPredicate = Function(p) IO.Path.GetFileName(p).StartsWith(FolderStartsWithStr),
+        '    .ExcludeFilePredicate = Function(p) IO.Path.GetFileName(p).StartsWith("~")
+        '}
         Dim options As New FileSearchOptions With {
         .SearchPattern = searchPattern,
         .SleepPerFolderMs = 100,
-        .ExcludeFolderPredicate = Function(p) IO.Path.GetFileName(p).StartsWith(FolderStartsWithStr),
-        .ExcludeFilePredicate = Function(p) IO.Path.GetFileName(p).StartsWith("~")
+        .ExcludeFolderPredicate = Function(p) FileSearcher.IsMatchFilterPathName(p, FolderStartsWithStr),
+        .ExcludeFilePredicate = Function(p) FileSearcher.IsMatchFilterPathName(p, FileStartsWithStr)
     }
 
         Dim logger As New AppLogger()
@@ -71,12 +77,15 @@
 
         Dim _logger = New AppLogger
 
+        Dim filterValue = "^$"
+
         Dim options As New FileSearchOptions With {
             .SearchPattern = "*.txt",
             .SleepPerFolderMs = 50,
-            .ExcludeFolderPredicate = Function(path) IO.Path.GetFileName(path).StartsWith("TEMP"),
-            .ExcludeFilePredicate = Function(path) IO.Path.GetFileName(path).StartsWith("~$")
+            .ExcludeFolderPredicate = Function(path) FileSearcher.IsMatchFilterPathName(path, "TEMP"),
+            .ExcludeFilePredicate = Function(path) FileSearcher.IsMatchFilterPathName(path, filterValue)
         }
+
 
         Dim controller As New FileSearchController()
 
@@ -90,5 +99,24 @@
 
     End Sub
 
+    Private Sub ButtonUp_Click(sender As Object, e As EventArgs) Handles ButtonUp.Click
+        CountUpDown(TextBox_Count, 1)
+    End Sub
 
+    Private Sub ButtonDown_Click(sender As Object, e As EventArgs) Handles ButtonDown.Click
+        CountUpDown(TextBox_Count, -1)
+    End Sub
+
+    Private Sub CountUpDown(con As Control, addValue As Integer)
+        Dim _val = con.Text
+        Dim _num = 0
+        Integer.TryParse(_val, _num)
+        _num += addValue
+        con.Text = _num.ToString
+
+        Dim log = $"{con.Name}.Text = {_num}"
+        _logger.Info(log)
+        RichTextBox1.AppendText(log + vbCrLf)
+        RichTextBox1.ScrollToCaret()
+    End Sub
 End Class
